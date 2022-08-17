@@ -54,24 +54,6 @@ public class NSD {
         while (state == ListenerState.NULL) {
             //GLog.h(state.toString());
         }
-        if (DEBUG)
-        {
-            for (int i = 1; i <= 2; i += 1) {
-                try {
-                    ServerInfo test_server = new DirectServerInfo(
-                            String.format("TestServer:Player %d", i),
-                            InetAddress.getByAddress(new byte[]{(byte) 195, 43, (byte) 142, 107}),
-                            1100 + i - 1,
-                            -1,
-                            -1,
-                            false
-                    );
-                    serverList.add(test_server);
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         return state == ListenerState.STARTED;
     }
 
