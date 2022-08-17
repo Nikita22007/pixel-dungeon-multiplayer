@@ -19,6 +19,7 @@ package com.watabou.pixeldungeon;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -121,11 +122,13 @@ public class PixelDungeon extends Game {
 			com.watabou.pixeldungeon.items.wands.WandOfReach.class,
 			"com.watabou.pixeldungeon.items.wands.WandOfTelekinesis" );
 	}
-	
+	private FirebaseAnalytics mFirebaseAnalytics;
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		
+		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 		updateImmersiveMode();
 		
 		DisplayMetrics metrics = new DisplayMetrics();
