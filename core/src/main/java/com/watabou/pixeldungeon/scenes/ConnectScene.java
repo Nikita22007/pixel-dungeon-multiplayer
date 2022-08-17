@@ -75,7 +75,7 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
         }
         List<ServerInfo> list;
         list= NetworkScanner.getServerList();
-        serverList=list.toArray(new ServerInfo[list.size()]); //Todo use only List<?>
+        serverList=list.toArray(new ServerInfo[0]); //Todo use only List<?>
         if (serverList.length > 0) {
 
             float rowHeight = PixelDungeon.landscape() ? ROW_HEIGHT_L : ROW_HEIGHT_P;
@@ -132,7 +132,7 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
         archs = new Archs();
         archs.setSize(width, height);
         add( archs );
-      //  if (!NetworkScanner.isWifiConnected()){
+      //  if (!NSD.isWifiConnected()){
         //    CreateCenterText(width, height,TXT_WIFI_DISABLED);
         //} else
         {
@@ -198,7 +198,7 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
         private BitmapText position;
         private BitmapTextMultiline desc;
 
-        public Record( int pos, boolean withFlare, ServerInfo rec,Scene scene ) {
+        public Record(int pos, boolean withFlare, ServerInfo rec, Scene scene ) {
             super();
             this.ConnectScene=scene;
             this.rec = rec;
@@ -260,7 +260,7 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
             }
 
             desc.x = shield.x + shield.width + GAP;
-            desc.maxWidth = (int)(shield.x - desc.x);
+            //desc.maxWidth = (int)(shield.x - desc.x);
             desc.measure();
             desc.y = position.y + position.baseLine() - desc.baseLine();
         }

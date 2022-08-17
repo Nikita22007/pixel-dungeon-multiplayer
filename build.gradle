@@ -15,7 +15,6 @@ def getDate() {
     def formattedDate = date.format('yyyy-MM-dd-HH-mm')
     return formattedDate
 }
-
 allprojects {
 
     ext {
@@ -27,9 +26,7 @@ allprojects {
             appVersionName = 'Client-debug'
         }  else {
             appVersionName = 'Client-alpha-'+getDate()
-
         }
-
         appAndroidCompileSDK = 28
         appAndroidMinSDK = 16
         appAndroidTargetSDK = 28

@@ -26,6 +26,13 @@ public class Client extends Thread {
     protected static final NetworkPacket packet = new NetworkPacket();
     protected static final int BUFFER_SIZE = 16 * 1024; // bytes
 
+    public static boolean connect(ServerInfo server) {
+        ServerAddress address = server.getAddress();
+        if (address == null) {
+            return false;
+        }
+        return connect(address.host, address.port);
+    }
     public static boolean connect(String server, int port) {
         packet.clearData();
         parceThread = new ParseThread();

@@ -14,23 +14,21 @@ public class WndConnectServer extends Window {
     private static final int WIDTH			= 120;
     private static final int MARGIN 		= 2;
     private static final int BUTTON_HEIGHT	= 20;
-    private String IP;
-    private int port;
+    private ServerInfo serverInfo;
     private Scene scene;
 
-    private String generateMessage(int players, int playersMax,String IP, int port){
+    private String generateMessage(int players, int playersMax){
         String message="Players: ";
         message+=(players>-1)?players:"?";
         message+='/';
         message+=(playersMax>-1)?playersMax:"?";
         message+='\n';
-        message+=IP+':'+port;
+        //message+=IP+':'+port;
         return message;
     }
     public WndConnectServer(Scene scene, ServerInfo server){
         super();
-        this.IP=server.IP.getHostAddress();
-        this.port=server.port;
+        this.serverInfo = server;
         this.scene=scene;
 
         BitmapTextMultiline tfTitle = PixelScene.createMultiline(server.name, 9 );
@@ -41,7 +39,7 @@ public class WndConnectServer extends Window {
         tfTitle.x= (tfTitle.maxWidth-tfTitle.width()) / 2 ;
         add( tfTitle );
 
-        BitmapTextMultiline tfMesage = PixelScene.createMultiline( generateMessage(server.players,server.maxPlayers,IP,port), 8 );
+        BitmapTextMultiline tfMesage = PixelScene.createMultiline( generateMessage(server.players,server.maxPlayers), 8 );
         tfMesage.maxWidth = WIDTH - MARGIN * 2;
         tfMesage.measure();
         tfMesage.x = MARGIN;
@@ -96,9 +94,8 @@ public class WndConnectServer extends Window {
     }
     //Fixme delete this function
     protected void onSelect( int index ) {
-        if (index==1){ //
-            //TODO connect
-            if (!Client.connect(IP,port)){
+        if (index==1){
+            if (!Client.connect(serverInfo)){
                 scene.add(new WndError("Can't connect"));
             }else{
                 NetworkScanner.stop();
