@@ -3,6 +3,7 @@ package com.watabou.pixeldungeon.scenes;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Camera;
+import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Music;
@@ -164,15 +165,24 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
     @Override
     public void update() {
         super.update();
-        if (needRedraw){
-            drawServers();
-            needRedraw  = false;
-        }
         if (showWindow!=null){
             addToFront(showWindow);
             bringToFront(showWindow);
             showWindow = null;
         }
+        else if (needRedraw && !hasWindow()){
+            drawServers();
+            needRedraw = false;
+        }
+    }
+
+    private boolean hasWindow() {
+        for (Gizmo elem: members){
+            if (elem instanceof Window){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
