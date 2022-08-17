@@ -22,7 +22,6 @@ android {
 dependencies {
     implementation project(':PD-classes')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.github.RohitSurwase.UCE-Handler:uce_handler:1.4'
 }
 repositories {
     mavenCentral()
