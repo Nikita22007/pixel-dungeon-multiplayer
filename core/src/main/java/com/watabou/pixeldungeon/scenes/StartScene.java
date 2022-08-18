@@ -143,7 +143,7 @@ public class StartScene extends PixelScene {
 					} );
 
 				} else */{
-					Game.switchScene( ConnectScene.class );
+					PixelDungeon.switchNoFade( ConnectScene.class );
 				}
 			}
 		};

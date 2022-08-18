@@ -19,6 +19,7 @@ import com.watabou.pixeldungeon.ui.Archs;
 import com.watabou.pixeldungeon.ui.ExitButton;
 import com.watabou.pixeldungeon.ui.Window;
 import com.watabou.pixeldungeon.windows.WndConnectServer;
+import com.watabou.pixeldungeon.windows.WndError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
 
     private static final String TXT_TITLE		= "Servers";
     private static final String TXT_NO_GAMES	= "No servers found.";
-    private static final String TXT_ERROR	    = "Servers search error.";
+    private static final String TXT_ERROR	    = "Server search is not started properly. Some servers may not be found.";
     private static final String TXT_SEARCHING	= "Searching...";
     private static final String TXT_WIFI_DISABLED	= "WI-FI is not connected.";
 
@@ -138,7 +139,10 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
         //} else
         {
             if (!NetworkScanner.start(this)) {
-                CreateCenterText(width, height,TXT_ERROR);
+                Window wnd = new WndError(TXT_ERROR);
+                addToFront(wnd);
+                bringToFront(wnd);
+                needRedraw = true;
             } else {
                 drawServers();
             }
