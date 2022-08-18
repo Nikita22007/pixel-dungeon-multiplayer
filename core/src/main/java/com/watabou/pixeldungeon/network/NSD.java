@@ -20,7 +20,8 @@ import static com.watabou.pixeldungeon.BuildConfig.DEBUG;
 
 public class NSD {
     protected static final String SERVICE_TYPE = "_mppd._tcp."; // _name._protocol //mppd=MultiPlayerPixelDungeon
-
+    protected static final int MAX_WAIT_TIME = 3000; // ms
+    protected static final int SLEEP_TIME = 100; // ms
     protected static List<ServerInfo> serverList = new ArrayList<>();
 
     //NSD
@@ -44,15 +45,22 @@ public class NSD {
 
     public static boolean start(@NotNull NetworkScanner.ServicesListener listener) {
 
+        state = ListenerState.NULL;
         servicesListener = listener;
         initializeNSDManager();
         initializeResolveListener();
         initializeDiscoveryListener();
-        state = ListenerState.NULL;
         serverList = new ArrayList<>();
         nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
-        while (state == ListenerState.NULL) {
-            //GLog.h(state.toString());
+        int sleep_time = MAX_WAIT_TIME;
+        while ((state == ListenerState.NULL) && (sleep_time > 0)) {
+            try {
+                //noinspection BusyWait
+                Thread.sleep(SLEEP_TIME);
+                sleep_time -= SLEEP_TIME;
+            } catch (InterruptedException e) {
+                break;
+            }
         }
         return state == ListenerState.STARTED;
     }
@@ -129,6 +137,7 @@ public class NSD {
                 // When the network service is no longer available.
                 // Internal bookkeeping code goes here.
                 GLog.n("service lost: " + service);
+                //todo add server deleting
             }
 
             //========Control
