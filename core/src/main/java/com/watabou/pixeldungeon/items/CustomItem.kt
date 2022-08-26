@@ -5,7 +5,6 @@ import com.watabou.pixeldungeon.items.bags.CustomBag
 import com.watabou.pixeldungeon.network.SendData.SendItemAction
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.ArrayList
 
 open class CustomItem() : Item() {
     protected var descString: String? = null
@@ -17,7 +16,17 @@ open class CustomItem() : Item() {
     var showBar: Boolean = false;
     public var ui: UI = UI();
 
-    constructor(obj: JSONObject) : this() {
+    companion object {
+        @JvmStatic
+        public fun createItem(obj: JSONObject): CustomItem {
+            if (obj.has("size")) {
+                return CustomBag(obj)
+            }
+            return CustomItem(obj)
+        }
+    }
+
+    protected constructor(obj: JSONObject) : this() {
         cursedKnown = true // todo check it
         update(obj)
 

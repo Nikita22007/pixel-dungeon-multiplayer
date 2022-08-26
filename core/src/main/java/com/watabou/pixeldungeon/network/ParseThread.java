@@ -425,7 +425,7 @@ public class ParseThread extends Thread {
             if (visibleItemObj == null) {
                 return;
             }
-            level.drop(new CustomItem(visibleItemObj), pos);
+            level.drop(CustomItem.createItem(visibleItemObj), pos);
             level.heaps.get(pos).setCustomImage(heapObj.optInt("visible_sprite", -1));
             level.heaps.get(pos).showsItem = heapObj.optBoolean("show_item", false);
         } catch (JSONException e) {
@@ -486,7 +486,7 @@ public class ParseThread extends Thread {
                         if (slotObj.isNull("item")) {
                             slot.item = null;
                         } else {
-                            slot.item = new CustomItem(slotObj.getJSONObject("item"));
+                            slot.item = CustomItem.createItem(slotObj.getJSONObject("item"));
                         }
                     }
                     hero.belongings.updateSpecialSlot(slot);
@@ -615,7 +615,7 @@ public class ParseThread extends Thread {
             case ("add"):
             case ("place"): {
                 JSONObject itemObj = actionObj.optJSONObject("item");
-                Item item = itemObj != null ? new CustomItem(actionObj.getJSONObject("item")) : null;
+                Item item = itemObj != null ? CustomItem.createItem(actionObj.getJSONObject("item")) : null;
                 if ((slot.size() == 1) && (slot.get(0) < 0)) {
                     hero.belongings.specialSlots.get(-slot.get(0) - 1).item = item;
                 } else {

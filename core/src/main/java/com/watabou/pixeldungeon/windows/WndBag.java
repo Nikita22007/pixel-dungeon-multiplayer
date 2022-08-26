@@ -404,7 +404,7 @@ public class WndBag extends WndTabbed {
 				} else {
 					showBar = item.isUpgradable() && item.levelKnown;
 				}
-				if (lastBag.owner.isAlive() && showBar) {
+				if (lastBag.owner != null && lastBag.owner.isAlive() && showBar) {
 					durability = new ColorBlock[NBARS];
 					int nBars = (int)GameMath.gate( 0, Math.round( (float)NBARS * item.durability() / item.maxDurability() ), NBARS );
 					for (int i=0; i < nBars; i++) {

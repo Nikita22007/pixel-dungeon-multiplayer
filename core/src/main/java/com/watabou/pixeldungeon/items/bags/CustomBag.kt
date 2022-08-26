@@ -23,12 +23,7 @@ class CustomBag(obj: JSONObject) : Bag(obj) {
     private fun addItemsFromJSONArray(arr: JSONArray) {
         for (i in 0 until arr.length()) {
             val itemObj = arr.getJSONObject(i);
-            val item: Item =
-            if (itemObj.has("size")) {
-                CustomBag(itemObj)
-            } else {
-                CustomItem(itemObj)
-            }
+            val item: Item = CustomItem.createItem(itemObj)
             items.add(item)
         }
     }
