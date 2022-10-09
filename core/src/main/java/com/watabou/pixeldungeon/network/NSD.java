@@ -80,9 +80,6 @@ public class NSD {
     }
 
     public static void initializeResolveListener() {
-        if (resolveListener != null) {
-            return;
-        }
         resolveListener = new NsdManager.ResolveListener() {
 
             @Override
@@ -117,9 +114,6 @@ public class NSD {
     }
 
     public static void initializeDiscoveryListener() {
-        if (discoveryListener != null) {
-            return;
-        }
         // Instantiate a new DiscoveryListener
         discoveryListener = new NsdManager.DiscoveryListener() {
 
