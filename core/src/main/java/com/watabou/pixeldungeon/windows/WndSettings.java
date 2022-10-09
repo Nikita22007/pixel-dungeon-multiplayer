@@ -37,7 +37,7 @@ public class WndSettings extends Window {
 	private static final String TXT_SCALE_UP		= "Scale up UI";
 	private static final String TXT_IMMERSIVE		= "Immersive mode";
 
-	private static final String TXT_RELAY = "Internet multiplayer";
+	private static final String TXT_RELAY = "Online multiplayer";
 
 
 	private static final String TXT_MUSIC	= "Music";
