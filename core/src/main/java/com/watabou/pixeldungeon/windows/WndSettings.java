@@ -119,12 +119,12 @@ public class WndSettings extends Window {
 				@Override
 				protected void onClick() {
 					super.onClick();
-					Settings.useRelay = !Settings.useRelay;
+					PixelDungeon.onlineMode(!PixelDungeon.onlineMode());
 					Sample.INSTANCE.play( Assets.SND_CLICK );
 				}
 			};
 			btnRelay.setRect( 0, btnImmersive.bottom() + GAP, WIDTH, BTN_HEIGHT );
-			btnRelay.checked( Settings.useRelay );
+			btnRelay.checked( PixelDungeon.onlineMode());
 			add( btnRelay );
 		}
 		

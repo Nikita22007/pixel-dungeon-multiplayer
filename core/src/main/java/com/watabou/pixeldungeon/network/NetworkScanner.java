@@ -1,5 +1,6 @@
 package com.watabou.pixeldungeon.network;
 
+import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.Settings;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ public class NetworkScanner {
     public static boolean start(@NotNull ServicesListener listener) {
         boolean res = NSD.start(listener);
         NetworkScanner.listener = listener;
-        if (Settings.useRelay) {
+        if (PixelDungeon.onlineMode()) {
             relayServer = new RelaySD();
             relayServer.listener = listener;
             relayServer.start();
