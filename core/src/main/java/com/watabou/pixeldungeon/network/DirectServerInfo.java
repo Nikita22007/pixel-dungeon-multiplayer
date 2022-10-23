@@ -1,5 +1,7 @@
 package com.watabou.pixeldungeon.network;
 
+import com.watabou.pixeldungeon.network.scanners.ServerInfo;
+
 import java.net.InetAddress;
 
 public class DirectServerInfo extends ServerInfo {

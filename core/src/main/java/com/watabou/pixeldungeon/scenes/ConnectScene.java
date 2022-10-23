@@ -12,7 +12,7 @@ import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.network.NetworkScanner;
-import com.watabou.pixeldungeon.network.ServerInfo;
+import com.watabou.pixeldungeon.network.scanners.ServerInfo;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.pixeldungeon.ui.Archs;
@@ -31,7 +31,7 @@ import java.util.List;
     * TABLE_SIZE should be calculated based on the height of the screen
 */
 
-public class ConnectScene extends PixelScene implements NetworkScanner.ServicesListener {
+public class ConnectScene extends PixelScene implements NetworkScanner.NetworkScannerListener {
 
     private static final int DEFAULT_COLOR	= 0xCCCCCC;
     private static final int TABLE_SIZE=6;
@@ -190,10 +190,12 @@ public class ConnectScene extends PixelScene implements NetworkScanner.ServicesL
     }
 
     @Override
-    public void OnServerConnected(ServerInfo info) {
+    public void OnServerFound(ServerInfo info) {
         needRedraw = true;
     }
-
+    public void OnServerLost(ServerInfo info) {
+        needRedraw = true;
+    }
 
     public static class Record extends Button {
         public Scene ConnectScene;

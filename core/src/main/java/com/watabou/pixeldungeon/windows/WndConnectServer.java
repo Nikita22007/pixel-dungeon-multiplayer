@@ -4,7 +4,7 @@ import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Scene;
 import com.watabou.pixeldungeon.network.Client;
 import com.watabou.pixeldungeon.network.NetworkScanner;
-import com.watabou.pixeldungeon.network.ServerInfo;
+import com.watabou.pixeldungeon.network.scanners.ServerInfo;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.scenes.StartScene;
 import com.watabou.pixeldungeon.ui.RedButton;

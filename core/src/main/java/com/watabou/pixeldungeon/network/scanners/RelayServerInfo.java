@@ -1,8 +1,11 @@
-package com.watabou.pixeldungeon.network;
+package com.watabou.pixeldungeon.network.scanners;
 
 import com.watabou.pixeldungeon.Settings;
+import com.watabou.pixeldungeon.network.NetworkScanner;
+import com.watabou.pixeldungeon.network.ServerAddress;
+import com.watabou.pixeldungeon.network.scanners.ServerInfo;
 
-public class RelayServerInfo extends ServerInfo{
+public class RelayServerInfo extends ServerInfo {
     private int id;
     public RelayServerInfo(int id, String name, int players, int maxPlayers, boolean haveChallenges) {
         this.id = id;

@@ -1,4 +1,6 @@
-package com.watabou.pixeldungeon.network;
+package com.watabou.pixeldungeon.network.scanners;
+
+import com.watabou.pixeldungeon.network.ServerAddress;
 
 public abstract class ServerInfo {
     public String name = "no-name";

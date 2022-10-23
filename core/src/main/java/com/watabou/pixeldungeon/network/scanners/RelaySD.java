@@ -1,6 +1,9 @@
-package com.watabou.pixeldungeon.network;
+package com.watabou.pixeldungeon.network.scanners;
 
 import com.watabou.pixeldungeon.Settings;
+import com.watabou.pixeldungeon.network.NetworkScanner;
+import com.watabou.pixeldungeon.network.scanners.RelayServerInfo;
+import com.watabou.pixeldungeon.network.scanners.ServerInfo;
 import com.watabou.pixeldungeon.utils.GLog;
 
 import org.json.JSONArray;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RelaySD extends Thread {
+public class RelaySD extends Thread implements ServiceDiscovery{
 
     private static final String CHARSET = "UTF-8";
     private static final int DELAY = 3000;
@@ -28,18 +31,20 @@ public class RelaySD extends Thread {
     private BufferedReader reader;
     protected Socket relaySocket;
 
-    private static boolean started = false;
     private List<ServerInfo> servers = new ArrayList<>();
-    NetworkScanner.ServicesListener listener;
+    ServiceDiscoveryListener listener;
 
     public void run() {
-        started = true;
-        while (started()) {
+        if (listener == null){
+            return;
+        }
+        while (!Thread.currentThread().isInterrupted()) {
             Socket socket = null;
             try {
                 socket = new Socket(Settings.relayServerAddress, Settings.relayServerPort);
             } catch (IOException e) {
                 e.printStackTrace();
+                GLog.h("relay thread stopped, no restart");
                 return;
             }
             this.relaySocket = socket;
@@ -78,14 +83,18 @@ public class RelaySD extends Thread {
                         continue;
                     }
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e){
                 e.printStackTrace();
                 GLog.h("relay thread stopped,restarting");
+
+            }
+            catch(InterruptedException e) {
+                e.printStackTrace();
+                GLog.h("relay thread stopped, no restart");
                 return;
             }
         }
         GLog.h("relay thread stopped, no restart");
-        started = false;
     }
 
     private void updateServers(JSONObject servers_obj) throws JSONException {
@@ -108,15 +117,15 @@ public class RelaySD extends Thread {
             serverAddresses.add(info);
         }
         servers = serverAddresses;
-        listener.OnServerConnected(null);
+        listener.onServiceFound(null);
     }
 
     public boolean started() {
-        return started;
+        return !Thread.currentThread().isInterrupted();
     }
 
-    public void stopRelaySD() {
-        started = false;
+    protected void stopRelaySD() {
+        this.interrupt();
         try {
             if (relaySocket != null) {
                 relaySocket.close();
@@ -156,5 +165,18 @@ public class RelaySD extends Thread {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    @Override
+    public boolean startDiscovery(ServiceDiscoveryListener listener) {
+        this.listener = listener;
+        start();
+        return true;
+    }
+
+    @Override
+    public boolean stopDiscovery(){
+        stopRelaySD();
+        return true;
     }
 }

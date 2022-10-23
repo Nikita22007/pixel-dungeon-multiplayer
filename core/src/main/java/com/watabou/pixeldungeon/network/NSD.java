@@ -6,44 +6,43 @@ import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.WifiManager;
 
 import com.watabou.noosa.Game;
+import com.watabou.pixeldungeon.network.scanners.ServerInfo;
+import com.watabou.pixeldungeon.network.scanners.ServiceDiscovery;
 import com.watabou.pixeldungeon.utils.GLog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.watabou.pixeldungeon.BuildConfig.DEBUG;
 
-
-public class NSD {
+public class NSD implements ServiceDiscovery {
     protected static final String SERVICE_TYPE = "_mppd._tcp."; // _name._protocol //mppd=MultiPlayerPixelDungeon
     protected static final int MAX_WAIT_TIME = 3000; // ms
     protected static final int SLEEP_TIME = 100; // ms
-    protected static List<ServerInfo> serverList = new ArrayList<>();
+    protected List<ServerInfo> serverList = new ArrayList<>();
 
     //NSD
     protected static enum ListenerState {STARTED, STOPPED, START_FAIL, STOP_FAIL, NULL}
 
-    protected static ListenerState state;
-    protected static NsdManager.DiscoveryListener discoveryListener;
-    protected static NsdManager.ResolveListener resolveListener;
-    protected static NsdManager nsdManager;
+    protected ListenerState state;
+    protected NsdManager.DiscoveryListener discoveryListener;
+    protected NsdManager.ResolveListener resolveListener;
+    protected NsdManager nsdManager;
 
-    protected static NetworkScanner.ServicesListener servicesListener;
+    protected static ServiceDiscoveryListener servicesListener;
 
     public static boolean isWifiConnected() {
         WifiManager wifiManager = (WifiManager) Game.instance.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifiManager.isWifiEnabled();
     }
 
-    public static List<ServerInfo> getServerList() {
+    public List<ServerInfo> getServerList() {
         return serverList;
     }
 
-    public static boolean start(@NotNull NetworkScanner.ServicesListener listener) {
+    @Override
+    public boolean startDiscovery(ServiceDiscoveryListener listener) {
 
         state = ListenerState.NULL;
         servicesListener = listener;
@@ -65,7 +64,8 @@ public class NSD {
         return state == ListenerState.STARTED;
     }
 
-    public static boolean stop() {
+    @Override
+    public boolean stopDiscovery() {
         if (nsdManager != null) {
             nsdManager.stopServiceDiscovery(discoveryListener);
         }
@@ -73,13 +73,13 @@ public class NSD {
     }
 
     //NSD
-    private static void initializeNSDManager() {
+    private void initializeNSDManager() {
         if (nsdManager == null) {
             nsdManager = (NsdManager) Game.instance.getSystemService(Context.NSD_SERVICE);
         }
     }
 
-    public static void initializeResolveListener() {
+    public void initializeResolveListener() {
         resolveListener = new NsdManager.ResolveListener() {
 
             @Override
@@ -107,13 +107,13 @@ public class NSD {
 
                 serverList.add(server);
                 if (servicesListener != null) {
-                    servicesListener.OnServerConnected(server);
+                    servicesListener.onServiceFound(server);
                 }
             }
         };
     }
 
-    public static void initializeDiscoveryListener() {
+    public void initializeDiscoveryListener() {
         // Instantiate a new DiscoveryListener
         discoveryListener = new NsdManager.DiscoveryListener() {
 
