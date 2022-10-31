@@ -22,6 +22,7 @@ public class NetworkScanner {
         boolean res = nsd.startDiscovery(listener);
         NetworkScanner.scannerListener = scannerListener;
         if (PixelDungeon.onlineMode()) {
+            relayServer = new RelaySD();
             relayServer.startDiscovery(listener);
         }
         return res;
