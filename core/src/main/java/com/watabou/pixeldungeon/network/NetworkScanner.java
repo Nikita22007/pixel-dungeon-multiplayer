@@ -17,6 +17,7 @@ public class NetworkScanner {
     protected static NSD nsd = null;
 
     public static boolean start(@NotNull NetworkScannerListener scannerListener) {
+        initListener();
         nsd = new NSD();
         boolean res = nsd.startDiscovery(listener);
         NetworkScanner.scannerListener = scannerListener;
@@ -29,34 +30,41 @@ public class NetworkScanner {
     public static boolean stop() {
         boolean res = true;
         if (nsd != null) {
-            res = nsd.stopDiscovery();
+            res &= nsd.stopDiscovery();
         } else {
-            res = true;
+            res &= true;
         }
         if (relayServer != null) {
-            relayServer.stopDiscovery();
+            res &= relayServer.stopDiscovery();
             relayServer = null;
         }
+        scannerListener = null;
         return res;
     }
 
     public static List<ServerInfo> getServerList() {
         List<ServerInfo> result = new ArrayList<ServerInfo>(nsd.getServerList());
-        if (relayServer !=  null) {
+        if (relayServer != null) {
             result.addAll(relayServer.getServerList());
         }
         return result;
     }
 
-    protected static final ServiceDiscoveryListener listener = new ServiceDiscoveryListener() {
-        public void onServiceFound(ServerInfo info){
-            scannerListener.OnServerFound(info);
-        }
-        public void onServiceLost(ServerInfo info){
-            scannerListener.OnServerFound(info);
-        };
+    protected static ServiceDiscoveryListener listener = null;
 
-    };
+    protected static void initListener() {
+        listener = new ServiceDiscoveryListener() {
+
+            public void onServiceFound(ServerInfo info) {
+                if (scannerListener != null)
+                    scannerListener.OnServerFound(info);
+            }
+            public void onServiceLost(ServerInfo info) {
+                scannerListener.OnServerFound(info);
+            }
+        }
+        ;
+    }
 
     public interface NetworkScannerListener {
         public void OnServerFound(ServerInfo info);
