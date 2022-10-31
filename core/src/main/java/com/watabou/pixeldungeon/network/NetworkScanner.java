@@ -1,6 +1,7 @@
 package com.watabou.pixeldungeon.network;
 
 import com.watabou.pixeldungeon.PixelDungeon;
+import com.watabou.pixeldungeon.network.scanners.NSD;
 import com.watabou.pixeldungeon.network.scanners.RelaySD;
 import com.watabou.pixeldungeon.network.scanners.ServerInfo;
 import com.watabou.pixeldungeon.network.scanners.ServiceDiscovery.ServiceDiscoveryListener;

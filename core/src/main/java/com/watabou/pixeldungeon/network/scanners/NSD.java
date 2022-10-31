@@ -1,4 +1,4 @@
-package com.watabou.pixeldungeon.network;
+package com.watabou.pixeldungeon.network.scanners;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;
@@ -6,11 +6,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.WifiManager;
 
 import com.watabou.noosa.Game;
-import com.watabou.pixeldungeon.network.scanners.ServerInfo;
-import com.watabou.pixeldungeon.network.scanners.ServiceDiscovery;
 import com.watabou.pixeldungeon.utils.GLog;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
