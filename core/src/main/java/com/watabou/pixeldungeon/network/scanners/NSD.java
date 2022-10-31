@@ -23,7 +23,6 @@ public class NSD implements ServiceDiscovery {
 
     protected ListenerState state;
     protected NsdManager.DiscoveryListener discoveryListener;
-    protected NsdManager.ResolveListener resolveListener;
     protected NsdManager nsdManager;
 
     protected static ServiceDiscoveryListener servicesListener;
@@ -43,7 +42,6 @@ public class NSD implements ServiceDiscovery {
         state = ListenerState.NULL;
         servicesListener = listener;
         initializeNSDManager();
-        initializeResolveListener();
         initializeDiscoveryListener();
         serverList = new ArrayList<>();
         nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
@@ -75,8 +73,8 @@ public class NSD implements ServiceDiscovery {
         }
     }
 
-    public void initializeResolveListener() {
-        resolveListener = new NsdManager.ResolveListener() {
+    public NsdManager.ResolveListener createResolveListener() {
+        NsdManager.ResolveListener resolveListener = new NsdManager.ResolveListener() {
 
             @Override
             public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
@@ -107,6 +105,7 @@ public class NSD implements ServiceDiscovery {
                 }
             }
         };
+        return resolveListener;
     }
 
     public void initializeDiscoveryListener() {
@@ -118,7 +117,7 @@ public class NSD implements ServiceDiscovery {
                 // A service was found! Do something with it.
                 //GLog.p("Service discovery success" + service);
                 if (service.getServiceType().equals(SERVICE_TYPE)) {
-                    nsdManager.resolveService(service, resolveListener);
+                    nsdManager.resolveService(service, createResolveListener());
                 }
             }
 
