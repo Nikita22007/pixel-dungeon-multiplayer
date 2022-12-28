@@ -212,6 +212,15 @@ public class Belongings implements Iterable<Item> {
 		return backpack.get(path);
 	}
 
+	public void remove(List<Integer> path) {
+		assert !path.isEmpty(): "path is null";
+		if (path.get(0) < 0){
+			updateSpecialSlot(path.get(0), null);
+			return;
+		}
+		backpack.remove(path);
+	}
+
 	public List<Integer> pathOfItem(@NotNull Item item) {
 		assert (item != null) : "path of null item";
 		for (int i = 0; i < specialSlots.size(); i++) {

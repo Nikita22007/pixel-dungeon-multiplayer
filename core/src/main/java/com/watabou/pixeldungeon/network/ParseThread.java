@@ -632,7 +632,7 @@ public class ParseThread extends Thread {
                 break;
             }
             case ("remove"): {
-                stuff.remove(slot);
+                belongings.remove(slot);
                 break;
             }
             default:
