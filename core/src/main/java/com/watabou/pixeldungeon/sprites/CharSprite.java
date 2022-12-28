@@ -42,6 +42,8 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import org.json.JSONObject;
+
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -54,8 +56,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public static final int NEUTRAL		= 0xFFFF00;
 	
 	private static final float MOVE_INTERVAL	= 0.1f;
-	private static final float FLASH_INTERVAL	= 0.05f;	
-	
+	private static final float FLASH_INTERVAL	= 0.05f;
+
 	public enum State {
 		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED
 	}
@@ -215,7 +217,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			emo.killAndErase();
 		}
 	}
-	
+
+	protected void removeEmo() {
+		if (emo != null) {
+			emo.killAndErase();
+		}
+		emo = null;
+	}
+
 	public Emitter emitter() {
 		Emitter emitter = GameScene.emitter();
 		emitter.pos( this );
@@ -345,11 +354,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		if (iceBlock != null) {
 			iceBlock.visible = visible;
 		}
-		if (sleeping) {
-			showSleep();
-		} else {
-			hideSleep();
-		}
+
 		if (emo != null) {
 			emo.visible = visible;
 		}
@@ -365,14 +370,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			emo = new EmoIcon.Sleep( this );
 		}
 	}
-	
-	public void hideSleep() {
-		if (emo instanceof EmoIcon.Sleep) {
-			emo.killAndErase();
-			emo = null;
-		}
-	}
-	
+
 	public void showAlert() {
 		if (emo instanceof EmoIcon.Alert) {
 			
@@ -443,7 +441,27 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			
 		}
 	}
-	
+
+
+	public void setEmo(JSONObject emoObj) {
+		if (!emoObj.has("type")) {
+			removeEmo();
+			return;
+		}
+		String emoType = emoObj.optString("type");
+		if (emoType != "default")
+		{
+			//todo
+			showAlert();
+		}
+		String emotion = emoObj.optString("emotion");
+		switch (emotion){
+			case "alert": showAlert(); break;
+			case "sleep": showSleep(); break;
+			default: showAlert(); break; //todo
+		}
+	}
+
 	private static class JumpTweener extends Tweener {
 
 		public Visual visual;

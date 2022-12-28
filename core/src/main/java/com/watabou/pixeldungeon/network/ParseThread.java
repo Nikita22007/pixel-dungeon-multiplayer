@@ -811,6 +811,15 @@ public class ParseThread extends Thread {
                     }
                     break;
                 }
+                case "emo": {
+                    CharSprite sprite = chr.sprite;
+                    if (sprite == null) {
+                        break;
+                    }
+                    JSONObject emoObj = actorObj.getJSONObject(token);
+                    sprite.setEmo(emoObj);
+                    break;
+                }
                 default: {
                     GLog.n("Unexpected token \"%s\" in Actor Char. Ignored.", token);
                     break;
