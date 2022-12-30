@@ -22,7 +22,7 @@ public class RelayServerInfo extends ServerInfo {
             return null;
         }
         ServerAddress address = new ServerAddress();
-        address.host = Settings.relayServerAddress;
+        address.host = RelaySD.getRelayAddress();
         address.port = port;
         return address;
     }

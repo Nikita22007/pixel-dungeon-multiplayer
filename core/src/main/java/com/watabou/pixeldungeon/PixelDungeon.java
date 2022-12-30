@@ -297,6 +297,27 @@ public class PixelDungeon extends Game {
 		return Preferences.INSTANCE.getBoolean( Preferences.KEY_ONLINE_MODE, false);
 	}
 
+	public static boolean useCustomRelay() {
+		return Preferences.INSTANCE.getBoolean( Preferences.KEY_CUSTOM_RELAY, false);
+	}
+	public static void useCustomRelay(boolean value) {
+		Preferences.INSTANCE.put( Preferences.KEY_CUSTOM_RELAY, value);
+	}
+
+	public static String customRelayAddress(){
+		return Preferences.INSTANCE.getString( Preferences.KEY_RELAY_ADDR, "");
+	}
+	public static void customRelayAddress(String value) {
+		Preferences.INSTANCE.put( Preferences.KEY_RELAY_ADDR, value);
+	}
+
+	public static int customRelayPort(){
+		return Preferences.INSTANCE.getInt( Preferences.KEY_RELAY_PORT, Settings.defaultRelayServerPort);
+	}
+	public static void customRelayPort(int value) {
+		Preferences.INSTANCE.put( Preferences.KEY_RELAY_PORT, value);
+	}
+
 	public static void zoom( int value ) {
 		Preferences.INSTANCE.put( Preferences.KEY_ZOOM, value );
 	}

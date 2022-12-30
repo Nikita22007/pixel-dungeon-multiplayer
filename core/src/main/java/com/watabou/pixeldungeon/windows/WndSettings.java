@@ -19,6 +19,7 @@ package com.watabou.pixeldungeon.windows;
 
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.ui.Button;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.Settings;
@@ -38,7 +39,7 @@ public class WndSettings extends Window {
 	private static final String TXT_IMMERSIVE		= "Immersive mode";
 
 	private static final String TXT_RELAY = "Online multiplayer";
-
+	private static final String TXT_RELAY_SETTINGS = "Configure Relay";
 
 	private static final String TXT_MUSIC	= "Music";
 
@@ -61,7 +62,7 @@ public class WndSettings extends Window {
 	public WndSettings( boolean inGame ) {
 		super();
 		
-		CheckBox btnRelay = null;
+		Button configureRelay = null;
 		
 		if (inGame) {
 			int w = BTN_HEIGHT;
@@ -115,7 +116,7 @@ public class WndSettings extends Window {
 			btnImmersive.checked( PixelDungeon.immersed() );
 			btnImmersive.enable( android.os.Build.VERSION.SDK_INT >= 19 );
 			add( btnImmersive );
-			btnRelay = new CheckBox( TXT_RELAY ) {
+			CheckBox btnRelay = new CheckBox( TXT_RELAY ) {
 				@Override
 				protected void onClick() {
 					super.onClick();
@@ -126,6 +127,17 @@ public class WndSettings extends Window {
 			btnRelay.setRect( 0, btnImmersive.bottom() + GAP, WIDTH, BTN_HEIGHT );
 			btnRelay.checked( PixelDungeon.onlineMode());
 			add( btnRelay );
+
+			configureRelay = new RedButton(TXT_RELAY_SETTINGS){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					parent.parent.addToFront(new WndRelaySettings());
+					hide();
+				}
+			};
+			configureRelay.setRect( 0, btnRelay.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			add( configureRelay );
 		}
 		
 		CheckBox btnMusic = new CheckBox( TXT_MUSIC ) {
@@ -135,7 +147,7 @@ public class WndSettings extends Window {
 				PixelDungeon.music( checked() );
 			}
 		};
-		btnMusic.setRect( 0, (btnRelay != null ? btnRelay.bottom() : BTN_HEIGHT) + GAP, WIDTH, BTN_HEIGHT );
+		btnMusic.setRect( 0, (configureRelay != null ? configureRelay.bottom() : BTN_HEIGHT) + GAP, WIDTH, BTN_HEIGHT );
 		btnMusic.checked( PixelDungeon.music() );
 		add( btnMusic );
 		

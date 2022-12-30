@@ -1,5 +1,6 @@
 package com.watabou.pixeldungeon.network.scanners;
 
+import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.Settings;
 import com.watabou.pixeldungeon.network.NetworkScanner;
 import com.watabou.pixeldungeon.network.scanners.RelayServerInfo;
@@ -34,6 +35,22 @@ public class RelaySD extends Thread implements ServiceDiscovery{
     private List<ServerInfo> servers = new ArrayList<>();
     ServiceDiscoveryListener listener;
 
+    private int getRelayPort(){
+        if (!PixelDungeon.useCustomRelay()){
+            return Settings.defaultRelayServerPort;
+        }
+        int port = PixelDungeon.customRelayPort();
+        return (port != 0)? port: Settings.defaultRelayServerPort;
+    }
+
+    static String getRelayAddress(){
+        if (!PixelDungeon.useCustomRelay()){
+            return Settings.defaultRelayServerAddress;
+        }
+        String address = PixelDungeon.customRelayAddress();
+        return (!"".equals(address))? address : Settings.defaultRelayServerAddress;
+    }
+
     public void run() {
         if (listener == null){
             return;
@@ -41,7 +58,7 @@ public class RelaySD extends Thread implements ServiceDiscovery{
         while (!Thread.currentThread().isInterrupted()) {
             Socket socket = null;
             try {
-                socket = new Socket(Settings.relayServerAddress, Settings.relayServerPort);
+                socket = new Socket(getRelayAddress(), getRelayPort());
             } catch (IOException e) {
                 e.printStackTrace();
                 GLog.h("relay thread stopped, no restart");
