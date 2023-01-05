@@ -16,6 +16,7 @@ import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.actors.hero.HeroClass;
 import com.watabou.pixeldungeon.actors.mobs.CustomMob;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
+import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.FloatingText;
 import com.watabou.pixeldungeon.items.CustomItem;
 import com.watabou.pixeldungeon.items.Heap;
@@ -43,6 +44,7 @@ import com.watabou.pixeldungeon.windows.WndError;
 import com.watabou.pixeldungeon.windows.WndMessage;
 import com.watabou.pixeldungeon.windows.WndOptions;
 import com.watabou.pixeldungeon.windows.WndQuest;
+import com.watabou.utils.PointF;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -510,6 +512,7 @@ public class ParseThread extends Thread {
             GLog.h("actor " + actorID + "has null sprite");
             return;
         }
+
         switch (action) {
             case "idle": {
                 sprite.idle();
@@ -568,7 +571,7 @@ public class ParseThread extends Thread {
             try {
                 actionObj = actions.getJSONObject(i);
             } catch (JSONException e) {
-                Log.wtf("ParseActions", "can't action from array. " + e.toString());
+                Log.wtf("ParseActions", "can't get action from array. " + e.toString());
                 e.printStackTrace();
                 continue;
             }
@@ -584,6 +587,10 @@ public class ParseThread extends Thread {
                 }
                 case ("show_status"): {
                     parseShowStatusAction(actionObj);
+                    break;
+                }
+                case ("degradation"): {
+                    parseDegradationAction(actionObj);
                     break;
                 }
                 default:
@@ -660,6 +667,20 @@ public class ParseThread extends Thread {
             FloatingText.show(x, y, text, color);
         } else {
             FloatingText.show(x, y, key, text, color);
+        }
+    }
+
+    private void parseDegradationAction(JSONObject actionObj) {
+        try {
+            PointF point = new PointF((float) actionObj.getDouble("position_x"), (float) actionObj.getDouble("position_y"));
+            JSONArray array = actionObj.getJSONArray("matrix");
+            int[] matrix = new int[array.length()];
+            for (int i = 0; i < matrix.length; i++) {
+                matrix[i] = array.getInt(i);
+            }
+            GameScene.add(new Degradation(point, matrix));
+        } catch (JSONException e) {
+            GLog.n("Incorrect degradation action " + e.getMessage());
         }
     }
 
@@ -993,14 +1014,14 @@ public class ParseThread extends Thread {
                 }
 
                 Actor target_actor = Actor.findById(targetId);
-                if (! (target_actor instanceof Char)){
+                if (!(target_actor instanceof Char)) {
                     Buff.detach(id);
                     continue;
                 }
                 Char target = (Char) target_actor;
 
                 Buff old_buf = Buff.get(id);
-                if ((old_buf instanceof CustomBuff) && (old_buf.target == target) ) {
+                if ((old_buf instanceof CustomBuff) && (old_buf.target == target)) {
                     ((CustomBuff) old_buf).update(obj);
                     continue;
                 }

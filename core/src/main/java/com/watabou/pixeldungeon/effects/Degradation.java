@@ -93,7 +93,7 @@ public class Degradation extends Group {
 		return new Degradation( p, WAND );
 	}
 	
-	private Degradation( PointF p, int[] matrix ) {
+	public Degradation( PointF p, int[] matrix ) {
 		
 		for (int i=0; i < matrix.length; i += 2) {
 			add( new Speck( p.x, p.y, matrix[i], matrix[i+1] ) );

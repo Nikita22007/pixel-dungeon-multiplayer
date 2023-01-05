@@ -44,6 +44,7 @@ import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
 import com.watabou.pixeldungeon.effects.BannerSprites;
 import com.watabou.pixeldungeon.effects.BlobEmitter;
+import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.EmoIcon;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
@@ -520,7 +521,13 @@ public class GameScene extends PixelScene {
 			scene.addHeapSprite( heap );
 		}
 	}
-	
+
+	public static void add( Degradation degradation ) {
+		if (scene != null) {
+			scene.mobs.add(degradation);
+		}
+	}
+
 	public static void discard( Heap heap ) {
 		if (scene != null) {
 			scene.addDiscardedSprite( heap );
