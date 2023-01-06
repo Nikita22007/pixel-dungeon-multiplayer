@@ -61,7 +61,9 @@ public class NSD implements ServiceDiscovery {
     @Override
     public boolean stopDiscovery() {
         if (nsdManager != null) {
-            nsdManager.stopServiceDiscovery(discoveryListener);
+            if (state == ListenerState.STARTED) {
+                nsdManager.stopServiceDiscovery(discoveryListener);
+            }
         }
         return true;
     }
