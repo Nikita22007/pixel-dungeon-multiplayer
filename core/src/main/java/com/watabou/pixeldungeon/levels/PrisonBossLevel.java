@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.watabou.noosa.Scene;
 import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.Bones;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
@@ -30,7 +29,6 @@ import com.watabou.pixeldungeon.actors.mobs.Bestiary;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.keys.IronKey;
 import com.watabou.pixeldungeon.items.keys.SkeletonKey;
 import com.watabou.pixeldungeon.levels.Room.Type;
 import com.watabou.pixeldungeon.levels.painters.Painter;
@@ -284,20 +282,7 @@ public class PrisonBossLevel extends RegularLevel {
 	
 	@Override
 	protected void createItems() {
-		int keyPos = anteroom.random();
-		while (!passable[keyPos]) {
-			keyPos = anteroom.random();
-		}
-		drop( new IronKey(), keyPos ).type = Heap.Type.CHEST;
-		
-		Item item = Bones.get();
-		if (item != null) {
-			int pos;
-			do {
-				pos = roomEntrance.random();
-			} while (pos == entrance || map[pos] == Terrain.SIGN);
-			drop( item, pos ).type = Heap.Type.SKELETON;
-		}
+
 	}
 
 	@Override

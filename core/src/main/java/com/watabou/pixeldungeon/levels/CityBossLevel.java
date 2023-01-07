@@ -20,7 +20,6 @@ package com.watabou.pixeldungeon.levels;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.Bones;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
@@ -153,16 +152,7 @@ public class CityBossLevel extends Level {
 	
 	@Override
 	protected void createItems() {
-		Item item = Bones.get();
-		if (item != null) {
-			int pos;
-			do {
-				pos = 
-					Random.IntRange( LEFT + 1, LEFT + HALL_WIDTH - 2 ) + 
-					Random.IntRange( TOP + HALL_HEIGHT + 1, TOP + HALL_HEIGHT  + CHAMBER_HEIGHT ) * WIDTH;
-			} while (pos == entrance || map[pos] == Terrain.SIGN);
-			drop( item, pos ).type = Heap.Type.SKELETON;
-		}
+
 	}
 	
 	@Override

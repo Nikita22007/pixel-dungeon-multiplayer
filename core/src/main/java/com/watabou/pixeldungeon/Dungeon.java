@@ -345,16 +345,7 @@ public class Dungeon {
 		
 		return bundle;
 	}
-	
-	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
-		info.depth = bundle.getInt( DEPTH );
-		info.challenges = (bundle.getInt( CHALLENGES ) != 0);
-		if (info.depth == -1) {
-			info.depth = bundle.getInt( "maxDepth" );	// FIXME
-		}
-		Hero.preview( info, bundle.getBundle( HERO ) );
-	}
-	
+
 	public static void fail( String desc ) {
 		resultDescription = desc;
 		if (hero.belongings.getItem( Ankh.class ) == null) { 

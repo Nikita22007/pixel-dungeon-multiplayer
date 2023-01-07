@@ -26,7 +26,6 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Badges;
-import com.watabou.pixeldungeon.Bones;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.GamesInProgress;
 import com.watabou.pixeldungeon.ResultDescriptions;
@@ -1054,9 +1053,7 @@ if (Dungeon.hero!=null){ //TODO DEBUG
 				}
 			}
 		}
-		
-		Bones.leave();
-		
+
 		Dungeon.observe();
 				
 		Dungeon.hero.belongings.identify();

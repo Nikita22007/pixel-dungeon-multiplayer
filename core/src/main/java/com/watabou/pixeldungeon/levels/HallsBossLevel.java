@@ -19,7 +19,6 @@ package com.watabou.pixeldungeon.levels;
 
 import com.watabou.noosa.Scene;
 import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.Bones;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
@@ -145,14 +144,6 @@ public class HallsBossLevel extends Level {
 	
 	@Override
 	protected void createItems() {
-		Item item = Bones.get();
-		if (item != null) {
-			int pos;
-			do {
-				pos = Random.IntRange( ROOM_LEFT, ROOM_RIGHT ) + Random.IntRange( ROOM_TOP + 1, ROOM_BOTTOM ) * WIDTH;
-			} while (pos == entrance || map[pos] == Terrain.SIGN);
-			drop( item, pos ).type = Heap.Type.SKELETON;
-		}
 	}
 	
 	@Override

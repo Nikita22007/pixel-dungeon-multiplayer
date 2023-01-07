@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import com.watabou.pixeldungeon.Bones;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.mobs.Bestiary;
@@ -617,11 +616,6 @@ public abstract class RegularLevel extends Level {
 				}
 			}
 			drop( item, cell ).type = Heap.Type.HEAP;
-		}
-		
-		Item item = Bones.get();
-		if (item != null) {
-			drop( item, randomDropCell() ).type = Heap.Type.SKELETON;
 		}
 	}
 	

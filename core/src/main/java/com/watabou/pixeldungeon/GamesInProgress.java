@@ -25,31 +25,7 @@ import com.watabou.utils.Bundle;
 public class GamesInProgress {
 
 	private static HashMap<HeroClass, Info> state = new HashMap<HeroClass, Info>();
-	
-	public static Info check( HeroClass cl ) {
-		
-		if (state.containsKey( cl )) {
-			
-			return state.get( cl );
-			
-		} else {
-			
-			Info info;
-			try {
-				
-				Bundle bundle = Dungeon.gameBundle( Dungeon.gameFile( cl ) );
-				info = new Info();
-				Dungeon.preview( info, bundle );
 
-			} catch (Exception e) {
-				info = null;
-			}
-			
-			state.put( cl, info );
-			return info;
-			
-		}
-	}
 	
 	public static void set( HeroClass cl, int depth, int level, boolean challenges ) {
 		Info info = new Info();
