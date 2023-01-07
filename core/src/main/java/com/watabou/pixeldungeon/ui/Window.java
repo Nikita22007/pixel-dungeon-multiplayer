@@ -49,7 +49,8 @@ public class Window extends Group implements Signal.Listener<Key> {
 		this( 0, 0, Chrome.get( Chrome.Type.WINDOW ) );
 	}
 	
-	public Window( int width, int height ) {
+	@SuppressWarnings("unused")
+    public Window(int width, int height ) {
 		this( width, height, Chrome.get( Chrome.Type.WINDOW ) );
 	}
 			

@@ -18,16 +18,12 @@
 package com.watabou.pixeldungeon.windows;
 
 import com.watabou.noosa.BitmapTextMultiline;
-import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.actors.hero.Hero;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Imp;
-import com.watabou.pixeldungeon.items.Item;
+import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.items.quest.DwarfToken;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.ui.RedButton;
 import com.watabou.pixeldungeon.ui.Window;
-import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
 
 public class WndImp extends Window {
@@ -42,7 +38,8 @@ public class WndImp extends Window {
 	private static final int BTN_HEIGHT	= 20;
 	private static final int GAP		= 2;
 	
-	public WndImp( final Imp imp, final DwarfToken tokens ) {
+	@SuppressWarnings("unused")
+    public WndImp(final Char imp, final DwarfToken tokens ) {
 		
 		super();
 		
@@ -61,30 +58,12 @@ public class WndImp extends Window {
 		RedButton btnReward = new RedButton( TXT_REWARD ) {
 			@Override
 			protected void onClick() {
-				takeReward( imp, tokens, Imp.Quest.reward );
+				//todo
 			}
 		};
 		btnReward.setRect( 0, message.y + message.height() + GAP, WIDTH, BTN_HEIGHT );
 		add( btnReward );
 		
 		resize( WIDTH, (int)btnReward.bottom() );
-	}
-	
-	private void takeReward( Imp imp, DwarfToken tokens, Item reward ) {
-		
-		hide();
-		
-		tokens.detachAll( Dungeon.hero.belongings.backpack );
-
-		reward.identify();
-		if (reward.doPickUp( Dungeon.hero )) {
-			GLog.i( Hero.TXT_YOU_NOW_HAVE, reward.name() );
-		} else {
-			Dungeon.level.drop( reward, imp.pos ).sprite.drop();
-		}
-		
-		imp.flee();
-		
-		Imp.Quest.complete();
 	}
 }

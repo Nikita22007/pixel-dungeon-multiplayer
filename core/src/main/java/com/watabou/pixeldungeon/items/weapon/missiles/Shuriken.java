@@ -21,15 +21,12 @@ import com.watabou.pixeldungeon.items.Item;
 import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class Shuriken extends MissileWeapon {
+public class Shuriken extends Item {
 
 	{
 		name = "shuriken";
 		image = ItemSpriteSheet.SHURIKEN;
-		
-		STR = 13;
-		
-		DLY = 0.5f;
+
 	}
 	
 	public Shuriken() {
@@ -40,16 +37,7 @@ public class Shuriken extends MissileWeapon {
 		super();
 		quantity = number;
 	}
-	
-	@Override
-	public int min() {
-		return 2;
-	}
-	
-	@Override
-	public int max() {
-		return 6;
-	}
+
 	
 	@Override
 	public String desc() {

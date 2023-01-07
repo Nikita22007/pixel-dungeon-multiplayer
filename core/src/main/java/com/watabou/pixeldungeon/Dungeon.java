@@ -20,23 +20,10 @@ package com.watabou.pixeldungeon;
 import com.watabou.noosa.Game;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
-import com.watabou.pixeldungeon.actors.buffs.Amok;
-import com.watabou.pixeldungeon.actors.buffs.Light;
-import com.watabou.pixeldungeon.actors.buffs.Rage;
 import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.actors.hero.HeroClass;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Blacksmith;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Ghost;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Imp;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Wandmaker;
-import com.watabou.pixeldungeon.items.Ankh;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.potions.Potion;
-import com.watabou.pixeldungeon.items.rings.Ring;
-import com.watabou.pixeldungeon.items.scrolls.Scroll;
-import com.watabou.pixeldungeon.items.wands.Wand;
 import com.watabou.pixeldungeon.levels.Level;
-import com.watabou.pixeldungeon.levels.Room;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.ui.QuickSlot;
 import com.watabou.pixeldungeon.utils.BArray;
@@ -44,15 +31,12 @@ import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
-import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 
 public class Dungeon {
@@ -88,12 +72,7 @@ public class Dungeon {
 		Actor.clear();
 		
 		PathFinder.setMapSize( Level.WIDTH, Level.HEIGHT );
-		
-		Scroll.initLabels();
-		Potion.initColors();
-		Wand.initWoods();
-		Ring.initGems();
-		
+
 		Statistics.reset();
 		Journal.reset();
 		
@@ -107,14 +86,7 @@ public class Dungeon {
 		dewVial = true;
 		
 		chapters = new HashSet<Integer>();
-		
-		Ghost.Quest.reset();
-		Wandmaker.Quest.reset();
-		Blacksmith.Quest.reset();
-		Imp.Quest.reset();
-		
-		Room.shuffleTypes();
-		
+
 		QuickSlot.primaryValue = null;
 		QuickSlot.secondaryValue = null;
 
@@ -231,24 +203,13 @@ public class Dungeon {
 			bundle.put( CHAPTERS, ids );
 			
 			Bundle quests = new Bundle();
-			Ghost		.Quest.storeInBundle( quests );
-			Wandmaker	.Quest.storeInBundle( quests );
-			Blacksmith	.Quest.storeInBundle( quests );
-			Imp			.Quest.storeInBundle( quests );
 			bundle.put( QUESTS, quests );
-			
-			Room.storeRoomsInBundle( bundle );
-			
+
 			Statistics.storeInBundle( bundle );
 			Journal.storeInBundle( bundle );
 			
 			QuickSlot.save( bundle );
-			
-			Scroll.save( bundle );
-			Potion.save( bundle );
-			Wand.save( bundle );
-			Ring.save( bundle );
-			
+
 			Bundle badges = new Bundle();
 			Badges.saveLocal( badges );
 			bundle.put( BADGES, badges );
@@ -277,12 +238,7 @@ public class Dungeon {
 		
 		Dungeon.level = null;
 		Dungeon.depth = -1;
-		
-		Scroll.restore( bundle );
-		Potion.restore( bundle );
-		Wand.restore( bundle );
-		Ring.restore( bundle );
-		
+
 		potionOfStrength = bundle.getInt( POS );
 		scrollsOfUpgrade = bundle.getInt( SOU );
 		scrollsOfEnchantment = bundle.getInt( SOE );
@@ -346,13 +302,6 @@ public class Dungeon {
 		return bundle;
 	}
 
-	public static void fail( String desc ) {
-		resultDescription = desc;
-		if (hero.belongings.getItem( Ankh.class ) == null) { 
-			Rankings.INSTANCE.submit( false );
-		}
-	}
-	
 	public static void win( String desc ) {
 		
 		hero.belongings.identify();
@@ -380,13 +329,7 @@ public class Dungeon {
 		if (Level.adjacent( from, to )) {
 			return Actor.findChar( to ) == null && (pass[to] || Level.avoid[to]) ? to : -1;
 		}
-		
-		if (ch.flying || ch.buff( Amok.class ) != null || ch.buff( Rage.class ) != null) {
-			BArray.or( pass, Level.avoid, passable );
-		} else {
-			System.arraycopy( pass, 0, passable, 0, Level.LENGTH );
-		}
-		
+
 		for (Actor actor : Actor.all()) {
 			if (actor instanceof Char) {
 				int pos = ((Char)actor).pos;

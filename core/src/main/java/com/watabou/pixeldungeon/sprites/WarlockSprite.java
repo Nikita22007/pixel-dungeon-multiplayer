@@ -20,7 +20,6 @@ package com.watabou.pixeldungeon.sprites;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.actors.mobs.Warlock;
 import com.watabou.pixeldungeon.effects.MagicMissile;
 import com.watabou.utils.Callback;
 
@@ -59,7 +58,7 @@ public class WarlockSprite extends MobSprite {
 			new Callback() {			
 				@Override
 				public void call() {
-					((Warlock)ch).onZapComplete();
+					(ch).onZapComplete();
 				}
 			} );
 		Sample.INSTANCE.play( Assets.SND_ZAP );

@@ -31,7 +31,8 @@ public class WndChooseWay extends Window {
 	private static final int BTN_HEIGHT	= 18;
 	private static final float GAP		= 2;
 	
-	public WndChooseWay( final TomeOfMastery tome, final HeroSubClass way1, final HeroSubClass way2 ) {
+	@SuppressWarnings("unused")
+    public WndChooseWay(final TomeOfMastery tome, final HeroSubClass way1, final HeroSubClass way2 ) {
 		
 		super();
 		
@@ -72,7 +73,8 @@ public class WndChooseWay extends Window {
 		resize( WIDTH, (int)btnCancel.bottom() );
 	}
 	
-	public WndChooseWay( final TomeOfMastery tome, final HeroSubClass way ) {
+	@SuppressWarnings("unused")
+    public WndChooseWay(final TomeOfMastery tome, final HeroSubClass way ) {
 		
 		super();
 		

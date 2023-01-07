@@ -22,16 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.watabou.pixeldungeon.Badges;
-import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.KindOfWeapon;
-import com.watabou.pixeldungeon.items.armor.Armor;
 import com.watabou.pixeldungeon.items.bags.Bag;
-import com.watabou.pixeldungeon.items.keys.IronKey;
-import com.watabou.pixeldungeon.items.keys.Key;
-import com.watabou.pixeldungeon.items.rings.Ring;
-import com.watabou.pixeldungeon.items.scrolls.ScrollOfRemoveCurse;
-import com.watabou.pixeldungeon.items.wands.Wand;
 import com.watabou.pixeldungeon.ui.SpecialSlot;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -42,14 +34,15 @@ public class Belongings implements Iterable<Item> {
 
 	public static final int BACKPACK_SIZE	= 19;
 
-	private Hero owner;
+    private Hero owner;
 
 	public Bag backpack;
 
-	public KindOfWeapon weapon = null;
-	public Armor armor = null;
-	public Ring ring1 = null;
-	public Ring ring2 = null;
+	public Item weapon = null;
+	public Item armor = null;
+	public int armorTier = 0;
+	public Item ring1 = null;
+	public Item ring2 = null;
 
 	public ArrayList<SpecialSlot> specialSlots = new ArrayList<SpecialSlot>(4);
 
@@ -85,46 +78,11 @@ public class Belongings implements Iterable<Item> {
 		bundle.put( RING2, ring2 );
 	}
 
-	public void restoreFromBundle( Bundle bundle ) {
-
-		backpack.clear();
-		backpack.restoreFromBundle( bundle );
-
-		weapon = (KindOfWeapon)bundle.get( WEAPON );
-		if (weapon != null) {
-			weapon.activate( owner );
-		}
-
-		armor = (Armor)bundle.get( ARMOR );
-
-		ring1 = (Ring)bundle.get( RING1 );
-		if (ring1 != null) {
-			ring1.activate( owner );
-		}
-
-		ring2 = (Ring)bundle.get( RING2 );
-		if (ring2 != null) {
-			ring2.activate( owner );
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	public<T extends Item> T getItem( Class<T> itemClass ) {
 
 		for (Item item : this) {
 			if (itemClass.isInstance( item )) {
-				return (T)item;
-			}
-		}
-
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Key> T getKey( Class<T> kind, int depth ) {
-
-		for (Item item : backpack) {
-			if (item.getClass() == kind && ((Key)item).depth == depth) {
 				return (T)item;
 			}
 		}
@@ -158,10 +116,6 @@ public class Belongings implements Iterable<Item> {
 		for (Item item : backpack) {
 			item.cursedKnown = true;
 		}
-	}
-
-	public void uncurseEquipped() {
-		ScrollOfRemoveCurse.uncurse( owner, armor, weapon, ring1, ring2 );
 	}
 
 	public Item randomUnequipped() {
@@ -241,76 +195,6 @@ public class Belongings implements Iterable<Item> {
 			}
 		}
 		return backpack.pathOfItem(item);
-	}
-
-	public void resurrect( int depth ) {
-		for (Item item : backpack.items.toArray( new Item[0])) {
-			if (item instanceof Key) {
-				if (((Key)item).depth == depth) {
-					item.detachAll( backpack );
-				}
-			} else if (item.unique) {
-				// Keep unique items
-			} else if (!item.isEquipped( owner )) {
-				item.detachAll( backpack );
-			}
-		}
-
-		if (weapon != null) {
-			weapon.cursed = false;
-			weapon.activate( owner );
-		}
-
-		if (armor != null) {
-			armor.cursed = false;
-		}
-
-		if (ring1 != null) {
-			ring1.cursed = false;
-			ring1.activate( owner );
-		}
-		if (ring2 != null) {
-			ring2.cursed = false;
-			ring2.activate( owner );
-		}
-	}
-
-	public int charge( boolean full) {
-
-		int count = 0;
-
-		for (Item item : this) {
-			if (item instanceof Wand) {
-				Wand wand = (Wand)item;
-				if (wand.curCharges < wand.maxCharges) {
-					wand.curCharges = full ? wand.maxCharges : wand.curCharges + 1;
-					count++;
-
-					wand.updateQuickslot();
-				}
-			}
-		}
-
-		return count;
-	}
-
-	public int discharge() {
-
-		int count = 0;
-
-		for (Item item : this) {
-			if (item instanceof Wand) {
-				Wand wand = (Wand)item;
-				if (wand.curCharges > 0) {
-					wand.curCharges--;
-					count++;
-
-					wand.updateQuickslot();
-				}
-			}
-		}
-
-		return count;
 	}
 
 	@Override

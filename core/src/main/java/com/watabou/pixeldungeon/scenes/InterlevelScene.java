@@ -24,11 +24,7 @@ import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.Statistics;
 import com.watabou.pixeldungeon.actors.Actor;
-import com.watabou.pixeldungeon.items.Generator;
-import com.watabou.pixeldungeon.levels.DeadEndLevel;
-import com.watabou.pixeldungeon.levels.Level;
 import com.watabou.pixeldungeon.levels.SewerLevel;
 import com.watabou.pixeldungeon.network.ParseThread;
 import com.watabou.pixeldungeon.network.SendData;
@@ -129,8 +125,7 @@ public class InterlevelScene extends PixelScene {
 			@Override
 			public void run() {
 				try {
-					
-					Generator.reset();
+
 					switch (mode) {
 					case DESCEND:
 						descend();

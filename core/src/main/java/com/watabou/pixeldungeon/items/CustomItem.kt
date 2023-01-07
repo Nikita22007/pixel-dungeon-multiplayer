@@ -112,7 +112,6 @@ open class CustomItem() : Item() {
 
     override fun execute(hero: Hero, action: String) {
         SendItemAction(this, hero, action)
-        //super.execute(hero, action)
     }
 
     override fun visiblyUpgraded(): Int {

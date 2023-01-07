@@ -21,7 +21,7 @@ import com.watabou.pixeldungeon.items.Item;
 import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class Dart extends MissileWeapon {
+public class Dart extends Item {
 
 	{
 		name = "dart";
@@ -35,16 +35,6 @@ public class Dart extends MissileWeapon {
 	public Dart( int number ) {
 		super();
 		quantity = number;
-	}
-	
-	@Override
-	public int min() {
-		return 1;
-	}
-	
-	@Override
-	public int max() {
-		return 4;
 	}
 	
 	@Override

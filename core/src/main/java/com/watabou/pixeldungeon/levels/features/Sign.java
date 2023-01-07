@@ -17,17 +17,6 @@
  */
 package com.watabou.pixeldungeon.levels.features;
 
-import com.watabou.noosa.audio.Sample;
-import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.effects.CellEmitter;
-import com.watabou.pixeldungeon.effects.particles.ElmoParticle;
-import com.watabou.pixeldungeon.levels.DeadEndLevel;
-import com.watabou.pixeldungeon.levels.Terrain;
-import com.watabou.pixeldungeon.scenes.GameScene;
-import com.watabou.pixeldungeon.utils.GLog;
-import com.watabou.pixeldungeon.windows.WndMessage;
-
 public class Sign {
 
 	private static final String TXT_DEAD_END = 
@@ -72,29 +61,6 @@ public class Sign {
 		"As you try to read the sign it bursts into greenish flames.";
 	
 	public static void read( int pos ) {
-		
-		if (Dungeon.level instanceof DeadEndLevel) {
-			
-			GameScene.show( new WndMessage( TXT_DEAD_END ) );
-			
-		} else {
-			
-			int index = Dungeon.depth - 1;
-			
-			if (index < TIPS.length) {
-				GameScene.show( new WndMessage( TIPS[index] ) );
-			} else {
-				
-				Dungeon.level.destroy( pos );
-				GameScene.updateMap( pos );
-				GameScene.discoverTile( pos, Terrain.SIGN );
-				
-				CellEmitter.get( pos ).burst( ElmoParticle.FACTORY, 6 );
-				Sample.INSTANCE.play( Assets.SND_BURNING );
-				
-				GLog.w( TXT_BURN );
-				
-			}
-		}
+
 	}
 }

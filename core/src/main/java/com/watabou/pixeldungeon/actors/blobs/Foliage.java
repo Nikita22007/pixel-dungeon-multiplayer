@@ -17,63 +17,12 @@
  */
 package com.watabou.pixeldungeon.actors.blobs;
 
-import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.Journal;
-import com.watabou.pixeldungeon.actors.buffs.Buff;
-import com.watabou.pixeldungeon.actors.buffs.Shadows;
-import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.effects.BlobEmitter;
 import com.watabou.pixeldungeon.effects.particles.ShaftParticle;
-import com.watabou.pixeldungeon.levels.Level;
-import com.watabou.pixeldungeon.levels.Terrain;
-import com.watabou.pixeldungeon.scenes.GameScene;
 
 public class Foliage extends Blob {
-	
-	@Override
-	protected void evolve() {
 
-		int from = WIDTH + 1;
-		int to = Level.LENGTH - WIDTH - 1;
-		
-		int[] map = Dungeon.level.map;
-		boolean regrowth = false;
-		
-		boolean visible = false;
-		
-		for (int pos=from; pos < to; pos++) {
-			if (cur[pos] > 0) {
-				
-				off[pos] = cur[pos];
-				volume += off[pos];
-				
-				if (map[pos] == Terrain.EMBERS) {
-					map[pos] = Terrain.GRASS;
-					regrowth = true;
-				}
-				
-				visible = visible || Dungeon.visible[pos];
-				
-			} else {
-				off[pos] = 0;
-			}
-		}
-		
-		Hero hero = Dungeon.hero;
-		if (hero.isAlive() && hero.visibleEnemies() == 0 && cur[hero.pos] > 0) {
-			Buff.affect( hero, Shadows.class ).prolong();
-		}
-		
-		if (regrowth) {
-			GameScene.updateMap();
-		}
-		
-		if (visible) {
-			Journal.add( Journal.Feature.GARDEN );
-		}
-	}
-	
-	@Override
+    @Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );	
 		emitter.start( ShaftParticle.FACTORY, 0.9f, 0 );

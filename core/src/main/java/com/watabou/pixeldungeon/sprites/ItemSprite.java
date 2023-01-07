@@ -27,16 +27,12 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.DungeonTilemap;
-import com.watabou.pixeldungeon.effects.CellEmitter;
-import com.watabou.pixeldungeon.effects.Speck;
-import com.watabou.pixeldungeon.items.Gold;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
 import com.watabou.pixeldungeon.levels.Level;
 import com.watabou.pixeldungeon.levels.Terrain;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.utils.PointF;
-import com.watabou.utils.Random;
 
 public class ItemSprite extends MovieClip {
 
@@ -120,11 +116,7 @@ public class ItemSprite extends MovieClip {
 		
 		speed.set( 0, -100 );
 		acc.set( 0, -speed.y / DROP_INTERVAL * 2 );
-		
-		if (visible && heap != null && heap.peek() instanceof Gold) {
-			CellEmitter.center( heap.pos ).burst( Speck.factory( Speck.COIN ), 5 );
-			Sample.INSTANCE.play( Assets.SND_GOLD, 1, 1, Random.Float( 0.9f, 1.1f ) );
-		}
+
 	}
 	
 	public void drop( int from ) {
@@ -172,8 +164,8 @@ public class ItemSprite extends MovieClip {
 					int cell = Dungeon.level.map[heap.pos];
 					water = (cell == Terrain.WELL || cell == Terrain.ALCHEMY);
 				}
-				
-				if (!(heap.peek() instanceof Gold)) {
+
+				if (true) { //todo
 					Sample.INSTANCE.play( water ? Assets.SND_WATER : Assets.SND_STEP, 0.8f, 0.8f, 1.2f );
 				}
 			}

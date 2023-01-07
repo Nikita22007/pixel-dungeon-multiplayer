@@ -20,7 +20,6 @@ package com.watabou.pixeldungeon.sprites;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.actors.Char;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Imp;
 import com.watabou.pixeldungeon.effects.Speck;
 
 public class ImpSprite extends MobSprite {
@@ -49,10 +48,7 @@ public class ImpSprite extends MobSprite {
 	@Override
 	public void link( Char ch ) {
 		super.link( ch );
-		
-		if (ch instanceof Imp) {
-			alpha( 0.4f );
-		}
+		alpha( 0.4f );
 	}
 	
 	@Override

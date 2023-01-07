@@ -20,12 +20,9 @@ package com.watabou.pixeldungeon.windows;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.hero.Hero;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Shopkeeper;
-import com.watabou.pixeldungeon.items.EquipableItem;
 import com.watabou.pixeldungeon.items.Gold;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.rings.RingOfHaggler;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.ui.ItemSlot;
@@ -52,7 +49,8 @@ public class WndTradeItem extends Window {
 	
 	private WndBag owner;
 	
-	public WndTradeItem( final Item item, WndBag owner ) {
+	@SuppressWarnings("unused")
+    public WndTradeItem(final Item item, WndBag owner ) {
 		
 		super();
 		
@@ -65,7 +63,7 @@ public class WndTradeItem extends Window {
 			RedButton btnSell = new RedButton( Utils.format( TXT_SELL, item.price() ) ) {
 				@Override
 				protected void onClick() {
-					sell( item );
+					//todo
 					hide();
 				}
 			};
@@ -89,7 +87,7 @@ public class WndTradeItem extends Window {
 			RedButton btnSellAll = new RedButton( Utils.format( TXT_SELL_ALL, priceAll ) ) {
 				@Override
 				protected void onClick() {
-					sell( item );
+					// todo
 					hide();
 				}
 			};
@@ -160,7 +158,6 @@ public class WndTradeItem extends Window {
 		
 		if (owner != null) {
 			owner.hide();
-			Shopkeeper.sell();
 		}
 	}
 	
@@ -192,33 +189,18 @@ public class WndTradeItem extends Window {
 		return info.y + info.height();
 	}
 	
-	private void sell( Item item ) {
-		
-		Hero hero = Dungeon.hero;
-		
-		if (item.isEquipped( hero ) && !((EquipableItem)item).doUnequip( hero, false )) {
-			return;
-		}
-		item.detachAll( hero.belongings.backpack );
-		
-		int price = item.price();
-		
-		new Gold( price ).doPickUp( hero );
-		GLog.i( TXT_SOLD, item.name(), price );
-	}
-	
+
 	private void sellOne( Item item ) {
 		
 		if (item.quantity() <= 1) {
-			sell( item );
+			// todo
 		} else {
 			
 			Hero hero = Dungeon.hero;
 			
 			item = item.detach( hero.belongings.backpack );
 			int price = item.price();
-			
-			new Gold( price ).doPickUp( hero );
+
 			GLog.i( TXT_SOLD, item.name(), price );
 		}
 	}
@@ -226,9 +208,6 @@ public class WndTradeItem extends Window {
 	private int price( Item item ) {
 
 		int price = item.price() * 5 * (Dungeon.depth / 5 + 1);
-		if (Dungeon.hero.buff( RingOfHaggler.Haggling.class ) != null && price >= 2) {
-			price /= 2;
-		}
 		return price;
 	}
 	
@@ -241,9 +220,6 @@ public class WndTradeItem extends Window {
 		Dungeon.hero.gold -= price;
 		
 		GLog.i( TXT_BOUGHT, item.name(), price );
-		
-		if (!item.doPickUp( hero )) {
-			Dungeon.level.drop( item, heap.pos ).sprite.drop();
-		}
+
 	}
 }

@@ -20,11 +20,9 @@ package com.watabou.pixeldungeon.scenes;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
-import com.watabou.noosa.Scene;
 import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Music;
@@ -40,7 +38,6 @@ import com.watabou.pixeldungeon.Statistics;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.actors.blobs.Blob;
-import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
 import com.watabou.pixeldungeon.effects.BannerSprites;
 import com.watabou.pixeldungeon.effects.BlobEmitter;
@@ -52,7 +49,6 @@ import com.watabou.pixeldungeon.effects.Ripple;
 import com.watabou.pixeldungeon.effects.SpellSprite;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.potions.Potion;
 import com.watabou.pixeldungeon.items.wands.WandOfBlink;
 import com.watabou.pixeldungeon.levels.Level;
 import com.watabou.pixeldungeon.levels.RegularLevel;
@@ -300,16 +296,6 @@ public class GameScene extends PixelScene {
 		
 		ArrayList<Item> dropped = Dungeon.droppedItems.get( Dungeon.depth );
 		if (dropped != null) {
-			for (Item item : dropped) {
-				int pos = Dungeon.level.randomRespawnCell();
-				if (item instanceof Potion) {
-					((Potion)item).shatter( pos );
-				} else if (item instanceof Plant.Seed) {
-					Dungeon.level.plant( (Plant.Seed)item, pos );
-				} else {
-					Dungeon.level.drop( item, pos );
-				}
-			}
 			Dungeon.droppedItems.remove( Dungeon.depth );
 		}
 		
@@ -333,10 +319,6 @@ public class GameScene extends PixelScene {
 					GLog.w( TXT_GRASS );
 					break;
 				default:
-			}
-			if (Dungeon.level instanceof RegularLevel &&
-					((RegularLevel) Dungeon.level).secretDoors > Random.IntRange( 3, 4 )) {
-				GLog.w( TXT_SECRETS );
 			}
 			if (Dungeon.nightMode && !Dungeon.bossLevel(Dungeon.depth)) {
 				GLog.w( TXT_NIGHT_MODE );
@@ -669,9 +651,7 @@ public class GameScene extends PixelScene {
 	public static WndBag selectItem( WndBag.Listener listener, WndBag.Mode mode, String title ) {
 		cancelCellSelector();
 		
-		WndBag wnd = mode == Mode.SEED ?
-			WndBag.seedPouch( listener, mode, title ) :
-			WndBag.lastBag( listener, mode, title );
+		WndBag wnd = WndBag.lastBag( listener, mode, title );
 		scene.add( wnd );
 		
 		return wnd;

@@ -29,7 +29,8 @@ import com.watabou.utils.Random;
 
 public class WindParticle extends PixelParticle {
 
-	public static final Emitter.Factory FACTORY = new Factory() {	
+	@SuppressWarnings("unused")
+    public static final Emitter.Factory FACTORY = new Factory() {
 		@Override
 		public void emit( Emitter emitter, int index, float x, float y ) {
 			((WindParticle)emitter.recycle( WindParticle.class )).reset( x, y );
@@ -80,7 +81,8 @@ public class WindParticle extends PixelParticle {
 		private float x;
 		private float y;
 		
-		private float delay;
+		@SuppressWarnings("unused")
+        private float delay;
 		
 		public Wind( int pos ) {
 			super();

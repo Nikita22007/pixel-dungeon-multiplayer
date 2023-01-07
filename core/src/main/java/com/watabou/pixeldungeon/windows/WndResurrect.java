@@ -39,10 +39,12 @@ public class WndResurrect extends Window {
 	private static final int BTN_HEIGHT	= 20;
 	private static final float GAP		= 2;
 	
-	public static WndResurrect instance;
+	@SuppressWarnings("unused")
+    public static WndResurrect instance;
 	public static Object causeOfDeath;
 	
-	public WndResurrect( final Ankh ankh, Object causeOfDeath ) {
+	@SuppressWarnings("unused")
+    public WndResurrect(final Ankh ankh, Object causeOfDeath ) {
 		
 		super();
 		
@@ -96,7 +98,8 @@ public class WndResurrect extends Window {
 		instance = null;
 	}
 	
-	@Override
+	@SuppressWarnings("unused")
+    @Override
 	public void onBackPressed() {
 	}
 }

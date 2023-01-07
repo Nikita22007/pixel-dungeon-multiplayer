@@ -17,45 +17,8 @@
  */
 package com.watabou.pixeldungeon.items.keys;
 
-import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.items.bags.Bag;
-import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
-import com.watabou.pixeldungeon.utils.Utils;
-
-public class IronKey extends Key {
-
-	private static final String TXT_FROM_DEPTH = "iron key from depth %d";
+public class IronKey {
 
 	public static int curDepthQuantity = 0;
-	
-	{
-		name = "iron key";
-		image = ItemSpriteSheet.IRON_KEY;
-	}
-	
-	@Override
-	public boolean collect( Bag bag ) {
-		boolean result = super.collect( bag );
-		if (result && depth == Dungeon.depth && Dungeon.hero != null) {
-		}
-		return result;
-	}
-	
-	@Override
-	public void onDetach( ) {
-		if (depth == Dungeon.depth) {
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return Utils.format( TXT_FROM_DEPTH, depth );
-	}
-	
-	@Override
-	public String info() {
-		return 
-			"The notches on this ancient iron key are well worn; its leather lanyard " +
-			"is battered by age. What door might it open?";
-	}
+
 }

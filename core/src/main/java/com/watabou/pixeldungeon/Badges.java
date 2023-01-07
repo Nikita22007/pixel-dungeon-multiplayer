@@ -27,22 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.watabou.noosa.Game;
-import com.watabou.pixeldungeon.actors.mobs.Acidic;
-import com.watabou.pixeldungeon.actors.mobs.Albino;
-import com.watabou.pixeldungeon.actors.mobs.Bandit;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
-import com.watabou.pixeldungeon.actors.mobs.Senior;
-import com.watabou.pixeldungeon.actors.mobs.Shielded;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.bags.ScrollHolder;
-import com.watabou.pixeldungeon.items.bags.SeedPouch;
-import com.watabou.pixeldungeon.items.bags.WandHolster;
-import com.watabou.pixeldungeon.items.potions.Potion;
-import com.watabou.pixeldungeon.items.rings.Ring;
-import com.watabou.pixeldungeon.items.rings.RingOfHaggler;
-import com.watabou.pixeldungeon.items.rings.RingOfThorns;
-import com.watabou.pixeldungeon.items.scrolls.Scroll;
-import com.watabou.pixeldungeon.items.wands.Wand;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
@@ -315,87 +301,7 @@ public class Badges {
 		
 		displayBadge( badge );
 	}
-	
-	public static void validateStrengthAttained() {
-		Badge badge = null;
-		
-		if (!local.contains( Badge.STRENGTH_ATTAINED_1 ) && Dungeon.hero.STR >= 13) {
-			badge = Badge.STRENGTH_ATTAINED_1;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_2 ) && Dungeon.hero.STR >= 15) {
-			badge = Badge.STRENGTH_ATTAINED_2;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_3 ) && Dungeon.hero.STR >= 17) {
-			badge = Badge.STRENGTH_ATTAINED_3;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_4 ) && Dungeon.hero.STR >= 19) {
-			badge = Badge.STRENGTH_ATTAINED_4;
-			local.add( badge );
-		}
-		
-		displayBadge( badge );
-	}
-	
-	public static void validateFoodEaten() {
-		Badge badge = null;
-		
-		if (!local.contains( Badge.FOOD_EATEN_1 ) && Statistics.foodEaten >= 10) {
-			badge = Badge.FOOD_EATEN_1;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.FOOD_EATEN_2 ) && Statistics.foodEaten >= 20) {
-			badge = Badge.FOOD_EATEN_2;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.FOOD_EATEN_3 ) && Statistics.foodEaten >= 30) {
-			badge = Badge.FOOD_EATEN_3;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.FOOD_EATEN_4 ) && Statistics.foodEaten >= 40) {
-			badge = Badge.FOOD_EATEN_4;
-			local.add( badge );
-		}
-		
-		displayBadge( badge );
-	}
-	
-	public static void validatePotionsCooked() {
-		Badge badge = null;
-		
-		if (!local.contains( Badge.POTIONS_COOKED_1 ) && Statistics.potionsCooked >= 3) {
-			badge = Badge.POTIONS_COOKED_1;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.POTIONS_COOKED_2 ) && Statistics.potionsCooked >= 6) {
-			badge = Badge.POTIONS_COOKED_2;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.POTIONS_COOKED_3 ) && Statistics.potionsCooked >= 9) {
-			badge = Badge.POTIONS_COOKED_3;
-			local.add( badge );
-		}
-		if (!local.contains( Badge.POTIONS_COOKED_4 ) && Statistics.potionsCooked >= 12) {
-			badge = Badge.POTIONS_COOKED_4;
-			local.add( badge );
-		}
-		
-		displayBadge( badge );
-	}
-	
-	public static void validatePiranhasKilled() {
-		Badge badge = null;
-		
-		if (!local.contains( Badge.PIRANHAS ) && Statistics.piranhasKilled >= 6) {
-			badge = Badge.PIRANHAS;
-			local.add( badge );
-		}
-		
-		displayBadge( badge );
-	}
-	
+
 	public static void validateItemLevelAquired( Item item ) {
 		
 		// This method should be called:
@@ -427,94 +333,8 @@ public class Badges {
 		
 		displayBadge( badge );
 	}
-	
-	public static void validateAllPotionsIdentified() {
-		if (Dungeon.hero != null && Dungeon.hero.isAlive() && 
-			!local.contains( Badge.ALL_POTIONS_IDENTIFIED ) && Potion.allKnown()) {
-			
-			Badge badge = Badge.ALL_POTIONS_IDENTIFIED;
-			local.add( badge );
-			displayBadge( badge );
-			
-			validateAllItemsIdentified();
-		}
-	}
-	
-	public static void validateAllScrollsIdentified() {
-		if (Dungeon.hero != null && Dungeon.hero.isAlive() && 
-			!local.contains( Badge.ALL_SCROLLS_IDENTIFIED ) && Scroll.allKnown()) {
-			
-			Badge badge = Badge.ALL_SCROLLS_IDENTIFIED;
-			local.add( badge );
-			displayBadge( badge );
-			
-			validateAllItemsIdentified();
-		}
-	}
-	
-	public static void validateAllRingsIdentified() {
-		if (Dungeon.hero != null && Dungeon.hero.isAlive() && 
-			!local.contains( Badge.ALL_RINGS_IDENTIFIED ) && Ring.allKnown()) {
-			
-			Badge badge = Badge.ALL_RINGS_IDENTIFIED;
-			local.add( badge );
-			displayBadge( badge );
-			
-			validateAllItemsIdentified();
-		}
-	}
-	
-	public static void validateAllWandsIdentified() {
-		if (Dungeon.hero != null && Dungeon.hero.isAlive() && 
-			!local.contains( Badge.ALL_WANDS_IDENTIFIED ) && Wand.allKnown()) {
-			
-			Badge badge = Badge.ALL_WANDS_IDENTIFIED;
-			local.add( badge );
-			displayBadge( badge );
-			
-			validateAllItemsIdentified();
-		}
-	}
-	
-	public static void validateAllBagsBought( Item bag ) {
-		
-		Badge badge = null;
-		if (bag instanceof SeedPouch) {
-			badge = Badge.BAG_BOUGHT_SEED_POUCH;
-		} else if (bag instanceof ScrollHolder) {
-			badge = Badge.BAG_BOUGHT_SCROLL_HOLDER;
-		} else if (bag instanceof WandHolster) {
-			badge = Badge.BAG_BOUGHT_WAND_HOLSTER;
-		}
-		
-		if (badge != null) {
-			
-			local.add( badge );
-			
-			if (!local.contains( Badge.ALL_BAGS_BOUGHT ) &&
-				local.contains( Badge.BAG_BOUGHT_SCROLL_HOLDER ) &&
-				local.contains( Badge.BAG_BOUGHT_SEED_POUCH ) &&
-				local.contains( Badge.BAG_BOUGHT_WAND_HOLSTER )) {
-						
-					badge = Badge.ALL_BAGS_BOUGHT;
-					local.add( badge );
-					displayBadge( badge );
-			}
-		}
-	}
-	
-	public static void validateAllItemsIdentified() {
-		if (!global.contains( Badge.ALL_ITEMS_IDENTIFIED ) &&
-			global.contains( Badge.ALL_POTIONS_IDENTIFIED ) &&
-			global.contains( Badge.ALL_SCROLLS_IDENTIFIED ) &&
-			global.contains( Badge.ALL_RINGS_IDENTIFIED ) &&
-			global.contains( Badge.ALL_WANDS_IDENTIFIED )) {
-			
-			Badge badge = Badge.ALL_ITEMS_IDENTIFIED;
-			displayBadge( badge );
-		}
-	}
-	
+
+
 	public static void validateDeathFromFire() {
 		Badge badge = Badge.DEATH_FROM_FIRE;
 		local.add( badge );
@@ -546,13 +366,7 @@ public class Badges {
 		
 		validateYASD();
 	}
-	
-	public static void validateDeathFromGlyph() {
-		Badge badge = Badge.DEATH_FROM_GLYPH;
-		local.add( badge );
-		displayBadge( badge );
-	}
-	
+
 	public static void validateDeathFromFalling() {
 		Badge badge = Badge.DEATH_FROM_FALLING;
 		local.add( badge );
@@ -570,141 +384,7 @@ public class Badges {
 			displayBadge( badge );
 		}
 	}
-	
-	public static void validateBossSlain() {
-		Badge badge = null;
-		switch (Dungeon.depth) {
-		case 5:
-			badge = Badge.BOSS_SLAIN_1;
-			break;
-		case 10:
-			badge = Badge.BOSS_SLAIN_2;
-			break;
-		case 15:
-			badge = Badge.BOSS_SLAIN_3;
-			break;
-		case 20:
-			badge = Badge.BOSS_SLAIN_4;
-			break;
-		}
-		
-		if (badge != null) {
-			local.add( badge );
-			displayBadge( badge );
-			
-			if (badge == Badge.BOSS_SLAIN_1) {
-				switch (Dungeon.hero.heroClass) {
-				case WARRIOR:
-					badge = Badge.BOSS_SLAIN_1_WARRIOR;
-					break;
-				case MAGE:
-					badge = Badge.BOSS_SLAIN_1_MAGE;
-					break;
-				case ROGUE:
-					badge = Badge.BOSS_SLAIN_1_ROGUE;
-					break;
-				case HUNTRESS:
-					badge = Badge.BOSS_SLAIN_1_HUNTRESS;
-					break;
-				}
-				local.add( badge );
-				if (!global.contains( badge )) {
-					global.add( badge );
-					saveNeeded = true;
-				}
-				
-				if (global.contains( Badge.BOSS_SLAIN_1_WARRIOR ) &&
-					global.contains( Badge.BOSS_SLAIN_1_MAGE ) &&
-					global.contains( Badge.BOSS_SLAIN_1_ROGUE ) &&
-					global.contains( Badge.BOSS_SLAIN_1_HUNTRESS)) {
-					
-					badge = Badge.BOSS_SLAIN_1_ALL_CLASSES;
-					if (!global.contains( badge )) {
-						displayBadge( badge );
-						global.add( badge );
-						saveNeeded = true;
-					}
-				}
-			} else
-			if (badge == Badge.BOSS_SLAIN_3) {
-				switch (Dungeon.hero.subClass) {
-				case GLADIATOR:
-					badge = Badge.BOSS_SLAIN_3_GLADIATOR;
-					break;
-				case BERSERKER:
-					badge = Badge.BOSS_SLAIN_3_BERSERKER;
-					break;
-				case WARLOCK:
-					badge = Badge.BOSS_SLAIN_3_WARLOCK;
-					break;
-				case BATTLEMAGE:
-					badge = Badge.BOSS_SLAIN_3_BATTLEMAGE;
-					break;
-				case FREERUNNER:
-					badge = Badge.BOSS_SLAIN_3_FREERUNNER;
-					break;
-				case ASSASSIN:
-					badge = Badge.BOSS_SLAIN_3_ASSASSIN;
-					break;
-				case SNIPER:
-					badge = Badge.BOSS_SLAIN_3_SNIPER;
-					break;
-				case WARDEN:
-					badge = Badge.BOSS_SLAIN_3_WARDEN;
-					break;
-				default:
-					return;
-				}
-				local.add( badge );
-				if (!global.contains( badge )) {
-					global.add( badge );
-					saveNeeded = true;
-				}
-				
-				if (global.contains( Badge.BOSS_SLAIN_3_GLADIATOR ) &&
-					global.contains( Badge.BOSS_SLAIN_3_BERSERKER ) &&
-					global.contains( Badge.BOSS_SLAIN_3_WARLOCK ) &&
-					global.contains( Badge.BOSS_SLAIN_3_BATTLEMAGE ) &&
-					global.contains( Badge.BOSS_SLAIN_3_FREERUNNER ) &&
-					global.contains( Badge.BOSS_SLAIN_3_ASSASSIN ) &&
-					global.contains( Badge.BOSS_SLAIN_3_SNIPER ) &&
-					global.contains( Badge.BOSS_SLAIN_3_WARDEN )) {
-					
-					badge = Badge.BOSS_SLAIN_3_ALL_SUBCLASSES;
-					if (!global.contains( badge )) {
-						displayBadge( badge );
-						global.add( badge );
-						saveNeeded = true;
-					}
-				}
-			}
-		}
-	}
-	
-	public static void validateMastery() {
-		
-		Badge badge = null;
-		switch (Dungeon.hero.heroClass) {
-		case WARRIOR:
-			badge = Badge.MASTERY_WARRIOR;
-			break;
-		case MAGE:
-			badge = Badge.MASTERY_MAGE;
-			break;
-		case ROGUE:
-			badge = Badge.MASTERY_ROGUE;
-			break;
-		case HUNTRESS:
-			badge = Badge.MASTERY_HUNTRESS;
-			break;
-		}
-		
-		if (!global.contains( badge )) {
-			global.add( badge );
-			saveNeeded = true;
-		}
-	}
-	
+
 	public static void validateMasteryCombo( int n ) {
 		if (!local.contains( Badge.MASTERY_COMBO ) && n == 7) {
 			Badge badge = Badge.MASTERY_COMBO;
@@ -712,88 +392,7 @@ public class Badges {
 			displayBadge( badge );
 		}
 	}
-	
-	public static void validateRingOfHaggler() {
-		if (!local.contains( Badge.RING_OF_HAGGLER ) && new RingOfHaggler().isKnown()) {
-			Badge badge = Badge.RING_OF_HAGGLER;
-			local.add( badge );
-			displayBadge( badge );
-		}
-	}
-	
-	public static void validateRingOfThorns() {
-		if (!local.contains( Badge.RING_OF_THORNS ) && new RingOfThorns().isKnown()) {
-			Badge badge = Badge.RING_OF_THORNS;
-			local.add( badge );
-			displayBadge( badge );
-		}
-	}
-	
-	public static void validateRare( Mob mob ) {
-		
-		Badge badge = null;
-		if (mob instanceof Albino) {
-			badge = Badge.RARE_ALBINO;
-		} else if (mob instanceof Bandit) {
-			badge = Badge.RARE_BANDIT;
-		} else if (mob instanceof Shielded) {
-			badge = Badge.RARE_SHIELDED;
-		} else if (mob instanceof Senior) {
-			badge = Badge.RARE_SENIOR;
-		} else if (mob instanceof Acidic) {
-			badge = Badge.RARE_ACIDIC;
-		}
-		if (!global.contains( badge )) {
-			global.add( badge );
-			saveNeeded = true;
-		}
-		
-		if (global.contains( Badge.RARE_ALBINO ) &&
-			global.contains( Badge.RARE_BANDIT ) &&
-			global.contains( Badge.RARE_SHIELDED ) &&
-			global.contains( Badge.RARE_SENIOR ) &&
-			global.contains( Badge.RARE_ACIDIC )) {
-			
-			badge = Badge.RARE;
-			displayBadge( badge );
-		}
-	}
-	
-	public static void validateVictory() {
 
-		Badge badge = Badge.VICTORY;
-		displayBadge( badge );
-
-		switch (Dungeon.hero.heroClass) {
-		case WARRIOR:
-			badge = Badge.VICTORY_WARRIOR;
-			break;
-		case MAGE:
-			badge = Badge.VICTORY_MAGE;
-			break;
-		case ROGUE:
-			badge = Badge.VICTORY_ROGUE;
-			break;
-		case HUNTRESS:
-			badge = Badge.VICTORY_HUNTRESS;
-			break;
-		}
-		local.add( badge );
-		if (!global.contains( badge )) {
-			global.add( badge );
-			saveNeeded = true;
-		}
-		
-		if (global.contains( Badge.VICTORY_WARRIOR ) &&
-			global.contains( Badge.VICTORY_MAGE ) &&
-			global.contains( Badge.VICTORY_ROGUE ) &&
-			global.contains( Badge.VICTORY_HUNTRESS )) {
-			
-			badge = Badge.VICTORY_ALL_CLASSES;
-			displayBadge( badge );
-		}
-	}
-	
 	public static void validateNoKilling() {
 		if (!local.contains( Badge.NO_MONSTERS_SLAIN ) && Statistics.completedWithNoKilling) {
 			Badge badge = Badge.NO_MONSTERS_SLAIN;
@@ -801,15 +400,7 @@ public class Badges {
 			displayBadge( badge );
 		}
 	}
-	
-	public static void validateGrimWeapon() {
-		if (!local.contains( Badge.GRIM_WEAPON )) {
-			Badge badge = Badge.GRIM_WEAPON;
-			local.add( badge );
-			displayBadge( badge );
-		}
-	}
-	
+
 	public static void validateNightHunter() {
 		if (!local.contains( Badge.NIGHT_HUNTER ) && Statistics.nightHunt >= 15) {
 			Badge badge = Badge.NIGHT_HUNTER;
@@ -817,15 +408,7 @@ public class Badges {
 			displayBadge( badge );
 		}
 	}
-	
-	public static void validateSupporter() {
 
-		global.add( Badge.SUPPORTER );
-		saveNeeded = true;
-		
-		PixelScene.showBadge( Badge.SUPPORTER );
-	}
-	
 	public static void validateGamesPlayed() {
 		Badge badge = null;
 		if (Rankings.INSTANCE.totalNumber >= 10) {
@@ -880,12 +463,6 @@ public class Badges {
 	
 	public static boolean isUnlocked( Badge badge ) {
 		return global.contains( badge );
-	}
-	
-	public static void disown( Badge badge ) {
-		loadGlobal();
-		global.remove( badge );
-		saveNeeded = true;
 	}
 	
 	public static List<Badge> filtered( boolean global ) {

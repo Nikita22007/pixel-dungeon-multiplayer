@@ -19,12 +19,8 @@ package com.watabou.pixeldungeon.ui;
 
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.ui.Button;
-import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.items.CustomItem;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.armor.Armor;
-import com.watabou.pixeldungeon.items.weapon.Weapon;
-import com.watabou.pixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
@@ -160,38 +156,10 @@ public class ItemSlot extends Button {
 			icon.view( item.image(), item.glowing() );
 			
 			topLeft.text( item.status()  );
-			
-			boolean isArmor = item instanceof Armor;
-			boolean isWeapon = item instanceof Weapon;
-			if (isArmor || isWeapon) {
-				
-				if (item.levelKnown || (isWeapon && !(item instanceof MeleeWeapon))) {
-					
-					int str = isArmor ? ((Armor)item).STR : ((Weapon)item).STR;
-					topRight.text( Utils.format( TXT_STRENGTH, str ) );
-					if (str > Dungeon.hero.STR()) {
-						topRight.hardlight( DEGRADED );
-					} else {
-						topRight.resetColor();
-					}
-					
-				} else {
-					
-					topRight.text( Utils.format( TXT_TYPICAL_STR, isArmor ? 
-						((Armor)item).typicalSTR() : 
-						((MeleeWeapon)item).typicalSTR() ) );
-					topRight.hardlight( WARNING );
-					
-				}
-				topRight.measure();
-				
-			} else {
-				
-				topRight.text( null );
-				
-			}
-	
-			int level = item.visiblyUpgraded(); 
+
+			topRight.text( null );
+
+			int level = item.visiblyUpgraded();
 			if (level != 0 || (item.cursed && item.cursedKnown)) {
 				bottomRight.text( item.levelKnown ? Utils.format( TXT_LEVEL, level ) : TXT_CURSED );
 				bottomRight.measure();

@@ -34,7 +34,8 @@ public class WndQuest extends Window {
 	private static final int BTN_HEIGHT	= 20;
 	private static final int GAP		= 2;
 
-	public WndQuest(NPC questgiver, String text, String... options ) {
+	@SuppressWarnings("unused")
+    public WndQuest(NPC questgiver, String text, String... options ) {
 		this(questgiver.sprite(), questgiver.name, text, options);
 	}
 

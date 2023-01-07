@@ -17,31 +17,17 @@
  */
 package com.watabou.pixeldungeon.items;
 
-import java.util.ArrayList;
-
-import com.watabou.noosa.audio.Sample;
-import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.Badges;
 import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.actors.buffs.Blindness;
-import com.watabou.pixeldungeon.actors.buffs.Buff;
-import com.watabou.pixeldungeon.actors.buffs.Fury;
 import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.actors.hero.HeroSubClass;
-import com.watabou.pixeldungeon.effects.Speck;
-import com.watabou.pixeldungeon.effects.SpellSprite;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
-import com.watabou.pixeldungeon.utils.GLog;
-import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.pixeldungeon.windows.WndChooseWay;
+
+import java.util.ArrayList;
 
 public class TomeOfMastery extends Item {
 
-	private static final String TXT_BLINDED	= "You can't read while blinded";
-	
-	public static final float TIME_TO_READ = 10;
-	
 	public static final String AC_READ	= "READ";
 	
 	{
@@ -61,41 +47,10 @@ public class TomeOfMastery extends Item {
 	
 	@Override
 	public void execute( Hero hero, String action ) {
-		if (action.equals( AC_READ )) {
-			
-			if (hero.buff( Blindness.class ) != null) {
-				GLog.w( TXT_BLINDED );
-				return;
-			}
-			
-			curUser = hero;
-			
-			switch (hero.heroClass) {
-			case WARRIOR:
-				read( hero, HeroSubClass.GLADIATOR, HeroSubClass.BERSERKER );
-				break;
-			case MAGE:
-				read( hero, HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK );
-				break;
-			case ROGUE:
-				read( hero, HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER );
-				break;
-			case HUNTRESS:
-				read( hero, HeroSubClass.SNIPER, HeroSubClass.WARDEN );
-				break;
-			}
-			
-		} else {			
-			super.execute( hero, action );		
-		}
+		throw new RuntimeException("Client Item");
 	}
 	
-	@Override
-	public boolean doPickUp( Hero hero ) {
-		Badges.validateMastery();
-		return super.doPickUp( hero );
-	}
-	
+
 	@Override
 	public boolean isUpgradable() {
 		return false;
@@ -125,23 +80,6 @@ public class TomeOfMastery extends Item {
 	}
 	
 	public void choose( HeroSubClass way ) {
-		
-		detach( curUser.belongings.backpack );
-		
-		curUser.spend( TomeOfMastery.TIME_TO_READ );
-		curUser.busy();
-		
-		curUser.subClass = way;
-		
-		curUser.sprite.operate( curUser.pos );
-		Sample.INSTANCE.play( Assets.SND_MASTERY );
-		
-		SpellSprite.show( curUser, SpellSprite.MASTERY );
-		curUser.sprite.emitter().burst( Speck.factory( Speck.MASTERY ), 12 );
-		GLog.w( "You have chosen the way of the %s!", Utils.capitalize( way.title() ) );
-		
-		if (way == HeroSubClass.BERSERKER && curUser.HP <= curUser.HT * Fury.LEVEL) {
-			Buff.affect( curUser, Fury.class );
-		}
+		throw new RuntimeException("Unreleased");
 	}
 }

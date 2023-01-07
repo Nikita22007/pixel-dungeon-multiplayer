@@ -55,13 +55,7 @@ public class Buff extends Actor {
 		all_buffs.remove(buff_id);
 		target.remove( this );
 	}
-	
-	@Override
-	public boolean act() {
-		diactivate();
-		return true;
-	}
-	
+
 	public int icon() {
 		return BuffIndicator.NONE;
 	}
@@ -75,33 +69,6 @@ public class Buff extends Actor {
 		} catch (Exception e) {
 			return null;
 		}
-	}
-	
-	public static<T extends FlavourBuff> T append( Char target, Class<T> buffClass, float duration ) {
-		T buff = append( target, buffClass );
-		buff.spend( duration );
-		return buff;
-	}
-	
-	public static<T extends Buff> T affect( Char target, Class<T> buffClass ) {
-		T buff = target.buff( buffClass );
-		if (buff != null) {
-			return buff;
-		} else {
-			return append( target, buffClass );
-		}
-	}
-	
-	public static<T extends FlavourBuff> T affect( Char target, Class<T> buffClass, float duration ) {
-		T buff = affect( target, buffClass );
-		buff.spend( duration );
-		return buff;
-	}
-	
-	public static<T extends FlavourBuff> T prolong( Char target, Class<T> buffClass, float duration ) {
-		T buff = affect( target, buffClass );
-		buff.postpone( duration );
-		return buff;
 	}
 
 	public static void detach(int id) {

@@ -4,12 +4,14 @@ import com.watabou.pixeldungeon.actors.Actor
 import com.watabou.pixeldungeon.actors.Char
 import com.watabou.pixeldungeon.items.CustomItem
 import com.watabou.pixeldungeon.items.Item
+import com.watabou.pixeldungeon.ui.Icons
 import org.json.JSONArray
 import org.json.JSONObject
 
 class CustomBag(obj: JSONObject) : Bag(obj) {
+    public var icon: Icons;
     init {
-
+        icon = Icons.BACKPACK;
         cursedKnown = true // todo check it
         size = obj.getInt("size");
         if (obj.has("owner")){

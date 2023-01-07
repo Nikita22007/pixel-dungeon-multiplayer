@@ -37,24 +37,8 @@ public class Pushing extends Actor {
 		this.from = from;
 		this.to = to;
 	}
-	
-	@Override
-	protected boolean act() {
-		if (sprite != null) {
-			
-			if (effect == null) {
-				new Effect();
-			}
-			return false;
-			
-		} else {
-			
-			Actor.remove( Pushing.this );
-			return true;
-		}
-	}
 
-	public class Effect extends Visual {
+    public class Effect extends Visual {
 
 		private static final float DELAY = 0.15f;
 		

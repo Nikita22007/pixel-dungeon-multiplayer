@@ -19,31 +19,18 @@ package com.watabou.pixeldungeon.items;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Badges;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
-import com.watabou.pixeldungeon.actors.buffs.SnipersMark;
 import com.watabou.pixeldungeon.actors.hero.Hero;
-import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.Speck;
-import com.watabou.pixeldungeon.items.armor.Armor;
 import com.watabou.pixeldungeon.items.bags.Bag;
-import com.watabou.pixeldungeon.items.rings.Ring;
-import com.watabou.pixeldungeon.items.wands.Wand;
-import com.watabou.pixeldungeon.items.weapon.Weapon;
-import com.watabou.pixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.watabou.pixeldungeon.mechanics.Ballistica;
 import com.watabou.pixeldungeon.scenes.CellSelector;
 import com.watabou.pixeldungeon.scenes.GameScene;
-import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.sprites.MissileSprite;
 import com.watabou.pixeldungeon.ui.QuickSlot;
@@ -52,9 +39,11 @@ import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
-import com.watabou.utils.PointF;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Item implements Bundlable {
 
@@ -95,14 +84,6 @@ public class Item implements Bundlable {
 
 	public boolean unique = false;
 
-	private static Comparator<Item> itemComparator = new Comparator<Item>() {	
-		@Override
-		public int compare( Item lhs, Item rhs ) {
-			return Generator.Category.order( lhs ) - Generator.Category.order( rhs );
-		}
-	};
-
-
 	public void update(JSONObject item) {
 		throw new UnsupportedOperationException("Can't update Item with json object");
 	}
@@ -113,43 +94,9 @@ public class Item implements Bundlable {
 		actions.add( AC_THROW );
 		return actions;
 	}
-	
-	public boolean doPickUp( Hero hero ) {
-		if (collect( hero.belongings.backpack )) {
-			
-			GameScene.pickUp( this );
-			Sample.INSTANCE.play( Assets.SND_ITEM );
-			hero.spendAndNext( TIME_TO_PICK_UP );
-			return true;
-			
-		} else {
-			return false;
-		}
-	}
-	
-	public void doDrop( Hero hero ) {	
-		hero.spendAndNext( TIME_TO_DROP );			
-		Dungeon.level.drop( detachAll( hero.belongings.backpack ), hero.pos ).sprite.drop( hero.pos );	
-	}
-	
-	public void doThrow( Hero hero ) {
-		GameScene.selectCell( thrower );
-	}
-	
+
 	public void execute( Hero hero, String action ) {
-		
-		curUser = hero;
-		curItem = this;
-		
-		if (action.equals( AC_DROP )) {
-			
-			doDrop( hero );
-			
-		} else if (action.equals( AC_THROW )) {
-			
-			doThrow( hero );
-			
-		}
+
 	}
 	
 	public void execute( Hero hero ) {
@@ -216,7 +163,6 @@ public class Item implements Bundlable {
 			
 			items.add( this );	
 			QuickSlot.refresh();
-			Collections.sort( items, itemComparator );
 			return true;
 			
 		} else {
@@ -325,51 +271,13 @@ public class Item implements Bundlable {
 		
 		return this;
 	}
-	
-	public void use() {
-		if (level > 0 && !isBroken()) {
-			int threshold = (int)(maxDurability() * DURABILITY_WARNING_LEVEL);
-			if (durability-- >= threshold && threshold > durability && levelKnown) {
-				GLog.w( TXT_GONNA_BREAK, name() );
-			}
-			if (isBroken()) {
-				getBroken();
-				if (levelKnown) {
-					GLog.n( TXT_BROKEN, name() );
-					Dungeon.hero.interrupt();
-					
-					CharSprite sprite = Dungeon.hero.sprite;
-					PointF point = sprite.center().offset( 0, -16 );
-					if (this instanceof Weapon) {
-						sprite.parent.add( Degradation.weapon( point ) );
-					} else if (this instanceof Armor) {
-						sprite.parent.add( Degradation.armor( point ) );
-					} else if (this instanceof Ring) {
-						sprite.parent.add( Degradation.ring( point ) );
-					} else if (this instanceof Wand) {
-						sprite.parent.add( Degradation.wand( point ) );
-					}
-					Sample.INSTANCE.play( Assets.SND_DEGRADE );
-				}
-			}
-		}
-	}
-	
+
 	public boolean isBroken() {
 		return durability <= 0;
 	}
-	
-	public void getBroken() {	
-	}
-	
+
 	public void fix() {
 		durability = maxDurability();
-	}
-	
-	public void polish() {
-		if (durability < maxDurability()) {
-			durability++;
-		}
 	}
 	
 	public int durability() {
@@ -581,27 +489,11 @@ public class Item implements Bundlable {
 		QuickSlot.target( this, enemy );
 		
 		// FIXME!!!
-		float delay = TIME_TO_THROW;
-		if (this instanceof MissileWeapon) {
-			delay *= ((MissileWeapon)this).speedFactor( user );
-			if (enemy != null) {
-				SnipersMark mark = user.buff( SnipersMark.class );
-				if (mark != null) {
-					if (mark.object == enemy.id()) {
-						delay *= 0.5f;
-					}
-					user.remove( mark );
-				}
-			}
-		}
-		final float finalDelay = delay;
 		
 		((MissileSprite)user.sprite.parent.recycle( MissileSprite.class )).
 			reset( user.pos, cell, this, new Callback() {			
 				@Override
 				public void call() {
-					Item.this.detach( user.belongings.backpack ).onThrow( cell );
-					user.spendAndNext( finalDelay );
 				}
 			} );
 	}

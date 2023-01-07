@@ -28,45 +28,15 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Challenges;
 import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.Statistics;
 import com.watabou.pixeldungeon.actors.Actor;
-import com.watabou.pixeldungeon.actors.Char;
-import com.watabou.pixeldungeon.actors.blobs.Alchemy;
 import com.watabou.pixeldungeon.actors.blobs.Blob;
-import com.watabou.pixeldungeon.actors.blobs.WellWater;
-import com.watabou.pixeldungeon.actors.buffs.Awareness;
-import com.watabou.pixeldungeon.actors.buffs.Blindness;
-import com.watabou.pixeldungeon.actors.buffs.Buff;
-import com.watabou.pixeldungeon.actors.buffs.MindVision;
-import com.watabou.pixeldungeon.actors.buffs.Shadows;
-import com.watabou.pixeldungeon.actors.hero.Hero;
-import com.watabou.pixeldungeon.actors.hero.HeroClass;
-import com.watabou.pixeldungeon.actors.mobs.Bestiary;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
 import com.watabou.pixeldungeon.effects.particles.FlowParticle;
 import com.watabou.pixeldungeon.effects.particles.WindParticle;
-import com.watabou.pixeldungeon.items.Generator;
-import com.watabou.pixeldungeon.items.Gold;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.armor.Armor;
-import com.watabou.pixeldungeon.items.bags.ScrollHolder;
-import com.watabou.pixeldungeon.items.bags.SeedPouch;
-import com.watabou.pixeldungeon.items.food.Food;
-import com.watabou.pixeldungeon.items.potions.PotionOfHealing;
-import com.watabou.pixeldungeon.items.potions.PotionOfStrength;
-import com.watabou.pixeldungeon.items.scrolls.Scroll;
-import com.watabou.pixeldungeon.items.scrolls.ScrollOfEnchantment;
-import com.watabou.pixeldungeon.items.scrolls.ScrollOfUpgrade;
-import com.watabou.pixeldungeon.levels.features.Chasm;
-import com.watabou.pixeldungeon.levels.features.Door;
-import com.watabou.pixeldungeon.levels.features.HighGrass;
-import com.watabou.pixeldungeon.levels.painters.Painter;
-import com.watabou.pixeldungeon.levels.traps.*;
-import com.watabou.pixeldungeon.mechanics.ShadowCaster;
 import com.watabou.pixeldungeon.plants.Plant;
 import com.watabou.pixeldungeon.scenes.GameScene;
-import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -156,70 +126,8 @@ public abstract class Level implements Bundlable {
 		mobs = new HashSet<Mob>();
 		heaps = new SparseArray<Heap>();
 		blobs = new HashMap<Class<? extends Blob>,Blob>();
-		plants = new SparseArray<Plant>();
+	}
 
-		if  (1<2){
-			return;
-		}
-		if (!Dungeon.bossLevel(Dungeon.depth)) {
-	/*		addItemToSpawn( Generator.random( Generator.Category.FOOD ) );
-			if (Dungeon.posNeeded()) {
-				addItemToSpawn( new PotionOfStrength() );
-				Dungeon.potionOfStrength++;
-			}
-			if (Dungeon.souNeeded()) {
-				addItemToSpawn( new ScrollOfUpgrade() );
-				Dungeon.scrollsOfUpgrade++;
-			}
-			if (Dungeon.soeNeeded()) {
-				addItemToSpawn( new ScrollOfEnchantment() );
-				Dungeon.scrollsOfEnchantment++;
-			}
-			*/
-			if (Dungeon.depth > 1) {
-				switch (Random.Int( 10 )) {
-				case 0:
-					if (!Dungeon.bossLevel( Dungeon.depth + 1 )) {
-						feeling = Feeling.CHASM;
-					}
-					break;
-				case 1:
-					feeling = Feeling.WATER;
-					break;
-				case 2:
-					feeling = Feeling.GRASS;
-					break;
-				}
-			}
-		}
-		
-		boolean pitNeeded = Dungeon.depth > 1 && weakFloorCreated;
-		
-		do {
-			Arrays.fill( map, feeling == Feeling.CHASM ? Terrain.CHASM : Terrain.WALL );
-			
-			pitRoomNeeded = pitNeeded;
-			weakFloorCreated = false;
-			
-		} while (!build());
-		decorate();
-		
-		buildFlagMaps();
-		cleanWalls();
-		
-		createMobs();
-		createItems();
-	}
-	
-	public void reset() {	
-		
-		for (Mob mob : mobs.toArray( new Mob[0] )) {
-			if (!mob.reset()) {
-				mobs.remove( mob );
-			}
-		}
-		createMobs();
-	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
@@ -340,15 +248,7 @@ public abstract class Level implements Bundlable {
 	public String waterTex() {
 		return null;
 	}
-	
-	abstract protected boolean build();
 
-	abstract protected void decorate();
-
-	abstract protected void createMobs();
-
-	abstract protected void createItems();
-	
 	public void addVisuals( Scene scene ) {
 		for (int i=0; i < LENGTH; i++) {
 			if (pit[i]) {
@@ -362,28 +262,6 @@ public abstract class Level implements Bundlable {
 	
 	public int nMobs() {
 		return 0;
-	}
-	
-	public Actor respawner() {
-		return new Actor() {	
-			@Override
-			protected boolean act() {
-				if (mobs.size() < nMobs()) {
-
-					Mob mob = Bestiary.mutable( Dungeon.depth );
-					mob.state = mob.WANDERING;
-					mob.pos = randomRespawnCell();
-					if (Dungeon.hero.isAlive() && mob.pos != -1) {
-						GameScene.add( mob );
-						if (Statistics.amuletObtained) {
-							mob.beckon( Dungeon.hero.pos );
-						}
-					}
-				}
-				spend( Dungeon.nightMode || Statistics.amuletObtained ? TIME_TO_RESPAWN / 2 : TIME_TO_RESPAWN );
-				return true;
-			}
-		};
 	}
 	
 	public int randomRespawnCell() {
@@ -526,7 +404,7 @@ public abstract class Level implements Bundlable {
 	}
 	
 	public static void set( int cell, int terrain ) {
-		Painter.set( Dungeon.level, cell, terrain );
+		Dungeon.level.map[cell] = terrain;
 
 		int flags = Terrain.flags[terrain];
 		passable[cell]		= (flags & Terrain.PASSABLE) != 0;
@@ -540,35 +418,7 @@ public abstract class Level implements Bundlable {
 	}
 	
 	public Heap drop( Item item, int cell ) {
-		
-		if (Dungeon.isChallenged( Challenges.NO_FOOD ) && item instanceof Food) {
-			item = new Gold( item.price() );
-		} else
-		if (Dungeon.isChallenged( Challenges.NO_ARMOR ) && item instanceof Armor) {
-			item = new Gold( item.price() );
-		} else
-		if (Dungeon.isChallenged( Challenges.NO_HEALING ) && item instanceof PotionOfHealing) {
-			item = new Gold( item.price() );
-		} else
-		if (Dungeon.isChallenged( Challenges.NO_HERBALISM ) && item instanceof SeedPouch) {
-			item = new Gold( item.price() );
-		} else
-		if (Dungeon.isChallenged( Challenges.NO_SCROLLS ) && (item instanceof Scroll || item instanceof ScrollHolder)) {
-			if (item instanceof ScrollOfUpgrade) {
-				// These scrolls still can be found
-			} else {
-				item = new Gold( item.price() );
-			}
-		}
-		
-		if ((map[cell] == Terrain.ALCHEMY) && !(item instanceof Plant.Seed)) {
-			int n;
-			do {
-				n = cell + NEIGHBOURS8[Random.Int( 8 )];
-			} while (map[n] != Terrain.EMPTY_SP);
-			cell = n;
-		}
-		
+
 		Heap heap = heaps.get( cell );
 		if (heap == null) {
 			
@@ -592,11 +442,7 @@ public abstract class Level implements Bundlable {
 			
 		}
 		heap.drop( item );
-		
-		if (Dungeon.level != null) {
-			press( cell, null );
-		}
-				
+
 		return heap;
 	}
 
@@ -616,281 +462,10 @@ public abstract class Level implements Bundlable {
 		return newPlant;
 	}
 
-	public Plant plant( Plant.Seed seed, int pos ) {
-
-		Plant plant = plants.get( pos );
-		if (plant != null) {
-			plant.wither();
-		}
-		
-		plant = seed.couch( pos );
-		plants.put( pos, plant );
-
-		GameScene.add( plant );
-		
-		return plant;
-	}
-	
 	public void uproot( int pos ) {
 		plants.delete( pos );
 	}
-	
-	public int pitCell() {
-		return randomRespawnCell();
-	}
-	
-	public void press( int cell, Char ch ) {
-		if (cell >=0) return;
-		if (pit[cell] && ch instanceof Hero) {
-			Chasm.heroFall( cell );
-			return;
-		}
-		
-		boolean trap = false;
-		
-		switch (map[cell]) {
-		
-		case Terrain.SECRET_TOXIC_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.TOXIC_TRAP:
-			trap = true;
-			ToxicTrap.trigger( cell, ch );
-			break;
-			
-		case Terrain.SECRET_FIRE_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.FIRE_TRAP:
-			trap = true;
-			FireTrap.trigger( cell, ch );
-			break;
-			
-		case Terrain.SECRET_PARALYTIC_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.PARALYTIC_TRAP:
-			trap = true;
-			ParalyticTrap.trigger( cell,  ch );
-			break;
-			
-		case Terrain.SECRET_POISON_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.POISON_TRAP:
-			trap = true;
-			PoisonTrap.trigger( cell, ch );
-			break;
-			
-		case Terrain.SECRET_ALARM_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.ALARM_TRAP:
-			trap = true;
-			AlarmTrap.trigger( cell, ch );
-			break;
-			
-		case Terrain.SECRET_LIGHTNING_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.LIGHTNING_TRAP:
-			trap = true;
-			LightningTrap.trigger( cell, ch );
-			break;
-			
-		case Terrain.SECRET_GRIPPING_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.GRIPPING_TRAP:
-			trap = true;
-			GrippingTrap.trigger( cell, ch );
-			break;
-			
-		case Terrain.SECRET_SUMMONING_TRAP:
-			GLog.i( TXT_HIDDEN_PLATE_CLICKS );
-		case Terrain.SUMMONING_TRAP:
-			trap = true;
-			SummoningTrap.trigger( cell, ch );
-			break;
-			
-		case Terrain.HIGH_GRASS:
-			HighGrass.trample( this, cell, ch );
-			break;
-			
-		case Terrain.WELL:
-			WellWater.affectCell( cell );
-			break;
-			
-		case Terrain.ALCHEMY:
-			if (ch == null) {
-				Alchemy.transmute( cell );
-			}
-			break;
-			
-		case Terrain.DOOR:
-			Door.enter( cell );
-			break;
-		}
-		
-		if (trap) {
-			Sample.INSTANCE.play( Assets.SND_TRAP );
-			if (ch instanceof Hero) {
-				Dungeon.hero.interrupt();
-			}
-			set( cell, Terrain.INACTIVE_TRAP );
-			GameScene.updateMap( cell );
-		}
-		
-		Plant plant = plants.get( cell );
-		if (plant != null) {
-			plant.activate( ch );
-		}
-	}
-	
-	public void mobPress( Mob mob ) {
 
-		int cell = mob.pos;
-		
-		if (pit[cell] && !mob.flying) {
-			Chasm.mobFall( mob );
-			return;
-		}
-		
-		boolean trap = true;
-		switch (map[cell]) {
-		
-		case Terrain.TOXIC_TRAP:
-			ToxicTrap.trigger( cell,  mob );
-			break;
-			
-		case Terrain.FIRE_TRAP:
-			FireTrap.trigger( cell, mob );
-			break;
-			
-		case Terrain.PARALYTIC_TRAP:
-			ParalyticTrap.trigger( cell,  mob );
-			break;
-			
-		case Terrain.POISON_TRAP:
-			PoisonTrap.trigger( cell, mob );
-			break;
-			
-		case Terrain.ALARM_TRAP:
-			AlarmTrap.trigger( cell,  mob );
-			break;
-			
-		case Terrain.LIGHTNING_TRAP:
-			LightningTrap.trigger( cell, mob );
-			break;
-		
-		case Terrain.GRIPPING_TRAP:
-			GrippingTrap.trigger( cell, mob );
-			break;
-			
-		case Terrain.SUMMONING_TRAP:
-			SummoningTrap.trigger( cell, mob );
-			break;
-			
-		case Terrain.DOOR:
-			Door.enter( cell );
-			
-		default:
-			trap = false;
-		}
-		
-		if (trap) {
-			if (Dungeon.visible[cell]) {
-				Sample.INSTANCE.play( Assets.SND_TRAP );
-			}
-			set( cell, Terrain.INACTIVE_TRAP );
-			GameScene.updateMap( cell );
-		}
-		
-		Plant plant = plants.get( cell );
-		if (plant != null) {
-			plant.activate( mob );
-		}
-	}
-	
-	public boolean[] updateFieldOfView( Char c ) {
-		
-		int cx = c.pos % WIDTH;
-		int cy = c.pos / WIDTH;
-		
-		boolean sighted = c.buff( Blindness.class ) == null && c.buff( Shadows.class ) == null && c.isAlive();
-		if (sighted) {
-			ShadowCaster.castShadow( cx, cy, fieldOfView, c.viewDistance );
-		} else {
-			Arrays.fill( fieldOfView, false );
-		}
-
-		int sense = 1;
-		if (c.isAlive()) {
-			for (Buff b : c.buffs( MindVision.class )) {
-				sense = Math.max( ((MindVision)b).distance, sense );
-			}
-		}
-		
-		if ((sighted && sense > 1) || !sighted) {
-			
-			int ax = Math.max( 0, cx - sense );
-			int bx = Math.min( cx + sense, WIDTH - 1 );
-			int ay = Math.max( 0, cy - sense );
-			int by = Math.min( cy + sense, HEIGHT - 1 );
-
-			int len = bx - ax + 1;
-			int pos = ax + ay * WIDTH;
-			for (int y = ay; y <= by; y++, pos+=WIDTH) {
-				Arrays.fill( fieldOfView, pos, pos + len, true );
-			}
-			
-			for (int i=0; i < LENGTH; i++) {
-				fieldOfView[i] &= discoverable[i];
-			}
-		}
-		
-		if (c.isAlive()) {
-			if (c.buff( MindVision.class ) != null) {
-				for (Mob mob : mobs) {
-					int p = mob.pos;
-					fieldOfView[p] = true;
-					fieldOfView[p + 1] = true;
-					fieldOfView[p - 1] = true;
-					fieldOfView[p + WIDTH + 1] = true;
-					fieldOfView[p + WIDTH - 1] = true;
-					fieldOfView[p - WIDTH + 1] = true;
-					fieldOfView[p - WIDTH - 1] = true;
-					fieldOfView[p + WIDTH] = true;
-					fieldOfView[p - WIDTH] = true;
-				}
-			} else if (c instanceof Hero && ((Hero)c).heroClass == HeroClass.HUNTRESS) {
-				for (Mob mob : mobs) {
-					int p = mob.pos;
-					if (distance( c.pos, p) == 2) {
-						fieldOfView[p] = true;
-						fieldOfView[p + 1] = true;
-						fieldOfView[p - 1] = true;
-						fieldOfView[p + WIDTH + 1] = true;
-						fieldOfView[p + WIDTH - 1] = true;
-						fieldOfView[p - WIDTH + 1] = true;
-						fieldOfView[p - WIDTH - 1] = true;
-						fieldOfView[p + WIDTH] = true;
-						fieldOfView[p - WIDTH] = true;
-					}
-				}
-			}
-			if (c.buff( Awareness.class ) != null) {
-				for (Heap heap : heaps.values()) {
-					int p = heap.pos;
-					fieldOfView[p] = true;
-					fieldOfView[p + 1] = true;
-					fieldOfView[p - 1] = true;
-					fieldOfView[p + WIDTH + 1] = true;
-					fieldOfView[p + WIDTH - 1] = true;
-					fieldOfView[p - WIDTH + 1] = true;
-					fieldOfView[p - WIDTH - 1] = true;
-					fieldOfView[p + WIDTH] = true;
-					fieldOfView[p - WIDTH] = true;
-				}
-			}
-		}
-		
-		return fieldOfView;
-	}
-	
 	public static int distance( int a, int b ) {
 		int ax = a % WIDTH;
 		int ay = a / WIDTH;

@@ -23,8 +23,6 @@ import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.ui.Component;
 import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.potions.Potion;
-import com.watabou.pixeldungeon.items.scrolls.Scroll;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
@@ -122,24 +120,7 @@ public class WndCatalogus extends WndTabbed {
 		list.scrollTo( 0, 0 );
 		
 		float pos = 0;
-		for (Class<? extends Item> itemClass : showPotions ? Potion.getKnown() : Scroll.getKnown()) {
-			ListItem item = new ListItem( itemClass );
-			item.setRect( 0, pos, width, ITEM_HEIGHT );
-			content.add( item );
-			items.add( item );
-			
-			pos += item.height();
-		}
-		
-		for (Class<? extends Item> itemClass : showPotions ? Potion.getUnknown() : Scroll.getUnknown()) {
-			ListItem item = new ListItem( itemClass );
-			item.setRect( 0, pos, width, ITEM_HEIGHT );
-			content.add( item );
-			items.add( item );
-			
-			pos += item.height();
-		}
-		
+		//todo
 		content.setSize( width, pos );
 		list.setSize( list.width(), list.height() );
 	}

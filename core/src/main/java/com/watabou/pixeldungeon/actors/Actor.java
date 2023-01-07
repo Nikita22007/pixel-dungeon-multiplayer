@@ -39,26 +39,6 @@ public abstract class Actor implements Bundlable {
 
 	private int id = 0;
 
-	protected abstract boolean act();
-
-	protected void spend( float time ) {
-		this.time += time;
-	}
-
-	protected void postpone( float time ) {
-		if (this.time < now + time) {
-			this.time = now + time;
-		}
-	}
-
-	protected float cooldown() {
-		return time - now;
-	}
-
-	protected void diactivate() {
-		time = Float.MAX_VALUE;
-	}
-
 	protected void onAdd() {}
 
 	protected void onRemove() {}

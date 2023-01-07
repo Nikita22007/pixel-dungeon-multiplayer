@@ -32,17 +32,9 @@ import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.items.CustomItem;
 import com.watabou.pixeldungeon.items.Gold;
 import com.watabou.pixeldungeon.items.Item;
-import com.watabou.pixeldungeon.items.armor.Armor;
 import com.watabou.pixeldungeon.items.bags.Bag;
-import com.watabou.pixeldungeon.items.bags.Keyring;
-import com.watabou.pixeldungeon.items.bags.ScrollHolder;
-import com.watabou.pixeldungeon.items.bags.SeedPouch;
-import com.watabou.pixeldungeon.items.bags.WandHolster;
-import com.watabou.pixeldungeon.items.wands.Wand;
-import com.watabou.pixeldungeon.items.weapon.melee.MeleeWeapon;
-import com.watabou.pixeldungeon.items.weapon.missiles.Boomerang;
+import com.watabou.pixeldungeon.items.bags.CustomBag;
 import com.watabou.pixeldungeon.network.SendData;
-import com.watabou.pixeldungeon.plants.Plant.Seed;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.ui.Icons;
@@ -68,10 +60,10 @@ public class WndBag extends WndTabbed {
 		UPGRADEABLE,
 		QUICKSLOT,
 		FOR_SALE,
-		WEAPON,
-		ARMOR,
-		ENCHANTABLE,
-		WAND,
+		@SuppressWarnings("unused") WEAPON,
+		@SuppressWarnings("unused") ARMOR,
+		@SuppressWarnings("unused") ENCHANTABLE,
+		@SuppressWarnings("unused") WAND,
 		SEED
 	}
 	
@@ -180,13 +172,6 @@ public class WndBag extends WndTabbed {
 			return new WndBag( Dungeon.hero.belongings.backpack, listener, mode, title );
 			
 		}
-	}
-	
-	public static WndBag seedPouch( Listener listener, Mode mode, String title ) {
-		SeedPouch pouch = Dungeon.hero.belongings.getItem( SeedPouch.class );
-		return pouch != null ?
-			new WndBag( pouch, listener, mode, title ) :
-			new WndBag( Dungeon.hero.belongings.backpack, listener, mode, title );
 	}
 	
 	protected void placeItems( Bag container ) {
@@ -303,14 +288,8 @@ public class WndBag extends WndTabbed {
 		}
 		
 		private Image icon() {
-			if (bag instanceof SeedPouch) {
-				return Icons.get( Icons.SEED_POUCH );
-			} else if (bag instanceof ScrollHolder) {
-				return Icons.get( Icons.SCROLL_HOLDER );
-			} else if (bag instanceof WandHolster) {
-				return Icons.get( Icons.WAND_HOLSTER );
-			} else if (bag instanceof Keyring) {
-				return Icons.get( Icons.KEYRING );
+			if (bag instanceof CustomBag) {
+				return Icons.get(((CustomBag) bag).getIcon());
 			} else {
 				return Icons.get( Icons.BACKPACK );
 			}
@@ -426,11 +405,6 @@ public class WndBag extends WndTabbed {
 						mode == Mode.FOR_SALE && (item.price() > 0) && (!item.isEquipped( Dungeon.hero ) || !item.cursed) ||
 						mode == Mode.UPGRADEABLE && item.isUpgradable() || 
 						mode == Mode.UNIDENTIFED && !item.isIdentified() ||
-						mode == Mode.WEAPON && (item instanceof MeleeWeapon || item instanceof Boomerang) ||
-						mode == Mode.ARMOR && (item instanceof Armor) ||
-						mode == Mode.ENCHANTABLE && (item instanceof MeleeWeapon || item instanceof Boomerang || item instanceof Armor) ||
-						mode == Mode.WAND && (item instanceof Wand) ||
-						mode == Mode.SEED && (item instanceof Seed) ||
 						mode == Mode.ALL
 					);
 				}

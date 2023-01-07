@@ -136,9 +136,6 @@ public class Bag extends CustomItem implements Iterable<Item> {
 					item.collect( this );
 				}
 			}
-
-			Badges.validateAllBagsBought( this );
-
 			return true;
 		} else {
 			return false;

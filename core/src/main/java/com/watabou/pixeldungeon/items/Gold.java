@@ -19,14 +19,8 @@ package com.watabou.pixeldungeon.items;
 
 import java.util.ArrayList;
 
-import com.watabou.noosa.audio.Sample;
-import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.Badges;
 import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.Statistics;
 import com.watabou.pixeldungeon.actors.hero.Hero;
-import com.watabou.pixeldungeon.scenes.GameScene;
-import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundle;
@@ -57,23 +51,7 @@ public class Gold extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		return new ArrayList<String>();
 	}
-	
-	@Override
-	public boolean doPickUp( Hero hero ) {
-		
-		hero.gold += quantity;
-		Statistics.goldCollected += quantity;
-		Badges.validateGoldCollected();
-		
-		GameScene.pickUp( this );
-		hero.sprite.showStatus( CharSprite.NEUTRAL, TXT_VALUE, quantity );
-		hero.spendAndNext( TIME_TO_PICK_UP );
-		
-		Sample.INSTANCE.play( Assets.SND_GOLD, 1, 1, Random.Float( 0.9f, 1.1f ) );
-		
-		return true;
-	}
-	
+
 	@Override
 	public boolean isUpgradable() {
 		return false;

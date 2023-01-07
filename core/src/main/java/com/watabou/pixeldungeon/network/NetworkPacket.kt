@@ -7,7 +7,6 @@ import com.watabou.pixeldungeon.items.CustomItem
 import com.watabou.pixeldungeon.actors.hero.Hero
 import org.json.JSONArray
 import java.util.*
-import kotlin.collections.HashMap
 
 class NetworkPacket {
     internal enum class CellState {

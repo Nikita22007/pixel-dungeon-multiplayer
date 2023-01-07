@@ -20,58 +20,15 @@ package com.watabou.pixeldungeon.actors.blobs;
 import com.watabou.pixeldungeon.Badges;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.ResultDescriptions;
-import com.watabou.pixeldungeon.actors.Actor;
-import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.effects.BlobEmitter;
 import com.watabou.pixeldungeon.effects.Speck;
 import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
-import com.watabou.utils.Random;
 
-public class ToxicGas extends Blob implements Hero.Doom {
-	
-	@Override
-	protected void evolve() {
-		super.evolve();
-		
-		int levelDamage = 5 + Dungeon.depth * 5;
-		
-		Char ch;
-		for (int i=0; i < LENGTH; i++) {
-			if (cur[i] > 0 && (ch = Actor.findChar( i )) != null) {
-				
-				int damage = (ch.HT + levelDamage) / 40;
-				if (Random.Int( 40 ) < (ch.HT + levelDamage) % 40) {
-					damage++;
-				}
-				
-				ch.damage( damage, this );
-			}
-		}
-		
-		Blob blob = Dungeon.level.blobs.get( ParalyticGas.class );
-		if (blob != null) {
-			
-			int par[] = blob.cur;
-			
-			for (int i=0; i < LENGTH; i++) {
-				
-				int t = cur[i];
-				int p = par[i];
-				
-				if (p >= t) {
-					volume -= t;
-					cur[i] = 0;
-				} else {
-					blob.volume -= p;
-					par[i] = 0;
-				}
-			}
-		}
-	}
-	
-	@Override
+public class ToxicGas extends Blob {
+
+    @Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
 
@@ -82,13 +39,5 @@ public class ToxicGas extends Blob implements Hero.Doom {
 	public String tileDesc() {
 		return "A greenish cloud of toxic gas is swirling here.";
 	}
-	
-	@Override
-	public void onDeath() {
-		
-		Badges.validateDeathFromGas();
-		
-		Dungeon.fail( Utils.format( ResultDescriptions.GAS, Dungeon.depth ) );
-		GLog.n( "You died from a toxic gas.." );
-	}
+
 }

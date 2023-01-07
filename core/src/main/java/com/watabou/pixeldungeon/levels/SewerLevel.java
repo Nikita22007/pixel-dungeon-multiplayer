@@ -24,8 +24,6 @@ import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.DungeonTilemap;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Ghost;
-import com.watabou.pixeldungeon.items.DewVial;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
@@ -47,78 +45,7 @@ public class SewerLevel extends RegularLevel {
 	public String waterTex() {
 		return Assets.WATER_SEWERS;
 	}
-	
-	protected boolean[] water() {
-		return Patch.generate( feeling == Feeling.WATER ? 0.60f : 0.45f, 5 );
-	}
-	
-	protected boolean[] grass() {
-		return Patch.generate( feeling == Feeling.GRASS ? 0.60f : 0.40f, 4 );
-	}
-	
-	@Override
-	protected void decorate() {
-		
-		for (int i=0; i < WIDTH; i++) {
-			if (map[i] == Terrain.WALL &&  
-				map[i + WIDTH] == Terrain.WATER &&
-				Random.Int( 4 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-		for (int i=WIDTH; i < LENGTH - WIDTH; i++) {
-			if (map[i] == Terrain.WALL && 
-				map[i - WIDTH] == Terrain.WALL && 
-				map[i + WIDTH] == Terrain.WATER &&
-				Random.Int( 2 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-		for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
-			if (map[i] == Terrain.EMPTY) { 
-				
-				int count = 
-					(map[i + 1] == Terrain.WALL ? 1 : 0) + 
-					(map[i - 1] == Terrain.WALL ? 1 : 0) + 
-					(map[i + WIDTH] == Terrain.WALL ? 1 : 0) +
-					(map[i - WIDTH] == Terrain.WALL ? 1 : 0);
-				
-				if (Random.Int( 16 ) < count * count) {
-					map[i] = Terrain.EMPTY_DECO;
-				}
-			}
-		}
-		
-		while (true) {
-			int pos = roomEntrance.random();
-			if (pos != entrance) {
-				map[pos] = Terrain.SIGN;
-				break;
-			}
-		}
-	}
-	
-	@Override
-	protected void createMobs() {
-		super.createMobs();
 
-		Ghost.Quest.spawn( this );
-	}
-	
-	@Override
-	protected void createItems() {
-		if (Dungeon.dewVial && Random.Int( 4 - Dungeon.depth ) == 0) {
-			addItemToSpawn( new DewVial() );
-			Dungeon.dewVial = false;
-		}
-		
-		super.createItems();
-	}
-	
 	@Override
 	public void addVisuals( Scene scene ) {
 		super.addVisuals( scene );

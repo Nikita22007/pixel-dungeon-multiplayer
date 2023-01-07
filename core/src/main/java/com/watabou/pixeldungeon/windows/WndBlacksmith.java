@@ -23,8 +23,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.ui.Component;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Chrome;
+import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.actors.hero.Hero;
-import com.watabou.pixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.watabou.pixeldungeon.items.Item;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.PixelScene;
@@ -54,12 +54,13 @@ public class WndBlacksmith extends Window {
 	private static final String TXT_REFORGE =
 		"Reforge them";
 	
-	public WndBlacksmith( Blacksmith troll, Hero hero ) {
+	@SuppressWarnings("unused")
+	public WndBlacksmith(Char troll, Hero hero ) {
 		
 		super();
 		
 		IconTitle titlebar = new IconTitle();
-		titlebar.icon( troll.sprite() );
+		titlebar.icon( troll.sprite );
 		titlebar.label( Utils.capitalize( troll.name ) );
 		titlebar.setRect( 0, 0, WIDTH, 0 );
 		add( titlebar );
@@ -93,7 +94,7 @@ public class WndBlacksmith extends Window {
 		btnReforge = new RedButton( TXT_REFORGE ) {
 			@Override
 			protected void onClick() {
-				Blacksmith.upgrade( btnItem1.item, btnItem2.item );
+				//todo
 				hide();
 			}
 		};
@@ -106,12 +107,13 @@ public class WndBlacksmith extends Window {
 	}
 	
 	protected WndBag.Listener itemSelector = new WndBag.Listener() {
+		@SuppressWarnings("unused")
 		@Override
 		public void onSelect( Item item ) {
 			if (item != null) {
 				btnPressed.item( item );
 				
-				if (btnItem1.item != null && btnItem2.item != null) {
+/*				if (btnItem1.item != null && btnItem2.item != null) {
 					String result = Blacksmith.verify( btnItem1.item, btnItem2.item );
 					if (result != null) {
 						GameScene.show( new WndMessage( result ) );
@@ -120,10 +122,12 @@ public class WndBlacksmith extends Window {
 						btnReforge.enable( true );
 					}
 				}
+ */ //todo
 			}
 		}
 	};
 	
+	@SuppressWarnings("unused")
 	public static class ItemButton extends Component {
 		
 		protected NinePatch bg;

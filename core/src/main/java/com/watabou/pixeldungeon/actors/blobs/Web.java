@@ -17,36 +17,12 @@
  */
 package com.watabou.pixeldungeon.actors.blobs;
 
-import com.watabou.pixeldungeon.actors.Actor;
-import com.watabou.pixeldungeon.actors.Char;
-import com.watabou.pixeldungeon.actors.buffs.Buff;
-import com.watabou.pixeldungeon.actors.buffs.Roots;
 import com.watabou.pixeldungeon.effects.BlobEmitter;
 import com.watabou.pixeldungeon.effects.particles.WebParticle;
 
 public class Web extends Blob {
-	
-	@Override
-	protected void evolve() {
-		
-		for (int i=0; i < LENGTH; i++) {
-			
-			int offv = cur[i] > 0 ? cur[i] - 1 : 0;
-			off[i] = offv;
-			
-			if (offv > 0) {
-				
-				volume += offv;
-				
-				Char ch = Actor.findChar( i );
-				if (ch != null) {
-					Buff.prolong( ch, Roots.class, TICK );
-				}
-			}
-		}
-	}
-	
-	@Override
+
+    @Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
 		

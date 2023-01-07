@@ -17,12 +17,8 @@
  */
 package com.watabou.pixeldungeon.actors.blobs;
 
-import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.Journal;
 import com.watabou.pixeldungeon.effects.BlobEmitter;
 import com.watabou.pixeldungeon.effects.Speck;
-import com.watabou.pixeldungeon.items.Heap;
-import com.watabou.pixeldungeon.items.Item;
 import com.watabou.utils.Bundle;
 
 public class Alchemy extends Blob {
@@ -40,34 +36,14 @@ public class Alchemy extends Blob {
 			}
 		}
 	}
-	
-	@Override
-	protected void evolve() {
-		volume = off[pos] = cur[pos];
-		
-		if (Dungeon.visible[pos]) {
-			Journal.add( Journal.Feature.ALCHEMY );
-		}
-	}
-	
-	@Override
+
+    @Override
 	public void seed( int cell, int amount ) {
 		cur[pos] = 0;
 		pos = cell;
 		volume = cur[pos] = amount;
 	}
-	
-	public static void transmute( int cell ) {
-		Heap heap = Dungeon.level.heaps.get( cell );
-		if (heap != null) {
-			
-			Item result = heap.transmute();
-			if (result != null) {
-				Dungeon.level.drop( result, cell ).sprite.drop( cell );
-			}
-		}
-	}
-	
+
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );	

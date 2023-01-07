@@ -17,38 +17,19 @@
  */
 package com.watabou.pixeldungeon.items;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.pixeldungeon.Assets;
-import com.watabou.pixeldungeon.Badges;
 import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.Statistics;
-import com.watabou.pixeldungeon.actors.buffs.Buff;
-import com.watabou.pixeldungeon.actors.buffs.Burning;
-import com.watabou.pixeldungeon.actors.buffs.Frost;
-import com.watabou.pixeldungeon.actors.hero.Hero;
-import com.watabou.pixeldungeon.actors.mobs.Mimic;
-import com.watabou.pixeldungeon.actors.mobs.Wraith;
 import com.watabou.pixeldungeon.effects.CellEmitter;
 import com.watabou.pixeldungeon.effects.Speck;
-import com.watabou.pixeldungeon.effects.Splash;
 import com.watabou.pixeldungeon.effects.particles.ElmoParticle;
-import com.watabou.pixeldungeon.effects.particles.FlameParticle;
-import com.watabou.pixeldungeon.effects.particles.ShadowParticle;
-import com.watabou.pixeldungeon.items.food.ChargrilledMeat;
-import com.watabou.pixeldungeon.items.food.FrozenCarpaccio;
-import com.watabou.pixeldungeon.items.food.MysteryMeat;
-import com.watabou.pixeldungeon.items.scrolls.Scroll;
-import com.watabou.pixeldungeon.plants.Plant.Seed;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
-import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Random;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class Heap implements Bundlable {
 
@@ -124,47 +105,7 @@ public class Heap implements Bundlable {
 	public ItemSprite.Glowing glowing() {
 		return (type == Type.HEAP || type == Type.FOR_SALE) && items.size() > 0 ? items.peek().glowing() : null;
 	}
-	
-	public void open( Hero hero ) {
-		switch (type) {
-		case MIMIC:
-			if (Mimic.spawnAt( pos, items ) != null) {
-				GLog.n( TXT_MIMIC );
-				destroy();
-			} else {
-				type = Type.CHEST;
-			}
-			break;
-		case TOMB:
-			Wraith.spawnAround( hero.pos );
-			break;
-		case SKELETON:
-			CellEmitter.center( pos ).start( Speck.factory( Speck.RATTLE ), 0.1f, 3 );
-			for (Item item : items) {
-				if (item.cursed) {
-					if (Wraith.spawnAt( pos ) == null) {
-						hero.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
-						hero.damage( hero.HP / 2, this );
-					}
-					Sample.INSTANCE.play( Assets.SND_CURSED );
-					break;
-				}
-			}
-			break;
-		case HIDDEN:
-			sprite.alpha( 0 );
-			sprite.parent.add( new AlphaTweener( sprite, 1, FADE_TIME ) );
-			break;
-		default:
-		}
-		
-		if (type != Type.MIMIC) {
-			type = Type.HEAP;
-			sprite.link();
-			sprite.drop();
-		}
-	}
-	
+
 	public int size() {
 		return items.size();
 	}
@@ -206,12 +147,8 @@ public class Heap implements Bundlable {
 			items.remove( item );
 			
 		}
-		
-		if (item instanceof Dewdrop) {
-			items.add( item );
-		} else {
-			items.addFirst( item );
-		}
+
+		items.addFirst( item );
 		
 		if (sprite != null) {
 			sprite.view( image(), glowing() );
@@ -225,147 +162,7 @@ public class Heap implements Bundlable {
 			items.add( index, b );
 		}
 	}
-	
-	public void burn() {
-		
-		if (type == Type.MIMIC) {
-			Mimic m = Mimic.spawnAt( pos, items );
-			if (m != null) {
-				Buff.affect( m, Burning.class ).reignite( m );
-				m.sprite.emitter().burst( FlameParticle.FACTORY, 5 );
-				destroy();
-			}
-		}
-		if (type != Type.HEAP) {
-			return;
-		}
-		
-		boolean burnt = false;
-		boolean evaporated = false;
-		
-		for (Item item : items.toArray( new Item[0] )) {
-			if (item instanceof Scroll) {
-				items.remove( item );
-				burnt = true;
-			} else if (item instanceof Dewdrop) {
-				items.remove( item );
-				evaporated = true;
-			} else if (item instanceof MysteryMeat) {
-				replace( item, ChargrilledMeat.cook( (MysteryMeat)item ) );
-				burnt = true;
-			}
-		}
-		
-		if (burnt || evaporated) {
-			
-			if (Dungeon.visible[pos]) {
-				if (burnt) {
-					burnFX( pos );
-				} else {
-					evaporateFX( pos );
-				}
-			}
-			
-			if (isEmpty()) {
-				destroy();
-			} else if (sprite != null) {
-				sprite.view( image(), glowing() );
-			}
-			
-		}
-	}
-	
-	public void freeze() {
-		
-		if (type == Type.MIMIC) {
-			Mimic m = Mimic.spawnAt( pos, items );
-			if (m != null) {
-				Buff.prolong( m, Frost.class, Frost.duration( m ) * Random.Float( 1.0f, 1.5f ) );
-				destroy();
-			}
-		}
-		if (type != Type.HEAP) {
-			return;
-		}
-		
-		boolean frozen = false;
-		for (Item item : items.toArray( new Item[0] )) {
-			if (item instanceof MysteryMeat) {
-				replace( item, FrozenCarpaccio.cook( (MysteryMeat)item ) );
-				frozen = true;
-			}
-		}
-		
-		if (frozen) {
-			if (isEmpty()) {
-				destroy();
-			} else if (sprite != null) {
-				sprite.view( image(), glowing() );
-			}	
-		}
-	}
-	
-	public Item transmute() {
-		
-		CellEmitter.get( pos ).burst( Speck.factory( Speck.BUBBLE ), 3 );
-		Splash.at( pos, 0xFFFFFF, 3 );
-		
-		float chances[] = new float[items.size()];
-		int count = 0;
-		
-		int index = 0;
-		for (Item item : items) {
-			if (item instanceof Seed) {
-				count += item.quantity;
-				chances[index++] = item.quantity;
-			} else {
-				count = 0;
-				break;
-			}
-		}
-		
-		if (count >= SEEDS_TO_POTION) {
-			
-			CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
-			Sample.INSTANCE.play( Assets.SND_PUFF );
-			
-			if (Random.Int( count ) == 0) {
-				
-				CellEmitter.center( pos ).burst( Speck.factory( Speck.EVOKE ), 3 );
-				
-				destroy();
-				
-				Statistics.potionsCooked++;
-				Badges.validatePotionsCooked();
-				
-				return Generator.random( Generator.Category.POTION );
-				
-			} else {
-				
-				Seed proto = (Seed)items.get( Random.chances( chances ) );
-				Class<? extends Item> itemClass = proto.alchemyClass;
-				
-				destroy();
-				
-				Statistics.potionsCooked++;
-				Badges.validatePotionsCooked();
-				
-				if (itemClass == null) {
-					return Generator.random( Generator.Category.POTION );
-				} else {
-					try {
-						return itemClass.newInstance();
-					} catch (Exception e) {
-						return null;
-					}
-				}
-			}		
-			
-		} else {
-			return null;
-		}
-	}
-	
+
 	public static void burnFX( int pos ) {
 		CellEmitter.get( pos ).burst( ElmoParticle.FACTORY, 6 );
 		Sample.INSTANCE.play( Assets.SND_BURNING );
