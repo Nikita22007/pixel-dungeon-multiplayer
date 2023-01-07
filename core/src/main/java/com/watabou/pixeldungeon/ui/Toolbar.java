@@ -95,8 +95,8 @@ public class Toolbar extends Component {
 		add( btnInfo = new Tool( 40, 7, 21, 25 ) {
 			@Override
 			protected void onClick() {
-				GLog.n("Info is not working now");
-					//GameScene.selectCell( informer );
+				//GLog.n("Info is not working now");
+				GameScene.selectCell( informer );
 			}
 		} );
 		
