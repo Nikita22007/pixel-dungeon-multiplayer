@@ -23,7 +23,7 @@ class CustomBag(obj: JSONObject) : Bag(obj) {
         }
         if (obj.has("icon")) {
             try {
-                Icons.valueOf(obj.getString("items").uppercase(Locale.ENGLISH))
+                icon = Icons.valueOf(obj.getString("icon").uppercase(Locale.ENGLISH))
             } catch (e: RuntimeException) {
                 GLog.n("incorrect icon: " + e.message);
                 e.printStackTrace();
