@@ -602,7 +602,7 @@ public class GameScene extends PixelScene {
 					GLog.n("Mob sprite is null. ID:" + mob.id());
 					continue;
 				}
-				//mob.sprite.visible = Dungeon.visible[mob.pos];
+				mob.sprite.visible = Dungeon.visible[mob.pos];
 			}
 		}
 	}
