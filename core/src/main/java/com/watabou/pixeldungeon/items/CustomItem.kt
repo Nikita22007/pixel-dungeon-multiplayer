@@ -12,6 +12,7 @@ open class CustomItem() : Item() {
     protected var actionsList: ArrayList<String> = ArrayList();
 
     protected var identified = false;
+    protected var maxDurability: Int = 1;
 
     var showBar: Boolean = false;
     public var ui: UI = UI();
@@ -54,6 +55,9 @@ open class CustomItem() : Item() {
                 }
                 "durability" -> {
                     durability = obj.getInt(token)
+                }
+                "max_durability" -> {
+                    maxDurability = obj.getInt(token)
                 }
                 "level" -> {
                     level = obj.getInt(token)
@@ -108,6 +112,10 @@ open class CustomItem() : Item() {
 
     override fun isIdentified(): Boolean {
         return identified;
+    }
+
+    override fun maxDurability(lvl: Int): Int {
+        return maxDurability;
     }
 
     override fun execute(hero: Hero, action: String) {
