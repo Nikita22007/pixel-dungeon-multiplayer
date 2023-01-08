@@ -50,64 +50,12 @@ public class Blob extends Actor {
 	
 	private static final String CUR		= "cur";
 	private static final String START	= "start";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle( bundle );
-		
-		if (volume > 0) {
-		
-			int start;
-			for (start=0; start < LENGTH; start++) {
-				if (cur[start] > 0) {
-					break;
-				}
-			}
-			int end;
-			for (end=LENGTH-1; end > start; end--) {
-				if (cur[end] > 0) {
-					break;
-				}
-			}
-			
-			bundle.put( START, start );
-			bundle.put( CUR, trim( start, end + 1 ) );
-			
-		}
-	}
-	
+
 	private int[] trim( int start, int end ) {
 		int len = end - start;
 		int[] copy = new int[len];
 		System.arraycopy( cur, start, copy, 0, len );
 		return copy;
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		
-		super.restoreFromBundle( bundle );
-		
-		int[] data = bundle.getIntArray( CUR );
-		if (data != null) {
-			int start = bundle.getInt( START );	
-			for (int i=0; i < data.length; i++) {
-				cur[i + start] = data[i];
-				volume += data[i];
-			}
-		}
-		
-		if (Level.resizingNeeded) {
-			int[] cur = new int[Level.LENGTH];
-			Arrays.fill( cur, 0 );
-			
-			int loadedMapSize = Level.loadedMapSize;
-			for (int i=0; i < loadedMapSize; i++) {
-				System.arraycopy( this.cur, i * loadedMapSize, cur, i * Level.WIDTH, loadedMapSize );
-			}
-			
-			this.cur = cur;
-		}
 	}
 
     public void use( BlobEmitter emitter ) {

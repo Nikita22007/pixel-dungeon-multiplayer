@@ -31,7 +31,7 @@ import com.watabou.pixeldungeon.levels.Level;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
-public abstract class Actor implements Bundlable {
+public abstract class Actor {
 
 	public static final float TICK	= 1f;
 
@@ -45,18 +45,6 @@ public abstract class Actor implements Bundlable {
 
 	private static final String TIME	= "time";
 	private static final String ID		= "id";
-
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		bundle.put( TIME, time );
-		bundle.put( ID, id );
-	}
-
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		time = bundle.getFloat( TIME );
-		id = bundle.getInt( ID );
-	}
 
 	protected void setId(int ID) {
 		id = ID;

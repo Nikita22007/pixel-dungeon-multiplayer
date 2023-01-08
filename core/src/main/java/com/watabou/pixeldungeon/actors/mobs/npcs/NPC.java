@@ -43,10 +43,6 @@ public abstract class NPC extends Mob {
 			Dungeon.level.drop( heap.pickUp(), n ).sprite.drop( pos );
 		}
 	}
-	
-	@Override
-	public void beckon( int cell ) {
-	}
-	
+
 	abstract public void interact();
 }

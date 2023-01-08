@@ -44,8 +44,6 @@ public abstract class Char extends Actor {
 	public int HT;
 	public int HP;
 	
-	protected float baseSpeed	= 1;
-	
 	public boolean paralysed	= false;
 	public boolean rooted		= false;
 	public boolean flying		= false;
@@ -59,37 +57,6 @@ public abstract class Char extends Actor {
 	private static final String TAG_HP		= "HP";
 	private static final String TAG_HT		= "HT";
 	private static final String BUFFS		= "buffs";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		
-		super.storeInBundle( bundle );
-		
-		bundle.put( POS, pos );
-		bundle.put( TAG_HP, HP );
-		bundle.put( TAG_HT, HT );
-		bundle.put( BUFFS, buffs );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		
-		super.restoreFromBundle( bundle );
-		
-		pos = bundle.getInt( POS );
-		HP = bundle.getInt( TAG_HP );
-		HT = bundle.getInt( TAG_HT );
-		
-		for (Bundlable b : bundle.getCollection( BUFFS )) {
-			if (b != null) {
-				((Buff)b).attachTo( this );
-			}
-		}
-	}
-	
-	public boolean attack( Char enemy ) {
-		return false;
-	}
 
 	public void destroy() {
 		HP = 0;

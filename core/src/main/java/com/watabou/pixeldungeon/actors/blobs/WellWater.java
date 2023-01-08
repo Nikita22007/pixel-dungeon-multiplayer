@@ -23,18 +23,6 @@ public class WellWater extends Blob {
 
 	protected int pos;
 
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle( bundle );
-
-		for (int i=0; i < LENGTH; i++) {
-			if (cur[i] > 0) {
-				pos = i;
-				break;
-			}
-		}
-	}
-
     @Override
 	public void seed( int cell, int amount ) {
 		cur[pos] = 0;

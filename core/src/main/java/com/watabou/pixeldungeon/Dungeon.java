@@ -182,7 +182,6 @@ public class Dungeon {
 			
 			bundle.put( VERSION, Game.version );
 			bundle.put( CHALLENGES, challenges );
-			bundle.put( HERO, hero );
 			bundle.put( GOLD, hero.gold);
 			bundle.put( DEPTH, depth );
 			

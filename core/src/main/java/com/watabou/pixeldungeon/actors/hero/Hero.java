@@ -194,11 +194,6 @@ public class Hero extends Char {
 		BuffIndicator.refreshHero();
 	}
 	
-	@Override
-	public void die( Object cause  ) {
-		super.die( cause );
-	}
-	
 	public static void reallyDie( Object cause ) {
 		
 		int length = Level.LENGTH;
@@ -277,8 +272,7 @@ if (Dungeon.hero!=null){ //TODO DEBUG
 	public void onAttackComplete() {
 		
 		AttackIndicator.target( enemy );
-		
-		attack( enemy );
+
 		curAction = null;
 
 		super.onAttackComplete();

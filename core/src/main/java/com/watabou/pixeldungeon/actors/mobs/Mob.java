@@ -29,14 +29,6 @@ import com.watabou.utils.Bundle;
 
 public abstract class Mob extends Char {
 	
-	private static final String	TXT_DIED	= "You hear something died in the distance";
-	
-	protected static final String	TXT_ECHO	= "echo of ";
-	
-	protected static final String TXT_NOTICE1	= "?!";
-	protected static final String TXT_RAGE		= "#$%^";
-	protected static final String TXT_EXP		= "%+dEXP";
-	
 	public AiState SLEEPEING	= new Sleeping();
 	public AiState HUNTING		= new Hunting();
 	public AiState WANDERING	= new Wandering();
@@ -54,10 +46,6 @@ public abstract class Mob extends Char {
 	protected int maxLvl = 30;
 	
 	protected Char enemy;
-	protected boolean enemySeen;
-	protected boolean alerted = false;
-
-	protected static final float TIME_TO_WAKE_UP = 1f;
 	
 	public boolean hostile = true;
 	
@@ -65,46 +53,6 @@ public abstract class Mob extends Char {
 	private static final String TARGET	= "target";
 
 	private String desc = "A creature unknown to science.";
-
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		
-		super.storeInBundle( bundle );
-		
-		if (state == SLEEPEING) {
-			bundle.put( STATE, Sleeping.TAG );
-		} else if (state == WANDERING) {
-			bundle.put( STATE, Wandering.TAG );
-		} else if (state == HUNTING) {
-			bundle.put( STATE, Hunting.TAG );
-		} else if (state == FLEEING) {
-			bundle.put( STATE, Fleeing.TAG );
-		} else if (state == PASSIVE) {
-			bundle.put( STATE, Passive.TAG );
-		}
-		bundle.put( TARGET, target );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		
-		super.restoreFromBundle( bundle );
-		
-		String state = bundle.getString( STATE );
-		if (state.equals( Sleeping.TAG )) {
-			this.state = SLEEPEING;
-		} else if (state.equals( Wandering.TAG )) {
-			this.state = WANDERING;
-		} else if (state.equals( Hunting.TAG )) {
-			this.state = HUNTING;
-		} else if (state.equals( Fleeing.TAG )) {
-			this.state = FLEEING;
-		} else if (state.equals( Passive.TAG )) {
-			this.state = PASSIVE;
-		}
-
-		target = bundle.getInt( TARGET );
-	}
 	
 	public CharSprite sprite() {
 		CharSprite sprite = null;
@@ -125,106 +73,11 @@ public abstract class Mob extends Char {
 			return true;
 		}
 	}
-	
-	protected boolean canAttack( Char enemy ) {
-		return Level.adjacent( pos, enemy.pos );
-	}
-	
-	protected boolean getCloser( int target ) {
-		
-		if (rooted) {
-			return false;
-		}
-		
-		int step = Dungeon.findPath( this, pos, target, 
-			Level.passable, 
-			Level.fieldOfView );
-		if (step != -1) {
-			move( step );
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	protected boolean getFurther( int target ) {
-		int step = Dungeon.flee( this, pos, target, 
-			Level.passable, 
-			Level.fieldOfView );
-		if (step != -1) {
-			move( step );
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	@Override
-	public void move( int step ) {
-		super.move( step );
-	}
-
-	@Override
-	public void onAttackComplete() {
-		attack( enemy );
-		super.onAttackComplete();
-	}
-
 
 	@Override
 	public void destroy() {
-		
 		super.destroy();
-		
 		Dungeon.level.mobs.remove( this );
-		
-		if (Dungeon.hero.isAlive()) {
-
-			if (hostile) {
-				Statistics.enemiesSlain++;
-				Badges.validateMonstersSlain();
-				Statistics.qualifiedForNoKilling = false;
-				
-				if (Dungeon.nightMode) {
-					Statistics.nightHunt++;
-				} else {
-					Statistics.nightHunt = 0;
-				}
-				Badges.validateNightHunter();
-			}
-
-			int exp = exp();
-			if (exp > 0) {
-				Dungeon.hero.sprite.showStatus( CharSprite.POSITIVE, TXT_EXP, exp );
-			}
-		}
-	}
-	
-	public int exp() {
-		return Dungeon.hero.lvl <= maxLvl ? EXP : 0;
-	}
-	
-	@Override
-	public void die( Object cause ) {
-		
-		super.die( cause );
-	}
-	
-	protected Object loot = null;
-	protected float lootChance = 0;
-
-	public boolean reset() {
-		return false;
-	}
-	
-	public void beckon( int cell ) {
-		
-		notice();
-		
-		if (state != HUNTING) {
-			state = WANDERING;
-		}
-		target = cell;
 	}
 	
 	public String description() {
@@ -233,10 +86,6 @@ public abstract class Mob extends Char {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
-	}
-
-	public void notice() {
-		sprite.showAlert();
 	}
 	
 	public void yell( String str ) {
