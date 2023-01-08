@@ -92,7 +92,6 @@ public class Dungeon {
 
 		if (hero == null) {
 			hero = new Hero();
-			hero.live();
 		}
 		
 		Badges.reset();

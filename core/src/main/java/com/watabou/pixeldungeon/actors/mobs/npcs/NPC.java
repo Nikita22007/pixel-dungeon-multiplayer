@@ -27,7 +27,6 @@ public abstract class NPC extends Mob {
 	
 	{
 		HP = HT = 1;
-		EXP = 0;
 	
 		hostile = false;
 		state = PASSIVE;

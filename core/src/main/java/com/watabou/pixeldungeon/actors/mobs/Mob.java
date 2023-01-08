@@ -30,30 +30,16 @@ import com.watabou.utils.Bundle;
 public abstract class Mob extends Char {
 	
 	public AiState SLEEPEING	= new Sleeping();
-	public AiState HUNTING		= new Hunting();
-	public AiState WANDERING	= new Wandering();
-	public AiState FLEEING		= new Fleeing();
 	public AiState PASSIVE		= new Passive();
+
 	public AiState state = SLEEPEING;
 	
 	public Class<? extends CharSprite> spriteClass;
-	
-	protected int target = -1;
-	
-	protected int defenseSkill = 0;
-	
-	protected int EXP = 1;
-	protected int maxLvl = 30;
-	
-	protected Char enemy;
-	
+
 	public boolean hostile = true;
-	
-	private static final String STATE	= "state";
-	private static final String TARGET	= "target";
 
 	private String desc = "A creature unknown to science.";
-	
+
 	public CharSprite sprite() {
 		CharSprite sprite = null;
 		try {
@@ -88,17 +74,11 @@ public abstract class Mob extends Char {
 		this.desc = desc;
 	}
 	
-	public void yell( String str ) {
-		GLog.n( "%s: \"%s\" ", name, str );
-	}
-	
 	public interface AiState {
 		public String status();
 	}
 	
 	private class Sleeping implements AiState {
-		
-		public static final String TAG	= "SLEEPING";
 
 		@Override
 		public String status() {
@@ -106,42 +86,7 @@ public abstract class Mob extends Char {
 		}
 	}
 	
-	private class Wandering implements AiState {
-		
-		public static final String TAG	= "WANDERING";
-
-		@Override
-		public String status() {
-			return Utils.format( "This %s is wandering", name );
-		}
-	}
-	
-	private class Hunting implements AiState {
-		
-		public static final String TAG	= "HUNTING";
-
-		@Override
-		public String status() {
-			return Utils.format( "This %s is hunting", name );
-		}
-	}
-	
-	protected class Fleeing implements AiState {
-		
-		public static final String TAG	= "FLEEING";
-
-		protected void nowhereToRun() {
-		}
-		
-		@Override
-		public String status() {
-			return Utils.format( "This %s is fleeing", name );
-		}
-	}
-	
 	private class Passive implements AiState {
-		
-		public static final String TAG	= "PASSIVE";
 
 		@Override
 		public String status() {

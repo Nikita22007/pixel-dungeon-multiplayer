@@ -47,8 +47,6 @@ import java.util.Collections;
 public class Hero extends Char {
 
 	public  int gold;
-
-	public static final String TXT_YOU_NOW_HAVE	= "You now have %s";
 	
 	public static final int STARTING_STR = 10;
 
@@ -92,19 +90,10 @@ public class Hero extends Char {
 		return  STR;
 	}
 
-	private static final String ATTACK		= "attackSkill";
-	private static final String DEFENSE		= "defenseSkill";
-	private static final String STRENGTH	= "STR";
-	private static final String LEVEL		= "lvl";
-	private static final String EXPERIENCE	= "exp";
-
 	public String className() {
 		return subClass == null || subClass == HeroSubClass.NONE ? heroClass.title() : subClass.title();
 	}
-	
-	public void live() {
-	}
-	
+
 	public int tier() {
 		return belongings.armor == null ? 0 : belongings.armorTier;
 	}
@@ -316,8 +305,6 @@ if (Dungeon.hero!=null){ //TODO DEBUG
 		HP = HT;
 		gold = 0;
 		exp = 0;
-
-		live();
 	}
 	
 	@Override

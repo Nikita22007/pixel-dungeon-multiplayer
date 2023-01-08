@@ -10,9 +10,6 @@ public class CustomMob extends Mob {
         spriteClass = RatSprite.class;
 
         HP = HT = 1;
-        defenseSkill = 1;
-
-        maxLvl = 1;
 
         this.setId(id);
     }
