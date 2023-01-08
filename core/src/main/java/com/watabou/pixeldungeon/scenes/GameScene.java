@@ -533,7 +533,9 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static void add( EmoIcon icon ) {
-		scene.emoicons.add( icon );
+		if (scene != null) {
+			scene.emoicons.add(icon);
+		}
 	}
 	
 	public static void effect( Visual effect ) {
