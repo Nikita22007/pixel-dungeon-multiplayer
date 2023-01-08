@@ -2,12 +2,12 @@ package com.watabou.pixeldungeon.items.bags
 
 import com.watabou.pixeldungeon.actors.Actor
 import com.watabou.pixeldungeon.actors.Char
-import com.watabou.pixeldungeon.items.CustomItem
 import com.watabou.pixeldungeon.items.Item
 import com.watabou.pixeldungeon.ui.Icons
 import com.watabou.pixeldungeon.utils.GLog
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.*
 
 class CustomBag(obj: JSONObject) : Bag(obj) {
     public var icon: Icons = Icons.BACKPACK;
@@ -23,7 +23,7 @@ class CustomBag(obj: JSONObject) : Bag(obj) {
         }
         if (obj.has("icon")) {
             try {
-                Icons.valueOf(obj.getString("items"))
+                Icons.valueOf(obj.getString("items").uppercase(Locale.ENGLISH))
             } catch (e: RuntimeException) {
                 GLog.n("incorrect icon: " + e.message);
                 e.printStackTrace();
