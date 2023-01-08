@@ -818,12 +818,16 @@ public class ParseThread extends Thread {
                     Set<CharSprite.State> states = sprite.states();
                     Set<CharSprite.State> newStates = new HashSet<>(3);
                     for (int i = 0; i < statesArr.length(); i++) {
-                        CharSprite.State state = CharSprite.State.valueOf(statesArr.getString(i).toUpperCase());
-                        newStates.add(state);
-                        if (states.contains(state)) {
-                            continue;
+                        try {
+                            CharSprite.State state = CharSprite.State.valueOf(statesArr.getString(i).toUpperCase());
+                            newStates.add(state);
+                            if (states.contains(state)) {
+                                continue;
+                            }
+                            sprite.add(state);
+                        } catch (IllegalArgumentException e) {
+                            GLog.n("Illegal char state: %s", e.getMessage());
                         }
-                        sprite.add(state);
                     }
                     for (CharSprite.State state : states) {
                         if (!newStates.contains(state)) {
