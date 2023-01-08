@@ -47,7 +47,7 @@ public class Belongings implements Iterable<Item> {
 	public ArrayList<SpecialSlot> specialSlots = new ArrayList<SpecialSlot>(4);
 
 	public ArrayList<Bag> Bags(){
-		ArrayList bags = new ArrayList<Bag>(6);
+		ArrayList<Bag> bags = new ArrayList<Bag>(6);
 		bags.add(backpack);
 		bags.addAll(backpack.bagsInside());
 		return bags;
