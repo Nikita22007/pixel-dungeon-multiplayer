@@ -126,6 +126,7 @@ public abstract class Level implements Bundlable {
 		mobs = new HashSet<Mob>();
 		heaps = new SparseArray<Heap>();
 		blobs = new HashMap<Class<? extends Blob>,Blob>();
+		plants = new SparseArray<Plant>();
 	}
 
 	
