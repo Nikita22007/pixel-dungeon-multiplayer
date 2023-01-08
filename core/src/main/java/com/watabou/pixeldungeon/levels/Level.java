@@ -424,7 +424,6 @@ public abstract class Level implements Bundlable {
 			heap = new Heap();
 			heap.pos = cell;
 			if (false && (map[cell] == Terrain.CHASM || (Dungeon.level != null && pit[cell]))) {
-				Dungeon.dropToChasm( item );
 				GameScene.discard( heap );
 			} else {
 				heaps.put( cell, heap );

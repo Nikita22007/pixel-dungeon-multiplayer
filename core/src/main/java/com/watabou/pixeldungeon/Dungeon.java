@@ -40,12 +40,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Dungeon {
-	
-	public static int potionOfStrength;
-	public static int scrollsOfUpgrade;
-	public static int scrollsOfEnchantment;
-	public static boolean dewVial;		// true if the dew vial can be spawned
-	
+
 	public static int challenges;
 	
 	public static Hero hero;
@@ -80,11 +75,6 @@ public class Dungeon {
 		
 		droppedItems = new SparseArray<ArrayList<Item>>();
 		
-		potionOfStrength = 0;
-		scrollsOfUpgrade = 0;
-		scrollsOfEnchantment = 0;
-		dewVial = true;
-		
 		chapters = new HashSet<Integer>();
 
 		QuickSlot.primaryValue = null;
@@ -110,16 +100,6 @@ public class Dungeon {
 
 	public static boolean bossLevel( int depth ) {
 		return depth == 5 || depth == 10 || depth == 15 || depth == 20 || depth == 25;
-	}
-
-	
-	public static void dropToChasm( Item item ) {
-		int depth = Dungeon.depth + 1;
-		ArrayList<Item> dropped = (ArrayList<Item>)Dungeon.droppedItems.get( depth );
-		if (dropped == null) {
-			Dungeon.droppedItems.put( depth, dropped = new ArrayList<Item>() ); 
-		}
-		dropped.add( item );
 	}
 	
 	private static final String RG_GAME_FILE	= "game.dat";
@@ -188,11 +168,6 @@ public class Dungeon {
 				bundle.put( String.format( DROPPED, d ), droppedItems.get( d ) );
 			}
 			
-			bundle.put( POS, potionOfStrength );
-			bundle.put( SOU, scrollsOfUpgrade );
-			bundle.put( SOE, scrollsOfEnchantment );
-			bundle.put( DV, dewVial );
-			
 			int count = 0;
 			int ids[] = new int[chapters.size()];
 			for (Integer id : chapters) {
@@ -237,11 +212,6 @@ public class Dungeon {
 		Dungeon.level = null;
 		Dungeon.depth = -1;
 
-		potionOfStrength = bundle.getInt( POS );
-		scrollsOfUpgrade = bundle.getInt( SOU );
-		scrollsOfEnchantment = bundle.getInt( SOE );
-		dewVial = bundle.getBoolean( DV );
-
 		Bundle badges = bundle.getBundle( BADGES );
 		if (!badges.isNull()) {
 			Badges.loadLocal( badges );
@@ -264,17 +234,7 @@ public class Dungeon {
 		
 		Statistics.restoreFromBundle( bundle );
 		Journal.restoreFromBundle( bundle );
-		
-		droppedItems = new SparseArray<ArrayList<Item>>();
-		for (int i=2; i <= Statistics.deepestFloor + 1; i++) {
-			ArrayList<Item> dropped = new ArrayList<Item>();
-			for (Bundlable b : bundle.getCollection( String.format( DROPPED, i ) ) ) {
-				dropped.add( (Item)b );
-			}
-			if (!dropped.isEmpty()) {
-				droppedItems.put( i, dropped );
-			}
-		}
+
 	}
 	
 	public static void deleteGame( HeroClass cl, boolean deleteLevels ) {
