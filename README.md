@@ -1,17 +1,15 @@
 # About this repository
 This repository contains Pixel Dungeon code modified to multiplayer game. This codebase uses Gradle.
 
-### **If you don't see commits in the Master branch it doesn't mean that the project is dead!**
-
 Pixel Dungeon was split into a server and a client. You can see client here. To get server, see https://github.com/Nikita22007/pixel-dungeon-multiplayer-server
 
 _**Copyrite will be updated after creating base build.**_
 
 ## How to contact me
 
-2. You can write me in [VK](https://vk.com/nikita22007)
-3. Discord:  `Nikita22007#2980`
-4. nothing more...
+1. You can write me in [VK](https://vk.com/nikita22007)
+2. Discord:  `Nikita22007#2980`
+3. nothing more...
 
 # Pixel Dungeon
 
