@@ -9,9 +9,6 @@ _**Copyrite will be updated after creating base build.**_
 
 ## How to contact me
 
-1. You can write me on my email: a
-    * _game.nikita22007@yandex.ru_ 
-(Please,  write subject as "Pixel Dungeon Multiplayer")
 2. You can write me in [VK](https://vk.com/nikita22007)
 3. Discord:  `Nikita22007#2980`
 4. nothing more...
