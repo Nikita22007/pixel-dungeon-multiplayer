@@ -1031,7 +1031,9 @@ public class ParseThread extends Thread {
                 }
 
                 CustomBuff buff = new CustomBuff(obj);
-                buff.attachTo((Char) Actor.findById(targetId));
+                if (!buff.attachTo((Char) Actor.findById(targetId))){
+                    GLog.n("failed to attach buf. Buf id: %d; bug name: %s", buff.buff_id, buff.toString());
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 continue;

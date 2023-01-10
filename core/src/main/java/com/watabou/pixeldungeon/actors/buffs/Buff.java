@@ -35,10 +35,6 @@ public class Buff extends Actor {
 
 	public boolean attachTo( Char target ) {
 
-		if (target.immunities().contains( getClass() )) {
-			return false;
-		}
-
 		if (buff_id < 0) {
 			return false;
 		}
@@ -47,7 +43,6 @@ public class Buff extends Actor {
 
 		this.target = target;
 		target.add( this );
-		
 		return true;
 	}
 	
@@ -61,15 +56,6 @@ public class Buff extends Actor {
 	}
 
 	// static
-	public static<T extends Buff> T append( Char target, Class<T> buffClass ) {
-		try {
-			T buff = buffClass.newInstance();
-			buff.attachTo( target );
-			return buff;
-		} catch (Exception e) {
-			return null;
-		}
-	}
 
 	public static void detach(int id) {
 		detach(all_buffs.get(id));
@@ -80,11 +66,6 @@ public class Buff extends Actor {
 			buff.detach();
 		}
 	}
-	
-	public static void detach( Char target, Class<? extends Buff> cl ) {
-		detach( target.buff( cl ) );
-	}
-
 
 	public static Buff get(int id) {
 		return all_buffs.get(id);

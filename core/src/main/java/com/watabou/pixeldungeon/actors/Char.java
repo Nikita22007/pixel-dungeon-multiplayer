@@ -154,12 +154,6 @@ public abstract class Char extends Actor {
 	public void onOperateComplete() {
 		next();
 	}
-	
-	private static final HashSet<Class<?>> EMPTY = new HashSet<Class<?>>();
-
-	public HashSet<Class<?>> immunities() {
-		return EMPTY;
-	}
 
     public void onZapComplete() {
 		//todo
