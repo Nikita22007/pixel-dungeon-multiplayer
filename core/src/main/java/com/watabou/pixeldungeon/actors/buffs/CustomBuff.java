@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.ui.BuffIndicator;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,12 +18,12 @@ public class CustomBuff extends Buff{
 
     private String desc = "unknown";
 
-    public CustomBuff(JSONObject obj) throws JSONException {
+    public CustomBuff(@NonNull JSONObject obj) throws JSONException {
         buff_id = obj.getInt("id");
         update(obj);
     }
 
-    public void update(JSONObject obj) throws JSONException {
+    public void update(@NonNull JSONObject obj) throws JSONException {
         setIcon(obj.optInt("icon", icon));
         setDesc(obj.optString("desc", desc));
         if (target == hero) {
@@ -38,7 +39,7 @@ public class CustomBuff extends Buff{
         this.icon = icon;
     }
 
-    public void setDesc(String desc) {
+    public void setDesc(@NotNull String desc) {
         this.desc = desc;
     }
 
