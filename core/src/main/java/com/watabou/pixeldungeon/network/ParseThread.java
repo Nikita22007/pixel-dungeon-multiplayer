@@ -556,6 +556,10 @@ public class ParseThread extends Thread {
                 });
                 break;
             }
+            case "read": {
+                sprite.read();
+                break;
+            }
             case "die": {
                 sprite.die();
                 break;

@@ -206,7 +206,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		
 		turnTo( from, to );
 	}
-	
+
+	public void read() {
+		throw new AssertionError("Unexpected using read() on char sprite");
+	}
+
 	public void die() {
 		sleeping = false;
 		play( die );
