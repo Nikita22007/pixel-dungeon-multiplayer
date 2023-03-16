@@ -10,6 +10,9 @@ public class SpecialSlot {
     public Item item = null;
 
     public void updateWith(SpecialSlot newData) {
-
+        assert(id==newData.id);
+        sprite = newData.sprite;
+        image_id = newData.image_id;
+        item = newData.item;
     }
 }
