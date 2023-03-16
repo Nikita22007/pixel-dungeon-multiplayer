@@ -34,6 +34,10 @@ import com.watabou.pixeldungeon.levels.Terrain;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.utils.PointF;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
+
 public class ItemSprite extends MovieClip {
 
 	public static final int SIZE	= 16;
@@ -214,16 +218,25 @@ public class ItemSprite extends MovieClip {
 		public Glowing( int color ) {
 			this( color, 1f );
 		}
-		
-		public Glowing( int color, float period ) {
-			
+
+		protected void setColor(int color) {
 			this.color = color;
-			
 			red = (color >> 16) / 255f;
 			green = ((color >> 8) & 0xFF) / 255f;
 			blue = (color & 0xFF) / 255f;
-			
+
+		}
+
+		public Glowing( int color, float period ) {
+			setColor(color);
 			this.period = period;
 		}
-	}
+
+        public Glowing(@NotNull JSONObject jsonObject) {
+			int color = jsonObject.optInt("color", WHITE.color);
+			float period = (float) jsonObject.optDouble("period", WHITE.color);
+			setColor(color);
+			this.period = period;
+        }
+    }
 }

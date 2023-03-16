@@ -3,6 +3,7 @@ package com.watabou.pixeldungeon.items
 import com.watabou.pixeldungeon.actors.hero.Hero
 import com.watabou.pixeldungeon.items.bags.CustomBag
 import com.watabou.pixeldungeon.network.SendData.SendItemAction
+import com.watabou.pixeldungeon.sprites.ItemSprite
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -13,6 +14,7 @@ open class CustomItem() : Item() {
 
     protected var identified = false;
     protected var maxDurability: Int = 1;
+    protected var glowing: ItemSprite.Glowing? = null;
 
     var showBar: Boolean = false;
     public var ui: UI = UI();
@@ -89,6 +91,15 @@ open class CustomItem() : Item() {
                 "show_bar" -> {
                     showBar = obj.getBoolean(token);
                 }
+                "glowing" -> {
+                    if (obj.isNull(token)){
+                        glowing = null;
+                    }
+                    else {
+                        val glowingObj = obj.getJSONObject(token);
+                        glowing = ItemSprite.Glowing(glowingObj);
+                    }
+                }
             }
         }
     }
@@ -124,6 +135,10 @@ open class CustomItem() : Item() {
 
     override fun visiblyUpgraded(): Int {
         return level;
+    }
+
+    override fun glowing(): ItemSprite.Glowing? {
+        return glowing;
     }
 
     public class UI {
