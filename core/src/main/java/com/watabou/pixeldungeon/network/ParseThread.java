@@ -564,6 +564,9 @@ public class ParseThread extends Thread {
                 sprite.die();
                 break;
             }
+            case "remove": {
+
+            }
             default:
                 GLog.n("Unexpected action: " + action + "ID: " + actorID);
         }
@@ -940,7 +943,11 @@ public class ParseThread extends Thread {
                 case "removed":
                 case "removing": {
                     if (actor instanceof Char) {
-                        ((Char) actor).die(null);
+                        Char ch = (Char) actor;
+                        ch.destroy();
+                        if (ch.sprite != null) {
+                            ch.sprite.killAndErase();
+                        }
                     } else {
                         Actor.remove(actor);
                     }
@@ -1035,7 +1042,7 @@ public class ParseThread extends Thread {
                 }
 
                 CustomBuff buff = new CustomBuff(obj);
-                if (!buff.attachTo((Char) Actor.findById(targetId))){
+                if (!buff.attachTo((Char) Actor.findById(targetId))) {
                     GLog.n("failed to attach buf. Buf id: %d; bug name: %s", buff.buff_id, buff.toString());
                 }
             } catch (JSONException e) {
