@@ -945,9 +945,6 @@ public class ParseThread extends Thread {
                     if (actor instanceof Char) {
                         Char ch = (Char) actor;
                         ch.destroy();
-                        if (ch.sprite != null) {
-                            ch.sprite.killAndErase();
-                        }
                     } else {
                         Actor.remove(actor);
                     }
