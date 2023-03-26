@@ -34,9 +34,9 @@ public class Client extends Thread {
         }
         return connect(address.host, address.port);
     }
+
     public static boolean connect(String server, int port) {
         packet.clearData();
-        parceThread = new ParseThread();
         try {
             socket = new Socket(server, port);
             writeStream = new OutputStreamWriter(
@@ -47,10 +47,11 @@ public class Client extends Thread {
                     socket.getInputStream(),
                     Charset.forName(CHARSET).newDecoder()
             );
-            client = new Client();
-            client.start();
-            parceThread.start();
             writer = new BufferedWriter(writeStream, BUFFER_SIZE);
+            parceThread = new ParseThread(readStream, socket);
+            client = new Client();
+            client.setDaemon(true);
+            client.start();
             return socket.isConnected();
         } catch (UnknownHostException e) {
             return false;

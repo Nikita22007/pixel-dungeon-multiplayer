@@ -174,8 +174,9 @@ public class InterlevelScene extends PixelScene {
 	@Override
 	public void update() {
 		super.update();
-		if (ParseThread.getActiveThread() != null) {
-			ParseThread.getActiveThread().parseIfHasData();
+		ParseThread activeThread = ParseThread.getActiveThread();
+		if (activeThread != null) {
+			activeThread.parseIfHasData();
 		}
 		float p = timeLeft / TIME_TO_FADE;
 

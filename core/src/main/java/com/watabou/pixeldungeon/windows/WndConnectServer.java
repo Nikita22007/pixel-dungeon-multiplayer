@@ -94,14 +94,13 @@ public class WndConnectServer extends Window {
     }
     //Fixme delete this function
     protected void onSelect( int index ) {
-        if (index==1){
-            if (!Client.connect(serverInfo)){
+        if (index == 1) {
+            if (!Client.connect(serverInfo)) {
                 scene.add(new WndError("Can't connect"));
-            }else{
+            } else {
                 NetworkScanner.stop();
                 StartScene.startNewGame();
             }
         }
-
-    };
+    }
 }

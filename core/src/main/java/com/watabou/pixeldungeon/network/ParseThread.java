@@ -46,12 +46,15 @@ import com.watabou.pixeldungeon.windows.WndOptions;
 import com.watabou.pixeldungeon.windows.WndQuest;
 import com.watabou.utils.PointF;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -59,50 +62,107 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import static com.watabou.pixeldungeon.Dungeon.hero;
 import static com.watabou.pixeldungeon.Dungeon.level;
-import static com.watabou.pixeldungeon.network.Client.readStream;
-import static com.watabou.pixeldungeon.network.Client.socket;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
 import static com.watabou.pixeldungeon.utils.Utils.ToPascalCase;
+import static java.lang.Thread.sleep;
 
-public class ParseThread extends Thread {
+public class ParseThread implements Callable<String> {
 
-    private BufferedReader reader;
-
-    protected final AtomicReference<String> data = new AtomicReference<>();
-
+    @NotNull
+    private final BufferedReader reader;
+    @NotNull
+    private final Socket socket;
     private static ParseThread activeThread;
+    @NotNull
+    private  FutureTask<String> jsonCall;
+
+    public ParseThread(InputStreamReader readStream, Socket socket) {
+        this(new BufferedReader(readStream), socket);
+    }
+
+    public ParseThread(BufferedReader readStream, Socket socket) {
+        this.socket = socket;
+        this.reader = readStream;
+        activeThread = this;
+        updateTask();
+    }
 
     public static ParseThread getActiveThread() {
         if (activeThread == null) {
             return null;
         }
-        if (!activeThread.isAlive() || activeThread.isInterrupted()) {
+        if ((activeThread.socket == null) || (activeThread.socket.isClosed())) {
             return null;
         }
         return activeThread;
     }
 
-    @Override
-    public void run() {
-        activeThread = this;
-        if (readStream != null) {
-            reader = new BufferedReader(readStream);
+    protected void updateTask() {
+        if ((jsonCall == null) || (jsonCall.isDone())) {
+            jsonCall = new FutureTask<String>(this);
+            new Thread(jsonCall).start();
         }
-        while (!socket.isClosed()) {
-            try {
-                if (data.get() == null) {
-                    data.set(reader.readLine());
-                }
-            } catch (IOException e) {
-                Log.e("ParseThread", e.getMessage());
+    }
 
+    @Override
+    public String call() {
+        if (socket.isClosed()) {
+            return null;
+        }
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            Log.e("ParseThread", e.getMessage());
+            return null;
+        }
+    }
 
+    private void parse() throws IOException, JSONException, InterruptedException {
+        String json = reader.readLine();
+        parse(json);
+    }
+
+    public void parseIfHasData() {
+        if (InterlevelScene.phase == InterlevelScene.Phase.FADE_OUT) {
+            return;
+        }
+        if (jsonCall.isCancelled()) {
+            disconenct();
+            return;
+        }
+        if (!jsonCall.isDone()) {
+            return;
+        }
+        try {
+            String json = jsonCall.get();
+            updateTask();
+            parse(json);
+        } catch (IOException e) {
+            GLog.n(e.getMessage());
+            disconenct();
+            return;
+        } catch (InterruptedException e) {
+            disconenct();
+            return;
+        } catch (JSONException e) {
+            Log.w("parsing", e.getMessage());
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            {
+                Log.w("parsing", e.getMessage());
+                disconenct();
+                return;
             }
         }
+    }
+
+    protected void disconenct() {
         Log.i("ParseThread", "parsing stopped");
         PixelDungeon.switchScene(
                 TitleScene.class,
@@ -119,35 +179,6 @@ public class ParseThread extends Thread {
                 }
 
         );
-    }
-
-    private void parse() throws IOException, JSONException, InterruptedException {
-        String json = reader.readLine();
-        parse(json);
-    }
-
-    public void parseIfHasData() {
-        if (InterlevelScene.phase == InterlevelScene.Phase.FADE_OUT) {
-            return;
-        }
-        if (data.get() != null) {
-            String json = data.get();
-            data.set(null);
-            try {
-                parse(json);
-            } catch (IOException e) {
-                GLog.n(e.getMessage());
-
-                PixelDungeon.switchScene(TitleScene.class);
-//                PixelDungeon.scene().add(new WndError("Disconnected"));
-                return;
-            } catch (InterruptedException e) {
-                return;
-            } catch (JSONException e) {
-                Log.w("parsing", e.getMessage());
-                e.printStackTrace();
-            }
-        }
     }
 
     private void parse(String json) throws IOException, JSONException, InterruptedException {
