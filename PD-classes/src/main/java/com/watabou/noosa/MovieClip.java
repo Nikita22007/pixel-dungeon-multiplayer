@@ -74,6 +74,7 @@ public class MovieClip extends Image {
 							return;
 						}
 					}
+					return;
 					
 				} else {
 					curFrame++;

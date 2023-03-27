@@ -47,6 +47,7 @@ import com.watabou.pixeldungeon.windows.WndQuest;
 import com.watabou.utils.PointF;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,7 +81,7 @@ public class ParseThread implements Callable<String> {
     private final Socket socket;
     private static ParseThread activeThread;
     @NotNull
-    private  FutureTask<String> jsonCall;
+    private FutureTask<String> jsonCall;
 
     public ParseThread(InputStreamReader readStream, Socket socket) {
         this(new BufferedReader(readStream), socket);
@@ -377,7 +378,7 @@ public class ParseThread implements Callable<String> {
                     }
                     String title = args.getString("title");
                     String text = args.getString("text");
-                    CharSprite sprite = spriteFromName(ToPascalCase(args.getString("sprite")), true);
+                    CharSprite sprite = spriteFromClass(spriteClassFromName(ToPascalCase(args.getString("sprite")), true));
                     GameScene.show(new WndQuest(id, sprite, title, text, options));
                     break;
                 }
@@ -594,9 +595,6 @@ public class ParseThread implements Callable<String> {
             case "die": {
                 sprite.die();
                 break;
-            }
-            case "remove": {
-
             }
             default:
                 GLog.n("Unexpected action: " + action + "ID: " + actorID);
@@ -834,7 +832,11 @@ public class ParseThread implements Callable<String> {
                 }
                 case "sprite_name": {
                     CharSprite old_sprite = chr.sprite;
-                    CharSprite sprite = spriteFromName(ToPascalCase(actorObj.getString(token)), chr != hero);
+                    Class<? extends CharSprite> new_sprite_class = spriteClassFromName(ToPascalCase(actorObj.getString(token)), chr != hero);
+                    if ((old_sprite != null) && (old_sprite.getClass().equals(new_sprite_class))) {
+                        break;
+                    }
+                    CharSprite sprite = spriteFromClass(new_sprite_class);
                     GameScene.updateCharSprite(chr, sprite);
                     break;
                 }
@@ -892,21 +894,32 @@ public class ParseThread implements Callable<String> {
         return chr;
     }
 
-    protected CharSprite spriteFromName(String spriteName, boolean notHero) {
+    @Nullable
+    @SuppressWarnings("unchecked")
+    protected Class<? extends CharSprite> spriteClassFromName(String spriteName, boolean notHero) {
         String sprite_name = Utils.format("com.watabou.pixeldungeon.sprites.%s", spriteName);
-        Class sprite_class = null;
+        Class<? extends CharSprite> sprite_class = null;
         CharSprite sprite = null;
         try {
-            sprite_class = Class.forName(sprite_name);
+            sprite_class = (Class<? extends CharSprite>) Class.forName(sprite_name);
             if ((sprite_class == HeroSprite.class) && (notHero)) {
                 sprite_class = HeroCustomSprite.class;
             }
+        } catch (Exception e) {
+            GLog.n("Incorrect sprite \"%s\"", sprite_name);
+            e.printStackTrace();
+        }
+        return sprite_class;
+    }
+
+    protected CharSprite spriteFromClass(Class<? extends CharSprite> sprite_class) {
+        CharSprite sprite = null;
+        try {
             sprite = (CharSprite) sprite_class.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (sprite == null) {
-            GLog.n("Incorrect sprite \"%s\"", sprite_name);
             sprite = new RatSprite();
         }
         return sprite;
