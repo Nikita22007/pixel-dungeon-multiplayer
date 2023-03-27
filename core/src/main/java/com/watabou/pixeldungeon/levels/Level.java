@@ -59,8 +59,6 @@ public abstract class Level implements Bundlable {
 	public static final int[] NEIGHBOURS8 = {+1, -1, +WIDTH, -WIDTH, +1+WIDTH, +1-WIDTH, -1+WIDTH, -1-WIDTH};
 	public static final int[] NEIGHBOURS9 = {0, +1, -1, +WIDTH, -WIDTH, +1+WIDTH, +1-WIDTH, -1+WIDTH, -1-WIDTH};
 	
-	protected static final float TIME_TO_RESPAWN	= 50;
-	
 	private static final String TXT_HIDDEN_PLATE_CLICKS = "A hidden pressure plate clicks!";
 	
 	public static boolean resizingNeeded;
@@ -99,9 +97,6 @@ public abstract class Level implements Bundlable {
 	
 	public int color1 = 0x004400;
 	public int color2 = 0x88CC44;
-	
-	protected static boolean pitRoomNeeded = false;
-	protected static boolean weakFloorCreated = false;
 	
 	private static final String MAP			= "map";
 	private static final String VISITED		= "visited";
@@ -144,8 +139,6 @@ public abstract class Level implements Bundlable {
 		
 		entrance	= bundle.getInt( ENTRANCE );
 		exit		= bundle.getInt( EXIT );
-		
-		weakFloorCreated = false;
 		
 		adjustMapSize();
 		
