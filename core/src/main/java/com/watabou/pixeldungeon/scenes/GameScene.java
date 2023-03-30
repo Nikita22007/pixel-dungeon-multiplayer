@@ -45,6 +45,7 @@ import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.EmoIcon;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
+import com.watabou.pixeldungeon.effects.Lightning;
 import com.watabou.pixeldungeon.effects.Ripple;
 import com.watabou.pixeldungeon.effects.SpellSprite;
 import com.watabou.pixeldungeon.items.Heap;
@@ -472,7 +473,13 @@ public class GameScene extends PixelScene {
 			add( prompt );
 		}
 	}
-	
+
+	public static void showBannerStatic(Banner banner) {
+		if (scene != null) {
+			scene.showBanner(banner);
+		}
+	}
+
 	private void showBanner( Banner banner ) {
 		banner.camera = uiCamera;
 		banner.x = align( uiCamera, (uiCamera.width - banner.width) / 2 );
@@ -481,7 +488,13 @@ public class GameScene extends PixelScene {
 	}
 	
 	// -------------------------------------------------------
-	
+
+	public static void addGroup(Group group) {
+		if (scene != null) {
+			scene.add(group);
+		}
+	}
+
 	public static void add( Plant plant ) {
 		if (scene != null) {
 			scene.addPlantSprite( plant );
@@ -539,7 +552,9 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static void effect( Visual effect ) {
-		scene.effects.add( effect );
+		if (scene != null) {
+			scene.effects.add(effect);
+		}
 	}
 	
 	public static Ripple ripple( int pos ) {

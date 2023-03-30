@@ -18,8 +18,12 @@ import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.actors.hero.HeroClass;
 import com.watabou.pixeldungeon.actors.mobs.CustomMob;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
+import com.watabou.pixeldungeon.effects.BannerSprites;
+import com.watabou.pixeldungeon.effects.DeathRay;
 import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.FloatingText;
+import com.watabou.pixeldungeon.effects.Lightning;
+import com.watabou.pixeldungeon.effects.Wound;
 import com.watabou.pixeldungeon.items.CustomItem;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
@@ -36,6 +40,7 @@ import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.pixeldungeon.sprites.HeroCustomSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
 import com.watabou.pixeldungeon.sprites.RatSprite;
+import com.watabou.pixeldungeon.ui.Banner;
 import com.watabou.pixeldungeon.ui.GameLog;
 import com.watabou.pixeldungeon.ui.QuickSlot;
 import com.watabou.pixeldungeon.ui.SpecialSlot;
@@ -125,11 +130,6 @@ public class ParseThread implements Callable<String> {
             Log.e("ParseThread", e.getMessage());
             return null;
         }
-    }
-
-    private void parse() throws IOException, JSONException, InterruptedException {
-        String json = reader.readLine();
-        parse(json);
     }
 
     public void parseIfHasData() {
@@ -635,6 +635,26 @@ public class ParseThread implements Callable<String> {
                     parseDegradationAction(actionObj);
                     break;
                 }
+                case ("visual_show_banner"): {
+                    parseBannerShowAction(actionObj);
+                    break;
+                }
+                case ("lightning_visual"): {
+                    parseLightningVisualAction(actionObj);
+                    break;
+                }
+                case ("death_ray_centered_visual"): {
+                    parseDeathRayCenteredVisualAction(actionObj);
+                    break;
+                }
+                case ("wound_visual"): {
+                    parseWoundVisualAction(actionObj);
+                    break;
+                }
+                case ("ripple_visual"): {
+                    parseRippleVisualAction(actionObj);
+                    break;
+                }
                 default:
                     GLog.h("unknown action type " + type + ". Ignored");
             }
@@ -723,6 +743,57 @@ public class ParseThread implements Callable<String> {
             GameScene.add(new Degradation(point, matrix));
         } catch (JSONException e) {
             GLog.n("Incorrect degradation action " + e.getMessage());
+        }
+    }
+
+    private void parseBannerShowAction(JSONObject actionObj) {
+        try {
+            BannerSprites.Type bannerType = BannerSprites.Type.valueOf(actionObj.getString(actionObj.getString("banner").toUpperCase()));
+
+            Banner banner = new Banner(BannerSprites.get(bannerType));
+            banner.show(actionObj.getInt("color"), (float) actionObj.getDouble("fade_time"), (float) actionObj.getDouble("fade_time"));
+            GameScene.showBannerStatic(banner);
+        } catch (JSONException e) {
+            GLog.n("Incorrect BannerShowAction action " + e.getMessage());
+        }
+    }
+
+
+    private void parseLightningVisualAction(JSONObject actionObj) {
+        try {
+            JSONArray cellsJson = actionObj.getJSONArray("cells");
+            int[] cells = new int[cellsJson.length()];
+            for (int i = 0; i < cells.length; i++) {
+                cells[i] = cellsJson.getInt(i);
+            }
+            GameScene.addGroup(new Lightning(cells, cells.length, null));
+
+        } catch (JSONException e) {
+            GLog.n("Incorrect LightningVisualAction action " + e.getMessage());
+        }
+    }
+
+    private void parseDeathRayCenteredVisualAction(JSONObject actionObj) {
+        try {
+            GameScene.effect(new DeathRay(actionObj.getInt("start"), actionObj.getInt("stop"), (float) actionObj.getDouble("duration")));
+        } catch (JSONException e) {
+            GLog.n("Incorrect DeathRayCenteredVisualAction action " + e.getMessage());
+        }
+    }
+
+    private void parseWoundVisualAction(JSONObject actionObj) {
+        try {
+            Wound.hitWithTimeToFade(actionObj.getInt("pos"), (float) actionObj.getDouble("duration"));
+        } catch (JSONException e) {
+            GLog.n("Incorrect WoundVisualAction action " + e.getMessage());
+        }
+    }
+
+    private void parseRippleVisualAction(JSONObject actionObj) {
+        try {
+            GameScene.ripple(actionObj.getInt("pos"));
+        } catch (JSONException e) {
+            GLog.n("Incorrect RippleVisualAction action " + e.getMessage());
         }
     }
 

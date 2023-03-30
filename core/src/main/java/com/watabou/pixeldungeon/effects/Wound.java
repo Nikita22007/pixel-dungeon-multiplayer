@@ -69,15 +69,20 @@ public class Wound extends Image {
 		w.angle = angle;
 	}
 	
-	public static void hit( int pos ) {
-		hit( pos, 0 );
+	public static Wound hit( int pos ) {
+		return hit( pos, 0 );
 	}
-	
-	public static void hit( int pos, float angle ) {
+
+	public static void hitWithTimeToFade(int pos, float timeToFade) {
+		hit(pos).time = timeToFade;
+	}
+
+	public static Wound hit( int pos, float angle ) {
 		Group parent = Dungeon.hero.sprite.parent;
 		Wound w = (Wound)parent.recycle( Wound.class );
 		parent.bringToFront( w );
 		w.reset( pos );
 		w.angle = angle;
+		return w;
 	}
 }
