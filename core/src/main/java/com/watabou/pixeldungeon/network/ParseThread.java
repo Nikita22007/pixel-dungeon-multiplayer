@@ -71,6 +71,7 @@ import java.util.concurrent.FutureTask;
 
 import static com.watabou.pixeldungeon.Dungeon.hero;
 import static com.watabou.pixeldungeon.Dungeon.level;
+import static com.watabou.pixeldungeon.network.Client.disconnect;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
 import static com.watabou.pixeldungeon.utils.Utils.ToPascalCase;
 import static java.lang.Thread.sleep;
@@ -136,7 +137,7 @@ public class ParseThread implements Callable<String> {
             return;
         }
         if (jsonCall.isCancelled()) {
-            disconenct();
+            disconnect();
             return;
         }
         if (!jsonCall.isDone()) {
@@ -148,10 +149,10 @@ public class ParseThread implements Callable<String> {
             parse(json);
         } catch (IOException e) {
             GLog.n(e.getMessage());
-            disconenct();
+            disconnect();
             return;
         } catch (InterruptedException e) {
-            disconenct();
+            // disconnect will be upper
             return;
         } catch (JSONException e) {
             Log.w("parsing", e.getMessage());
@@ -159,13 +160,13 @@ public class ParseThread implements Callable<String> {
         } catch (ExecutionException e) {
             {
                 Log.w("parsing", e.getMessage());
-                disconenct();
+                disconnect();
                 return;
             }
         }
     }
 
-    protected void disconenct() {
+    protected static void returnToMainScreen() {
         Log.i("ParseThread", "parsing stopped");
         PixelDungeon.switchScene(
                 TitleScene.class,

@@ -36,6 +36,8 @@ import com.watabou.pixeldungeon.ui.Archs;
 import com.watabou.pixeldungeon.ui.ExitButton;
 import com.watabou.pixeldungeon.ui.PrefsButton;
 
+import static com.watabou.pixeldungeon.network.Client.disconnectWithoutSwitch;
+
 public class TitleScene extends PixelScene {
 
 	private static final String TXT_PLAY		= "Play";
@@ -149,7 +151,9 @@ public class TitleScene extends PixelScene {
 		ExitButton btnExit = new ExitButton();
 		btnExit.setPos( w - btnExit.width(), 0 );
 		add( btnExit );
-		
+
+		disconnectWithoutSwitch();
+
 		fadeIn();
 	}
 	

@@ -61,6 +61,11 @@ public class Client extends Thread {
     }
 
     public static void disconnect() {
+        disconnectWithoutSwitch();
+        ParseThread.returnToMainScreen();
+    }
+
+    public static void disconnectWithoutSwitch() {
         try {
             socket.close();
         } catch (Exception e) {
@@ -68,9 +73,6 @@ public class Client extends Thread {
         socket = null;
         readStream = null;
         writeStream = null;
-        if (!(PixelDungeon.scene() instanceof TitleScene)) {
-            PixelDungeon.switchScene(TitleScene.class);
-        }
     }
 
     public void run() {
@@ -79,11 +81,13 @@ public class Client extends Thread {
             return;
         }
         try {
-            while (!socket.isClosed()) sleep(1000);
+            while ((socket != null) && (!socket.isClosed())) sleep(1000);
         } catch (Exception e) {
             GLog.n(e.getStackTrace().toString());
         }
-        disconnect();
+        if (socket != null) {
+            disconnect();
+        }
     }
 
     public static void flush() {

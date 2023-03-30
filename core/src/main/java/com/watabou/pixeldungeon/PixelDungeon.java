@@ -29,6 +29,7 @@ import android.view.View;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.pixeldungeon.network.Client;
 import com.watabou.pixeldungeon.network.NetworkScanner;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.PixelScene;
@@ -126,6 +127,7 @@ public class PixelDungeon extends Game {
 	public void onDestroy(){
 		super.onDestroy();
 		NetworkScanner.stop();
+		Client.disconnectWithoutSwitch();
 	}
 
 	public static void switchNoFade( Class<? extends PixelScene> c ) {
