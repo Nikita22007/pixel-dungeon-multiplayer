@@ -92,11 +92,16 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public Char ch;
 	
 	public boolean isMoving = false;
-	
+
 	public CharSprite() {
 		super();
 		listener = this;
 	}
+
+	public boolean isPlaying() {
+		return !finished && !looping();
+	}
+
 
 	public Set<State> states(){
 		return states;

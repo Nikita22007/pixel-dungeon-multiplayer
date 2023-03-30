@@ -68,7 +68,6 @@ public abstract class Actor {
 	// *** Static members ***
 
 	private static HashSet<Actor> all = new HashSet<Actor>();
-	private static Actor current;
 
 	private static SparseArray<Actor> ids = new SparseArray<Actor>();
 
@@ -104,21 +103,6 @@ public abstract class Actor {
 		now = 0;
 	}
 
-	public static void init() {
-
-		addDelayed( Dungeon.hero, -Float.MIN_VALUE );
-
-		for (Mob mob : Dungeon.level.mobs) {
-			add( mob );
-		}
-
-		for (Blob blob : Dungeon.level.blobs.values()) {
-			add( blob );
-		}
-
-		current = null;
-	}
-
 	public static void occupyCell( Char ch ) {
 		chars[ch.pos] = ch;
 	}
@@ -128,9 +112,6 @@ public abstract class Actor {
 	}
 
 	/*protected*/public void next() {
-		if (current == this) {
-			//current = null;
-		}
 	}
 
 	public static void add( Actor actor ) {
