@@ -2,6 +2,8 @@ package com.watabou.pixeldungeon.network;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.pixeldungeon.Dungeon;
@@ -87,7 +89,7 @@ public class ParseThread implements Callable<String> {
         this(new BufferedReader(readStream), socket);
     }
 
-    public ParseThread(BufferedReader readStream, Socket socket) {
+    public ParseThread(@NonNull BufferedReader readStream, @NonNull Socket socket) {
         this.socket = socket;
         this.reader = readStream;
         activeThread = this;
@@ -192,6 +194,9 @@ public class ParseThread implements Callable<String> {
             e.printStackTrace();
             Log.e("Parsing", "json: " + json);
             return;
+        }
+        if (com.watabou.pixeldungeon.BuildConfig.DEBUG) {
+            Log.i("Parsing", data.toString(4));
         }
         //Log.w("data", data.toString(4));
         for (Iterator<String> it = data.keys(); it.hasNext(); ) {
