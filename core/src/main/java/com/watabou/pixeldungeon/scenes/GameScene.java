@@ -363,9 +363,7 @@ public class GameScene extends PixelScene {
 
 		ParseThread thread = ParseThread.getActiveThread();
 		if (thread != null) {
-			if (parsingAllowed()) {
-				thread.parseIfHasData();
-			}
+			thread.parseIfHasData();
 		}
 		
 		if (Dungeon.hero.ready && !Dungeon.hero.paralysed) {
@@ -379,26 +377,7 @@ public class GameScene extends PixelScene {
 			afterObserve();
 		}
 	}
-
-	private boolean parsingAllowed() {
-		for (Actor current : Actor.all()) {
-			if (current instanceof Char) {
-				Char ch = (Char) current;
-				if (ch.sprite == null){
-					continue;
-				}
-				if (ch.sprite.isMoving) {
-					return false;
-				}
-				if (ch.sprite.isPlaying()) {
-					return false;
-				}
-				break;
-			}
-		}
-		return true;
-	}
-
+	
 	@Override
 	protected void onBackPressed() {
 		if (!cancel()) {
