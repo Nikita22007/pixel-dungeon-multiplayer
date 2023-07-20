@@ -349,6 +349,9 @@ public class ParseThread implements Callable<String> {
         if (uiObject.has("resume_button_visible")) {
             hero.resume_button_visible = uiObject.optBoolean("resume_button_visible");
         }
+        if (uiObject.has("cell_listener_prompt")){
+            GameScene.defaultCellListener.setCustomPrompt(uiObject.optString("cell_listener_prompt",null));
+        }
     }
 
     private void parseWindow(JSONObject windowObj) {

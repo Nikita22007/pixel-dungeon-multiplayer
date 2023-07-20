@@ -17,6 +17,8 @@
  */
 package com.watabou.pixeldungeon.scenes;
 
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -77,6 +79,8 @@ import com.watabou.pixeldungeon.windows.WndGame;
 import com.watabou.pixeldungeon.windows.WndBag;
 import com.watabou.pixeldungeon.windows.WndStory;
 import com.watabou.utils.Random;
+
+import org.jetbrains.annotations.NotNull;
 
 public class GameScene extends PixelScene {
 	
@@ -453,7 +457,12 @@ public class GameScene extends PixelScene {
 		mobs.add( sprite );
 		sprite.link( mob );
 	}
-	
+
+	public static void setPrompt( String text ) {
+		if (scene != null) {
+			scene.prompt(text);
+		}
+	}
 	private void prompt( String text ) {
 		
 		if (prompt != null) {
@@ -693,16 +702,32 @@ public class GameScene extends PixelScene {
 		QuickSlot.cancel();
 	}
 	
-	private static final CellSelector.Listener defaultCellListener = new CellSelector.Listener() {
+	public static final CustomCellListener defaultCellListener = new CustomCellListener();
+
+	public static class CustomCellListener implements CellSelector.Listener {
+
+		@Nullable
+		private String customPrompt = null;
 		@Override
-		public void onSelect( Integer cell ) {
+		public void onSelect( @NotNull Integer cell ) {
 			if (Dungeon.hero.handle( cell )) {
 				Dungeon.hero.next();
 			}
 		}
 		@Override
+		@Nullable
 		public String prompt() {
-			return null;
+			return customPrompt;
+		}
+		public void setCustomPrompt(@Nullable String prompt){
+			if ("".equals(prompt)) {
+				customPrompt = null;
+			} else {
+				customPrompt = prompt;
+			}
+			if (cellSelector.listener == this) {
+				selectCell(this);
+			}
 		}
 	};
 }

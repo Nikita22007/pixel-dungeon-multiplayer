@@ -17,6 +17,9 @@
  */
 package com.watabou.pixeldungeon.scenes;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.watabou.input.Touchscreen.Touch;
 import com.watabou.noosa.TouchArea;
 import com.watabou.pixeldungeon.DungeonTilemap;
@@ -154,7 +157,8 @@ public class CellSelector extends TouchArea {
 	}
 	
 	public interface Listener {
-		void onSelect( Integer cell );
+		void onSelect(@NonNull Integer cell );
+		@Nullable
 		String prompt();
 	}
 }
