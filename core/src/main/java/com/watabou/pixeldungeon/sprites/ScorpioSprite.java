@@ -75,14 +75,6 @@ public class ScorpioSprite extends MobSprite {
 	public void onComplete( Animation anim ) {
 		if (anim == zap) {
 			idle();
-			
-			((MissileSprite)parent.recycle( MissileSprite.class )).
-			reset( ch.pos, cellToAttack, new Dart(), new Callback() {
-				@Override
-				public void call() {
-					ch.onAttackComplete();
-				}
-			} );
 		} else {
 			super.onComplete( anim );
 		}

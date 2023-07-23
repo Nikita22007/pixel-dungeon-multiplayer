@@ -476,40 +476,4 @@ public class Item implements Bundlable {
 		
 		QuickSlot.restore( bundle, this );
 	}
-	
-	public void cast( final Hero user, int dst ) {
-		
-		final int cell = Ballistica.cast( user.pos, dst, false, true );
-		user.sprite.zap( cell );
-		user.busy();
-		
-		Sample.INSTANCE.play( Assets.SND_MISS, 0.6f, 0.6f, 1.5f );
-		
-		Char enemy = Actor.findChar( cell );
-		QuickSlot.target( this, enemy );
-		
-		// FIXME!!!
-		
-		((MissileSprite)user.sprite.parent.recycle( MissileSprite.class )).
-			reset( user.pos, cell, this, new Callback() {			
-				@Override
-				public void call() {
-				}
-			} );
-	}
-	
-	protected static Hero curUser = null;
-	protected static Item curItem = null;
-	protected static CellSelector.Listener thrower = new CellSelector.Listener() {	
-		@Override
-		public void onSelect( Integer target ) {
-			if (target != null) {
-				curItem.cast( curUser, target );
-			}
-		}
-		@Override
-		public String prompt() {
-			return "Choose direction of throw";
-		}
-	};
 }

@@ -1,6 +1,7 @@
 /*
  * Pixel Dungeon
  * Copyright (C) 2012-2015 Oleg Dolya
+ * Copyright (C) 2021-2023 Nikita Shaposhnikov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +21,14 @@ package com.watabou.pixeldungeon.sprites;
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.pixeldungeon.DungeonTilemap;
-import com.watabou.pixeldungeon.items.Item;
+import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 
-import static com.watabou.pixeldungeon.sprites.ItemSpriteSheet.BOOMERANG;
-import static com.watabou.pixeldungeon.sprites.ItemSpriteSheet.CURARE_DART;
-import static com.watabou.pixeldungeon.sprites.ItemSpriteSheet.DART;
-import static com.watabou.pixeldungeon.sprites.ItemSpriteSheet.INCENDIARY_DART;
-import static com.watabou.pixeldungeon.sprites.ItemSpriteSheet.JAVELIN;
-import static com.watabou.pixeldungeon.sprites.ItemSpriteSheet.SHURIKEN;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MissileSprite extends ItemSprite implements Tweener.Listener {
-
-	private static final float SPEED	= 240f;
 	
 	private Callback callback;
 	
@@ -41,40 +36,45 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		super();
 		originToCenter();
 	}
-	
-	public void reset( int from, int to, Item item, Callback listener ) {
-		if (item == null) {
-			reset( from, to, 0, null, listener );
-		} else {
-			reset( from, to, item.image(), item.glowing(), listener );
+
+	public static void show(JSONObject actionObj) throws JSONException {
+		MissileSprite sprite = (MissileSprite) GameScene.recycleSprite( MissileSprite.class );
+		if (sprite == null){
+			return;
 		}
+
+		Glowing glowing = null;
+		if (!actionObj.isNull("item_glowing")) {
+			glowing = new Glowing(actionObj.getJSONObject("item_glowing"));
+		}
+		sprite.reset(
+				actionObj.getInt("from"),
+				actionObj.getInt("to"),
+				actionObj.getDouble("speed"),
+				actionObj.getDouble("angular_speed"),
+				actionObj.getDouble("angle"),
+				actionObj.getInt("item_image"),
+				glowing
+		);
 	}
-	
-	public void reset( int from, int to, int image, Glowing glowing, Callback listener ) {
+
+	private void reset(int from, int to, double SPEED, double angular_speed, double angle, int image, Glowing glowing) {
 		revive();
 		
 		view( image, glowing );
 		
-		this.callback = listener;
+		this.callback = null;
 
 		point( DungeonTilemap.tileToWorld( from ) );
 		PointF dest = DungeonTilemap.tileToWorld( to );
 		
 		PointF d = PointF.diff( dest, point() ); 
-		speed.set( d ).normalize().scale( SPEED );
+		this.speed.set( d ).normalize().scale( (float)SPEED );
+
+		this.angularSpeed = (float)angular_speed;
+		this.angle = (float) angle;
 		
-		if (image == DART || image == INCENDIARY_DART || image == CURARE_DART || image == JAVELIN) {
-			//no rotation while fly, use angle correction for sprite
-			angularSpeed = 0;
-			angle = 135 - (float)(Math.atan2( d.x, d.y ) / 3.1415926 * 180);
-			
-		} else {
-			//rotation in flight, SURIKEN and BOOMERANG rotate twice faster
-			angularSpeed = image == SHURIKEN || image == BOOMERANG ? 1440 : 720;
-			
-		}
-		
-		PosTweener tweener = new PosTweener( this, dest, d.length() / SPEED );
+		PosTweener tweener = new PosTweener( this, dest, d.length() / (float)SPEED );
 		tweener.listener = this;
 		parent.add( tweener );
 	}

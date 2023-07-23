@@ -39,6 +39,7 @@ import com.watabou.pixeldungeon.scenes.TitleScene;
 import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.pixeldungeon.sprites.HeroCustomSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
+import com.watabou.pixeldungeon.sprites.MissileSprite;
 import com.watabou.pixeldungeon.sprites.RatSprite;
 import com.watabou.pixeldungeon.ui.Banner;
 import com.watabou.pixeldungeon.ui.GameLog;
@@ -658,6 +659,10 @@ public class ParseThread implements Callable<String> {
                     parseRippleVisualAction(actionObj);
                     break;
                 }
+                case ("missile_sprite_visual"): {
+                    parseMissileSpriteVisualAction(actionObj);
+                    break;
+                }
                 default:
                     GLog.h("unknown action type " + type + ". Ignored");
             }
@@ -797,6 +802,14 @@ public class ParseThread implements Callable<String> {
             GameScene.ripple(actionObj.getInt("pos"));
         } catch (JSONException e) {
             GLog.n("Incorrect RippleVisualAction action " + e.getMessage());
+        }
+    }
+
+    private void parseMissileSpriteVisualAction(JSONObject actionObj) {
+        try {
+            MissileSprite.show(actionObj);
+        } catch (JSONException e) {
+            GLog.n("Incorrect MissileSpriteVisualAction action " + e.getMessage());
         }
     }
 

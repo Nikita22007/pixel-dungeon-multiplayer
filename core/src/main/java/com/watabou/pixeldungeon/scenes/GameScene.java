@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.Visual;
@@ -117,7 +118,8 @@ public class GameScene extends PixelScene {
 	private Group spells;
 	private Group statuses;
 	private Group emoicons;
-	
+	private Group other;
+
 	private Toolbar toolbar;
 	private Toast prompt;
 
@@ -559,7 +561,15 @@ public class GameScene extends PixelScene {
 			scene.emoicons.add(icon);
 		}
 	}
-	
+
+	@Nullable
+	public static Gizmo recycleSprite(@Nullable Class<? extends Gizmo> clazz){
+		if (scene != null) {
+			return scene.recycle(clazz);
+		}
+		return null;
+	}
+
 	public static void effect( Visual effect ) {
 		if (scene != null) {
 			scene.effects.add(effect);
