@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.actors.Actor;
@@ -622,49 +623,65 @@ public class ParseThread implements Callable<String> {
                 continue;
             }
             String type = actionObj.optString("action_type");
-            switch (type) {
-                case ("sprite_action"): {
-                    parseSpriteAction(actionObj);
-                    break;
+            try {
+                switch (type) {
+                    case ("sprite_action"): {
+                        parseSpriteAction(actionObj);
+                        break;
+                    }
+                    case ("add_item_to_bag"): {
+                        parse_update_bag_action(actionObj);
+                        break;
+                    }
+                    case ("show_status"): {
+                        parseShowStatusAction(actionObj);
+                        break;
+                    }
+                    case ("degradation"): {
+                        parseDegradationAction(actionObj);
+                        break;
+                    }
+                    case ("visual_show_banner"): {
+                        parseBannerShowAction(actionObj);
+                        break;
+                    }
+                    case ("lightning_visual"): {
+                        parseLightningVisualAction(actionObj);
+                        break;
+                    }
+                    case ("death_ray_centered_visual"): {
+                        parseDeathRayCenteredVisualAction(actionObj);
+                        break;
+                    }
+                    case ("wound_visual"): {
+                        parseWoundVisualAction(actionObj);
+                        break;
+                    }
+                    case ("ripple_visual"): {
+                        parseRippleVisualAction(actionObj);
+                        break;
+                    }
+                    case ("missile_sprite_visual"): {
+                        parseMissileSpriteVisualAction(actionObj);
+                        break;
+                    }
+                    case ("play_sample"): {
+                        Sample.INSTANCE.play(actionObj);
+                        break;
+                    }
+                    case ("load_sample"): {
+                        Sample.INSTANCE.load(actionObj.getJSONArray("samples"));
+                        break;
+                    }
+                    case ("unload_sample"): {
+                        Sample.INSTANCE.unload(actionObj.getString("sample"));
+                        break;
+                    }
+                    default:
+                        GLog.h("unknown action type " + type + ". Ignored");
                 }
-                case ("add_item_to_bag"): {
-                    parse_update_bag_action(actionObj);
-                    break;
-                }
-                case ("show_status"): {
-                    parseShowStatusAction(actionObj);
-                    break;
-                }
-                case ("degradation"): {
-                    parseDegradationAction(actionObj);
-                    break;
-                }
-                case ("visual_show_banner"): {
-                    parseBannerShowAction(actionObj);
-                    break;
-                }
-                case ("lightning_visual"): {
-                    parseLightningVisualAction(actionObj);
-                    break;
-                }
-                case ("death_ray_centered_visual"): {
-                    parseDeathRayCenteredVisualAction(actionObj);
-                    break;
-                }
-                case ("wound_visual"): {
-                    parseWoundVisualAction(actionObj);
-                    break;
-                }
-                case ("ripple_visual"): {
-                    parseRippleVisualAction(actionObj);
-                    break;
-                }
-                case ("missile_sprite_visual"): {
-                    parseMissileSpriteVisualAction(actionObj);
-                    break;
-                }
-                default:
-                    GLog.h("unknown action type " + type + ". Ignored");
+            }catch (JSONException e) {
+                GLog.n("Incorrect action ( " + type + "). Ignored");
             }
         }
     }

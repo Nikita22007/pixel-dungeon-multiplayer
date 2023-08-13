@@ -32,6 +32,10 @@ import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public enum Sample implements SoundPool.OnLoadCompleteListener {
 
 	INSTANCE;
@@ -70,6 +74,13 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 		if (pool != null) {
 			pool.autoResume();
 		}
+	}
+
+	public void load( JSONArray assets ) throws JSONException{
+		for (int i = 0; i < assets.length(); i++) {
+			loadingQueue.add( assets.getString(i) );
+		}
+		loadNext();
 	}
 
 	public void load( String... assets ) {
@@ -119,6 +130,19 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 
 	public int play( Object id ) {
 		return play( id, 1 );
+	}
+
+	public int play( JSONObject sampleObj ) throws JSONException {
+		String sample = sampleObj.getString("sample");
+		if (!ids.containsKey(sample)){
+			load(sample);
+		}
+		return play(
+				sample,
+				(float)sampleObj.optDouble("left_volume",sampleObj.optDouble("right_volume", sampleObj.optDouble("volume",1.0f))),
+				(float)sampleObj.optDouble("right_volume",sampleObj.optDouble("left_volume", sampleObj.optDouble("volume",1.0f))),
+				(float)sampleObj.optDouble("rate", 1.0f)
+		);
 	}
 
 	public int play( Object id, float volume ) {
