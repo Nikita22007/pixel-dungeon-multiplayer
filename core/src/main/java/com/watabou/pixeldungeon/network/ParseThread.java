@@ -748,7 +748,8 @@ public class ParseThread implements Callable<String> {
             for (int i = 0; i < matrix.length; i++) {
                 matrix[i] = array.getInt(i);
             }
-            GameScene.add(new Degradation(point, matrix));
+            int color = actionObj.optInt("color", Degradation.Speck.COLOR);
+            GameScene.add(new Degradation(point, matrix, color));
         } catch (JSONException e) {
             GLog.n("Incorrect degradation action " + e.getMessage());
         }

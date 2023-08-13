@@ -28,7 +28,7 @@ import com.watabou.utils.Random;
 
 public class Degradation extends Group {
 	
-	public Degradation( PointF p, int[] matrix ) {
+	public Degradation(PointF p, int[] matrix, int color) {
 		
 		for (int i=0; i < matrix.length; i += 2) {
 			add( new Speck( p.x, p.y, matrix[i], matrix[i+1] ) );
@@ -53,13 +53,13 @@ public class Degradation extends Group {
 	
 	public static class Speck extends PixelParticle {
 		
-		private static final int COLOR = 0xFF4422;
+		public static final int COLOR = 0xFF4422;
 		private static final int SIZE = 3;
-		
-		public Speck( float x0, float y0, int mx, int my ) {
+
+		public Speck( float x0, float y0, int mx, int my, int color ) {
 			
 			super();
-			color( COLOR );
+			color( color );
 			
 			float x1 = x0 + mx * SIZE;
 			float y1 = y0 + my * SIZE;
