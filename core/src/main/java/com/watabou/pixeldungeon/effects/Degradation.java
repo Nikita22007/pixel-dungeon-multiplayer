@@ -31,8 +31,8 @@ public class Degradation extends Group {
 	public Degradation(PointF p, int[] matrix, int color) {
 		
 		for (int i=0; i < matrix.length; i += 2) {
-			add( new Speck( p.x, p.y, matrix[i], matrix[i+1] ) );
-			add( new Speck( p.x, p.y, matrix[i], matrix[i+1] ) );
+			add( new Speck( p.x, p.y, matrix[i], matrix[i+1], color ) );
+			add( new Speck( p.x, p.y, matrix[i], matrix[i+1], color ) );
 		}
 	}
 	
