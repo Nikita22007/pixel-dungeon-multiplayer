@@ -607,8 +607,12 @@ public class ParseThread implements Callable<String> {
                 sprite.die();
                 break;
             }
+            case "turn": {
+                sprite.turnTo(actionObj.getInt("from"), actionObj.getInt("to"));
+                break;
+            }
             default:
-                GLog.n("Unexpected action: " + action + "ID: " + actorID);
+                GLog.n("Unexpected action: " + action + ". ID: " + actorID);
         }
     }
 
