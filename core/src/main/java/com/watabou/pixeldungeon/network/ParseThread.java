@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
@@ -351,8 +352,8 @@ public class ParseThread implements Callable<String> {
         if (uiObject.has("resume_button_visible")) {
             hero.resume_button_visible = uiObject.optBoolean("resume_button_visible");
         }
-        if (uiObject.has("cell_listener_prompt")){
-            GameScene.defaultCellListener.setCustomPrompt(uiObject.optString("cell_listener_prompt",null));
+        if (uiObject.has("cell_listener_prompt")) {
+            GameScene.defaultCellListener.setCustomPrompt(uiObject.optString("cell_listener_prompt", null));
         }
     }
 
@@ -681,10 +682,14 @@ public class ParseThread implements Callable<String> {
                         Sample.INSTANCE.unload(actionObj.getString("sample"));
                         break;
                     }
+                    case ("shake_camera"): {
+                        Camera.main.shake((float) actionObj.getDouble("magnitude"), (float) actionObj.getDouble("duration"));
+                        break;
+                    }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
                 }
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 GLog.n("Incorrect action ( " + type + "). Ignored");
             }
         }
