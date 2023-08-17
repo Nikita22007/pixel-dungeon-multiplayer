@@ -79,6 +79,7 @@ import com.watabou.pixeldungeon.windows.WndBag.Mode;
 import com.watabou.pixeldungeon.windows.WndGame;
 import com.watabou.pixeldungeon.windows.WndBag;
 import com.watabou.pixeldungeon.windows.WndStory;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
@@ -575,7 +576,13 @@ public class GameScene extends PixelScene {
 			scene.effects.add(effect);
 		}
 	}
-	
+
+	public static void showFlare(Flare flare, PointF position, float duration){
+		if (scene != null) {
+			flare.show(scene.effects, position, duration)
+		}
+	}
+
 	public static Ripple ripple( int pos ) {
 		Ripple ripple = (Ripple)scene.ripples.recycle( Ripple.class );
 		ripple.reset( pos );

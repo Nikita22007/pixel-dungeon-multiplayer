@@ -9,6 +9,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Dungeon;
+import com.watabou.pixeldungeon.DungeonTilemap;
 import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
@@ -24,6 +25,7 @@ import com.watabou.pixeldungeon.effects.BannerSprites;
 import com.watabou.pixeldungeon.effects.DeathRay;
 import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.Enchanting;
+import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
 import com.watabou.pixeldungeon.effects.Lightning;
 import com.watabou.pixeldungeon.effects.Wound;
@@ -696,6 +698,29 @@ public class ParseThread implements Callable<String> {
                         }
                         Item item = CustomItem.createItem(actionObj.getJSONObject("item"));
                         com.watabou.pixeldungeon.effects.Enchanting.show((Char)actor, item);
+                    }
+                    case ("flare_visual") : {
+                        PointF position;
+                        if (actionObj.has("pos")) {
+                            position = DungeonTilemap.tileCenterToWorld(
+                                    actionObj.getInt("pos")
+                            );
+                        } else {
+                            position = new PointF(
+                                    (float)actionObj.getDouble("position_x"),
+                                    (float)actionObj.getDouble("position_y")
+                                    );
+                        }
+
+                        Flare flare = new Flare(
+                                actionObj.getInt("rays"),
+                                (float) actionObj.getDouble("radius")
+                        );
+                        flare.angle = (float) actionObj.optDouble("angle",45);
+                        flare.angularSpeed =(float)  actionObj.optDouble("angular_speed",180);
+                        flare.color(actionObj.getInt("color"), actionObj.optBoolean("light_moode", true));
+                        GameScene.showFlare(flare, position, (float) actionObj.getDouble("duration"));
+                        break;
                     }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
