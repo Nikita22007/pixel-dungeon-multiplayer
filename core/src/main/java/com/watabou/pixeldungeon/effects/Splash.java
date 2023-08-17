@@ -62,12 +62,20 @@ public class Splash {
 	
 	private static final SplashFactory FACTORY = new SplashFactory(); 
 			
-	private static class SplashFactory extends Emitter.Factory {
+	public static class SplashFactory extends Emitter.Factory {
 
 		public int color;
 		public float dir;
 		public float cone;
-		
+
+		SplashFactory(){};
+
+		public SplashFactory(int color, float dir, float cone) {
+			this.color = color;
+			this.dir = dir;
+			this.cone = cone;
+		}
+
 		@Override
 		public void emit( Emitter emitter, int index, float x, float y ) {
 			PixelParticle p = (PixelParticle)emitter.recycle( PixelParticle.Shrinking.class );

@@ -8,6 +8,7 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.DungeonTilemap;
 import com.watabou.pixeldungeon.PixelDungeon;
@@ -28,7 +29,28 @@ import com.watabou.pixeldungeon.effects.Enchanting;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
 import com.watabou.pixeldungeon.effects.Lightning;
+import com.watabou.pixeldungeon.effects.MagicMissile;
+import com.watabou.pixeldungeon.effects.Speck;
+import com.watabou.pixeldungeon.effects.Splash;
 import com.watabou.pixeldungeon.effects.Wound;
+import com.watabou.pixeldungeon.effects.particles.BlastParticle;
+import com.watabou.pixeldungeon.effects.particles.EarthParticle;
+import com.watabou.pixeldungeon.effects.particles.ElmoParticle;
+import com.watabou.pixeldungeon.effects.particles.EnergyParticle;
+import com.watabou.pixeldungeon.effects.particles.FlameParticle;
+import com.watabou.pixeldungeon.effects.particles.FlowParticle;
+import com.watabou.pixeldungeon.effects.particles.LeafParticle;
+import com.watabou.pixeldungeon.effects.particles.PoisonParticle;
+import com.watabou.pixeldungeon.effects.particles.PurpleParticle;
+import com.watabou.pixeldungeon.effects.particles.SacrificialParticle;
+import com.watabou.pixeldungeon.effects.particles.ShadowParticle;
+import com.watabou.pixeldungeon.effects.particles.ShaftParticle;
+import com.watabou.pixeldungeon.effects.particles.SmokeParticle;
+import com.watabou.pixeldungeon.effects.particles.SnowParticle;
+import com.watabou.pixeldungeon.effects.particles.SparkParticle;
+import com.watabou.pixeldungeon.effects.particles.WebParticle;
+import com.watabou.pixeldungeon.effects.particles.WindParticle;
+import com.watabou.pixeldungeon.effects.particles.WoolParticle;
 import com.watabou.pixeldungeon.items.CustomItem;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
@@ -42,6 +64,7 @@ import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.InterlevelScene;
 import com.watabou.pixeldungeon.scenes.TitleScene;
 import com.watabou.pixeldungeon.sprites.CharSprite;
+import com.watabou.pixeldungeon.sprites.GooSprite;
 import com.watabou.pixeldungeon.sprites.HeroCustomSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
 import com.watabou.pixeldungeon.sprites.MissileSprite;
@@ -203,7 +226,7 @@ public class ParseThread implements Callable<String> {
             return;
         }
         if (com.watabou.pixeldungeon.BuildConfig.DEBUG) {
-            Log.i("Parsing", data.toString(4));
+            //Log.i("Parsing", data.toString(4));
         }
         //Log.w("data", data.toString(4));
         for (Iterator<String> it = data.keys(); it.hasNext(); ) {
@@ -692,14 +715,14 @@ public class ParseThread implements Callable<String> {
                     case ("enchanting_visual"): {
                         int targetCharId = actionObj.getInt("target");
                         Actor actor = Actor.findById(targetCharId);
-                        if (! (actor instanceof Char)){
+                        if (!(actor instanceof Char)) {
                             GLog.n("Enchanting: Can't find char with id " + targetCharId + ". Ignored");
                             break;
                         }
                         Item item = CustomItem.createItem(actionObj.getJSONObject("item"));
-                        com.watabou.pixeldungeon.effects.Enchanting.show((Char)actor, item);
+                        com.watabou.pixeldungeon.effects.Enchanting.show((Char) actor, item);
                     }
-                    case ("flare_visual") : {
+                    case ("flare_visual"): {
                         PointF position;
                         if (actionObj.has("pos")) {
                             position = DungeonTilemap.tileCenterToWorld(
@@ -707,19 +730,23 @@ public class ParseThread implements Callable<String> {
                             );
                         } else {
                             position = new PointF(
-                                    (float)actionObj.getDouble("position_x"),
-                                    (float)actionObj.getDouble("position_y")
-                                    );
+                                    (float) actionObj.getDouble("position_x"),
+                                    (float) actionObj.getDouble("position_y")
+                            );
                         }
 
                         Flare flare = new Flare(
                                 actionObj.getInt("rays"),
                                 (float) actionObj.getDouble("radius")
                         );
-                        flare.angle = (float) actionObj.optDouble("angle",45);
-                        flare.angularSpeed =(float)  actionObj.optDouble("angular_speed",180);
+                        flare.angle = (float) actionObj.optDouble("angle", 45);
+                        flare.angularSpeed = (float) actionObj.optDouble("angular_speed", 180);
                         flare.color(actionObj.getInt("color"), actionObj.optBoolean("light_moode", true));
                         GameScene.showFlare(flare, position, (float) actionObj.getDouble("duration"));
+                        break;
+                    }
+                    case ("emitter_visual"): {
+                        parseEmitterVisualAction(actionObj);
                         break;
                     }
                     default:
@@ -872,8 +899,165 @@ public class ParseThread implements Callable<String> {
         try {
             MissileSprite.show(actionObj);
         } catch (JSONException e) {
-            GLog.n("Incorrect MissileSpriteVisualAction action " + e.getMessage());
         }
+    }
+
+    private void parseEmitterVisualAction(JSONObject actionObj) {
+        try {
+            Char target = null;
+
+            boolean fillTarget = true;
+            PointF position = null;
+            PointF shift = null;
+            float width;
+            float height;
+            float interval;
+            int quantity;
+
+            Emitter.Factory factory = null;
+
+            if (actionObj.has("target_char")) {
+                fillTarget = actionObj.optBoolean("fill_target", true);
+                int targetCharId = actionObj.getInt("target_char");
+                Actor targetActor = Actor.findById(targetCharId);
+                if (targetActor instanceof Char) {
+                    target = (Char) targetActor;
+                } else {
+                    GLog.n("Incorrect EmitterVisualAction action: target is not char");
+                }
+            }
+
+            if (actionObj.has("pos")) {
+                position = DungeonTilemap.tileToWorld(actionObj.getInt("pos"));
+            } else if (actionObj.has("position_x")) {
+                position = new PointF(
+                        (float) actionObj.getDouble("position_x"),
+                        (float) actionObj.getDouble("position_y")
+                );
+            }
+
+            if (actionObj.has("shift_x")) {
+                shift = new PointF(
+                        (float) actionObj.getDouble("shift_x"),
+                        (float) actionObj.getDouble("shift_y")
+                );
+                if (position != null) {
+                    if ((shift.x != 0) || (shift.y != 0)) {
+                        position.x += shift.x;
+                        position.y += shift.y;
+                    }
+                }
+            }
+
+           width = (float) actionObj.getDouble("width");
+           height = (float) actionObj.getDouble("height");
+
+           interval = (float) actionObj.getDouble("interval");
+           quantity = actionObj.getInt("quantity");
+
+            factory = emitterFactoryFromJSONObject(actionObj.getJSONObject("factory"));
+            if (factory == null) {
+                return;
+            }
+            Emitter emitter = GameScene.emitter();
+            if (emitter == null) {
+                return;
+            }
+            if ((target == null) && (position == null)) {
+                GLog.n("Incorrect EmitterVisualAction action: no any target or position");
+                return;
+            }
+            if ((target != null) && (shift != null)) {
+                if ((shift.x != 0) || (shift.y != 0)) {
+                    position = new PointF(
+                            target.sprite.x + shift.x,
+                            target.sprite.y + shift.y
+                    );
+                    target = null;
+                }
+            }
+            if (target != null) {
+                emitter.pos(target.sprite);
+            } else {
+                emitter.pos(position);
+            }
+            emitter.width = width;
+            emitter.height = height;
+            emitter.fillTarget = fillTarget;
+            emitter.start(factory, interval, quantity);
+        } catch (JSONException e) {
+            GLog.n("Incorrect EmitterVisualAction action: " + e.getMessage());
+        }
+    }
+
+    protected Emitter.Factory emitterFactoryFromJSONObject(JSONObject factoryObj) throws JSONException {
+        boolean lightMode = factoryObj.optBoolean("light_mode", false);
+        switch (factoryObj.getString("factory_type").toLowerCase(Locale.ENGLISH)) {
+            case "blast":
+                return BlastParticle.FACTORY;
+            case "earth":
+                return EarthParticle.FACTORY;
+            case "elmo":
+                return ElmoParticle.FACTORY;
+            case "energy":
+                return EnergyParticle.FACTORY;
+            case "flame":
+                return FlameParticle.FACTORY;
+            case "flow":
+                return FlowParticle.FACTORY;
+            case "leaf":
+                return LeafParticle.factory(
+                        factoryObj.getInt("first_color"),
+                        factoryObj.getInt("second_color")
+                );
+            case "poison_missile":
+                return PoisonParticle.MISSILE;
+            case "poison_splash":
+                return PoisonParticle.SPLASH;
+            case "purple_missile":
+                return PurpleParticle.MISSILE;
+            case "purple_burst":
+                return PurpleParticle.BURST;
+            case "sartificial":
+                return SacrificialParticle.FACTORY;
+            case "shadow_missile":
+                return ShadowParticle.MISSILE;
+            case "shadow_curse":
+                return ShadowParticle.CURSE;
+            case "shadow_up":
+                return ShadowParticle.UP;
+            case "shaft":
+                return ShaftParticle.FACTORY;
+            case "snow":
+                return SnowParticle.FACTORY;
+            case "smoke":
+                return SmokeParticle.FACTORY;
+            case "spark":
+                return SparkParticle.FACTORY;
+            case "splash":
+                return new Splash.SplashFactory(
+                        factoryObj.getInt("color"),
+                        (float) factoryObj.getDouble("dir"),
+                        (float) factoryObj.getDouble("cone")
+                );
+            case "web":
+                return WebParticle.FACTORY;
+            case "wind":
+                return WindParticle.FACTORY;
+            case "wool":
+                return WoolParticle.FACTORY;
+            case "goo":
+                return GooSprite.GooParticle.FACTORY;
+
+            case "speck":
+                return Speck.factory(
+                        factoryObj.getInt("type"),
+                        lightMode
+                );
+
+        }
+        GLog.n("incorrect factory: " + factoryObj.getString("factory_type"));
+        return null;
     }
 
     protected void parseCell(JSONObject cell) throws JSONException {
