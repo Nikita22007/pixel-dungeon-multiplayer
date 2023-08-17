@@ -23,6 +23,7 @@ import com.watabou.pixeldungeon.actors.mobs.Mob;
 import com.watabou.pixeldungeon.effects.BannerSprites;
 import com.watabou.pixeldungeon.effects.DeathRay;
 import com.watabou.pixeldungeon.effects.Degradation;
+import com.watabou.pixeldungeon.effects.Enchanting;
 import com.watabou.pixeldungeon.effects.FloatingText;
 import com.watabou.pixeldungeon.effects.Lightning;
 import com.watabou.pixeldungeon.effects.Wound;
@@ -617,7 +618,7 @@ public class ParseThread implements Callable<String> {
         }
     }
 
-    protected void parseActions(JSONArray actions) throws JSONException {
+    protected void parseActions(@NonNull JSONArray actions) {
         for (int i = 0; i < actions.length(); i++) {
             JSONObject actionObj;
             try {
@@ -685,6 +686,16 @@ public class ParseThread implements Callable<String> {
                     case ("shake_camera"): {
                         Camera.main.shake((float) actionObj.getDouble("magnitude"), (float) actionObj.getDouble("duration"));
                         break;
+                    }
+                    case ("enchanting_visual"): {
+                        int targetCharId = actionObj.getInt("target");
+                        Actor actor = Actor.findById(targetCharId);
+                        if (! (actor instanceof Char)){
+                            GLog.n("Enchanting: Can't find char with id " + targetCharId + ". Ignored");
+                            break;
+                        }
+                        Item item = CustomItem.createItem(actionObj.getJSONObject("item"));
+                        com.watabou.pixeldungeon.effects.Enchanting.show((Char)actor, item);
                     }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
