@@ -23,6 +23,7 @@ import com.watabou.pixeldungeon.actors.hero.HeroClass;
 import com.watabou.pixeldungeon.actors.mobs.CustomMob;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
 import com.watabou.pixeldungeon.effects.BannerSprites;
+import com.watabou.pixeldungeon.effects.CheckedCell;
 import com.watabou.pixeldungeon.effects.DeathRay;
 import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.Enchanting;
@@ -694,6 +695,12 @@ public class ParseThread implements Callable<String> {
                     }
                     case ("missile_sprite_visual"): {
                         parseMissileSpriteVisualAction(actionObj);
+                        break;
+                    }
+                    case ("checked_cell_visual"): {
+                        if (Dungeon.visible[actionObj.getInt("pos")]) {
+                            GameScene.effect(new CheckedCell(actionObj.getInt("pos")));
+                        }
                         break;
                     }
                     case ("play_sample"): {
