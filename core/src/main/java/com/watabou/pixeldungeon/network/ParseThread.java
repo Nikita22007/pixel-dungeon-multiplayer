@@ -929,12 +929,18 @@ public class ParseThread implements Callable<String> {
                 Actor targetActor = Actor.findById(targetCharId);
                 if (targetActor instanceof Char) {
                     target = (Char) targetActor;
+                    if (!target.sprite.visible) {
+                        return;
+                    }
                 } else {
                     GLog.n("Incorrect EmitterVisualAction action: target is not char");
                 }
             }
 
             if (actionObj.has("pos")) {
+                if (!Dungeon.visible[actionObj.getInt("pos")]){
+                    return;
+                }
                 position = DungeonTilemap.tileToWorld(actionObj.getInt("pos"));
             } else if (actionObj.has("position_x")) {
                 position = new PointF(
