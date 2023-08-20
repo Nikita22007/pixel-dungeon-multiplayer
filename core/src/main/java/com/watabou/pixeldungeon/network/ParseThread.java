@@ -635,6 +635,9 @@ public class ParseThread implements Callable<String> {
                 sprite.die();
                 break;
             }
+            case "flash":
+                sprite.flash((float)actionObj.optDouble("flash_time", CharSprite.FLASH_INTERVAL));
+                break;
             case "turn": {
                 sprite.turnTo(actionObj.getInt("from"), actionObj.getInt("to"));
                 break;

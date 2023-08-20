@@ -56,7 +56,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public static final int NEUTRAL		= 0xFFFF00;
 	
 	private static final float MOVE_INTERVAL	= 0.1f;
-	private static final float FLASH_INTERVAL	= 0.05f;
+	public static final float FLASH_INTERVAL	= 0.05f;
 
 	public enum State {
 		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED
@@ -263,9 +263,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		return 0xFFBB0000;
 	}
 	
-	public void flash() {
+	public void flash(float flashTime) {
 		ra = ba = ga = 1f;
-		flashTime = FLASH_INTERVAL;
+		this.flashTime = flashTime;
 	}
 	
 	public void add( State state ) {
