@@ -9,6 +9,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.DungeonTilemap;
 import com.watabou.pixeldungeon.PixelDungeon;
@@ -635,11 +636,21 @@ public class ParseThread implements Callable<String> {
                 sprite.die();
                 break;
             }
-            case "flash":
-                sprite.flash((float)actionObj.optDouble("flash_time", CharSprite.FLASH_INTERVAL));
+            case "flash": {
+                sprite.flash((float) actionObj.optDouble("flash_time", CharSprite.FLASH_INTERVAL));
                 break;
+            }
             case "turn": {
                 sprite.turnTo(actionObj.getInt("from"), actionObj.getInt("to"));
+                break;
+            }
+            case "alpha_tweener": {
+                sprite.alpha((float) actionObj.getDouble("start_alpha"));
+                sprite.parent.add(new AlphaTweener(
+                        sprite,
+                        (float) actionObj.getDouble("target_alpha"),
+                        (float) actionObj.getDouble("interval")
+                ));
                 break;
             }
             default:
@@ -941,7 +952,7 @@ public class ParseThread implements Callable<String> {
             }
 
             if (actionObj.has("pos")) {
-                if (!Dungeon.visible[actionObj.getInt("pos")]){
+                if (!Dungeon.visible[actionObj.getInt("pos")]) {
                     return;
                 }
                 position = DungeonTilemap.tileToWorld(actionObj.getInt("pos"));
@@ -965,11 +976,11 @@ public class ParseThread implements Callable<String> {
                 }
             }
 
-           width = (float) actionObj.getDouble("width");
-           height = (float) actionObj.getDouble("height");
+            width = (float) actionObj.getDouble("width");
+            height = (float) actionObj.getDouble("height");
 
-           interval = (float) actionObj.getDouble("interval");
-           quantity = actionObj.getInt("quantity");
+            interval = (float) actionObj.getDouble("interval");
+            quantity = actionObj.getInt("quantity");
 
             factory = emitterFactoryFromJSONObject(actionObj.getJSONObject("factory"));
             if (factory == null) {
