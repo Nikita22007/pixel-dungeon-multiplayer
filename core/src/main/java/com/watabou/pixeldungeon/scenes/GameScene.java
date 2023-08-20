@@ -680,7 +680,7 @@ public class GameScene extends PixelScene {
 	}
 	
 	private static boolean cancelCellSelector() {
-		if (cellSelector.listener != null && cellSelector.listener != defaultCellListener) {
+		if (cellSelector.listener != null) {
 			cellSelector.cancel();
 			return true;
 		} else {
