@@ -147,17 +147,18 @@ open class CustomItem() : Item() {
         val bottomRight: Label;
 
         constructor(obj: JSONObject) {
-            val topLeftObj: JSONObject? = obj.optJSONObject("top_left");
+            val topLeftObj: JSONObject? = if (obj.isNull("top_left")) null else obj.optJSONObject("top_left");
             if (topLeftObj == null) {
                 topLeft = Label(null, null, false);
             } else {
                 var color: Int? = null;
-                if (topLeftObj.has("color")) {
+                if (topLeftObj.has("color") && !topLeftObj.isNull("color")) {
                     color = topLeftObj.optInt("color", 0)
                 }
                 topLeft = Label(
                     color,
-                    topLeftObj.optString("text"),
+                        if (topLeftObj.isNull("text")) null else
+                    topLeftObj.optString("text", ""),
                     topLeftObj.optBoolean("visible", false)
                 );
             }
@@ -167,12 +168,13 @@ open class CustomItem() : Item() {
                 topRight = Label(null, null, false);
             } else {
                 var color: Int? = null;
-                if (topRightObj.has("color")) {
+                if (topRightObj.has("color") && !topRightObj.isNull("color")) {
                     color = topRightObj.optInt("color", 0)
                 }
                 topRight = Label(
                     color,
-                    topRightObj.optString("text"),
+                        if (topRightObj.isNull("text")) null else
+                    topRightObj.optString("text", ""),
                     topRightObj.optBoolean("visible", false)
                 );
             }
@@ -182,12 +184,13 @@ open class CustomItem() : Item() {
                 bottomRight = Label(null, null, false);
             } else {
                 var color: Int? = null;
-                if (bottomRightObj.has("color")) {
+                if (bottomRightObj.has("color") && !bottomRightObj.isNull("color")) {
                     color = bottomRightObj.optInt("color", 0)
                 }
                 bottomRight = Label(
                     color,
-                    bottomRightObj.optString("text"),
+                        if (bottomRightObj.isNull("text")) null else
+                        bottomRightObj.optString("text",""),
                     bottomRightObj.optBoolean("visible", false)
                 );
             }

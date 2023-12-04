@@ -2,8 +2,6 @@ package com.watabou.pixeldungeon.network;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
@@ -126,7 +124,7 @@ public class ParseThread implements Callable<String> {
         this(new BufferedReader(readStream), socket);
     }
 
-    public ParseThread(@NonNull BufferedReader readStream, @NonNull Socket socket) {
+    public ParseThread(@NotNull BufferedReader readStream, @NotNull Socket socket) {
         this.socket = socket;
         this.reader = readStream;
         activeThread = this;
@@ -658,7 +656,7 @@ public class ParseThread implements Callable<String> {
         }
     }
 
-    protected void parseActions(@NonNull JSONArray actions) {
+    protected void parseActions(@NotNull JSONArray actions) {
         for (int i = 0; i < actions.length(); i++) {
             JSONObject actionObj;
             try {
