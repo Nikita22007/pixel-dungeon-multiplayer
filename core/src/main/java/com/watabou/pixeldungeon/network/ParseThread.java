@@ -58,6 +58,7 @@ import com.watabou.pixeldungeon.items.bags.Bag;
 import com.watabou.pixeldungeon.items.bags.CustomBag;
 import com.watabou.pixeldungeon.items.keys.IronKey;
 import com.watabou.pixeldungeon.levels.SewerLevel;
+import com.watabou.pixeldungeon.levels.features.DecorEmitters;
 import com.watabou.pixeldungeon.plants.CustomPlant;
 import com.watabou.pixeldungeon.plants.Plant;
 import com.watabou.pixeldungeon.scenes.GameScene;
@@ -768,6 +769,11 @@ public class ParseThread implements Callable<String> {
                         parseEmitterVisualAction(actionObj);
                         break;
                     }
+                    case ("emitter_decor"):
+                    {
+                        level.addVisual(actionObj);
+                        break;
+                    }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
                 }
@@ -1084,6 +1090,7 @@ public class ParseThread implements Callable<String> {
         GLog.n("incorrect factory: " + factoryObj.getString("factory_type"));
         return null;
     }
+
 
     protected void parseCell(JSONObject cell) throws JSONException {
         int pos = cell.getInt("position");

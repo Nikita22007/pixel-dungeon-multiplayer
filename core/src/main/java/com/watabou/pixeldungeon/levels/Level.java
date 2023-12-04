@@ -22,12 +22,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Challenges;
 import com.watabou.pixeldungeon.Dungeon;
+import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.blobs.Blob;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
@@ -35,16 +39,24 @@ import com.watabou.pixeldungeon.effects.particles.FlowParticle;
 import com.watabou.pixeldungeon.effects.particles.WindParticle;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
+import com.watabou.pixeldungeon.levels.features.DecorEmitters;
 import com.watabou.pixeldungeon.plants.Plant;
 import com.watabou.pixeldungeon.scenes.GameScene;
+import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public abstract class Level implements Bundlable {
-	
-	public static enum Feeling {
+
+    List<JSONObject> decorEmittersInfo = new LinkedList<>();
+
+    public static enum Feeling {
 		NONE,
 		CHASM,
 		WATER,
@@ -249,6 +261,11 @@ public abstract class Level implements Bundlable {
 					scene.add( new FlowParticle.Flow( i - WIDTH ) );
 				}
 			}
+		}
+
+		for (JSONObject decorObj : decorEmittersInfo)
+		{
+			parseEmitterDecorAction(decorObj);
 		}
 	}
 	
@@ -469,8 +486,47 @@ public abstract class Level implements Bundlable {
 		int diff = Math.abs( a - b );
 		return diff == 1 || diff == WIDTH || diff == WIDTH + 1 || diff == WIDTH - 1;
 	}
-	
-	public String tileName( int tile ) {
+
+    public void addVisual(JSONObject obj)
+    {
+        decorEmittersInfo.add(obj);
+		if (PixelDungeon.scene() instanceof GameScene)
+		{
+			parseEmitterDecorAction(obj);
+		}
+    }
+
+    public void clearVisuals()
+    {
+        decorEmittersInfo.clear();
+    }
+
+    protected void parseEmitterDecorAction(@NotNull JSONObject actionObj) {
+        try {
+            switch (actionObj.getString("type"))
+            {
+                case ("torch"):
+                {
+                    Game.scene().add(new DecorEmitters.Torch(actionObj.getInt("pos"), actionObj.optInt("color", 0xFFFFCC)));
+                    break;
+                }
+                case ("sink"):
+                {
+					Game.scene().add(new DecorEmitters.Sink(actionObj.getInt("pos")));
+                    break;
+                }
+                case ("smoke"):
+                {
+					Game.scene().add(new DecorEmitters.Smoke(actionObj.getInt("pos")));
+                    break;
+                }
+            }
+        } catch (JSONException e) {
+            GLog.n("Incorrect EmitterVisualAction action: " + e.getMessage());
+        }
+    }
+
+    public String tileName(int tile ) {
 		
 		if (tile >= Terrain.WATER_TILES) {
 			return tileName( Terrain.WATER );
