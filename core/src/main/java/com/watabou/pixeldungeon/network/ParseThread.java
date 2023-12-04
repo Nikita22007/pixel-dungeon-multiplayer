@@ -1414,6 +1414,10 @@ public class ParseThread implements Callable<String> {
                     }
                     break;
                 }
+                case "gold": {
+                    hero.gold = heroObj.getInt(token);
+                    break;
+                }
                 default: {
                     GLog.n("Unexpected token \"%s\" in Hero. Ignored.", token);
                     break;
