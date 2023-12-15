@@ -46,16 +46,13 @@ import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.EmoIcon;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
-import com.watabou.pixeldungeon.effects.Lightning;
 import com.watabou.pixeldungeon.effects.Ripple;
 import com.watabou.pixeldungeon.effects.SpellSprite;
 import com.watabou.pixeldungeon.items.Heap;
 import com.watabou.pixeldungeon.items.Item;
 import com.watabou.pixeldungeon.items.wands.WandOfBlink;
 import com.watabou.pixeldungeon.levels.Level;
-import com.watabou.pixeldungeon.levels.RegularLevel;
 import com.watabou.pixeldungeon.levels.features.Chasm;
-import com.watabou.pixeldungeon.levels.features.DecorEmitters;
 import com.watabou.pixeldungeon.network.ParseThread;
 import com.watabou.pixeldungeon.plants.Plant;
 import com.watabou.pixeldungeon.sprites.CharSprite;
@@ -75,12 +72,10 @@ import com.watabou.pixeldungeon.ui.Toast;
 import com.watabou.pixeldungeon.ui.Toolbar;
 import com.watabou.pixeldungeon.ui.Window;
 import com.watabou.pixeldungeon.utils.GLog;
-import com.watabou.pixeldungeon.windows.WndBag.Mode;
 import com.watabou.pixeldungeon.windows.WndGame;
 import com.watabou.pixeldungeon.windows.WndBag;
 import com.watabou.pixeldungeon.windows.WndStory;
 import com.watabou.utils.PointF;
-import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -110,6 +105,7 @@ public class GameScene extends PixelScene {
 	private static CellSelector cellSelector;
 	
 	private Group terrain;
+	private Group decorEmitters;
 	private Group ripples;
 	private Group plants;
 	private Group heaps;
@@ -172,7 +168,10 @@ public class GameScene extends PixelScene {
 		
 		tiles = new DungeonTilemap();
 		terrain.add( tiles );
-		
+
+		decorEmitters = new Group();
+		add(decorEmitters);
+
 		Dungeon.level.addVisuals( this );
 		
 		plants = new Group();
@@ -413,7 +412,13 @@ public class GameScene extends PixelScene {
 			fog.aa =  0f;
 		}
 	}
-	
+
+
+
+	public void addDecorEmitter(Emitter emitter) {
+		decorEmitters.add(emitter);
+	}
+
 	private void addHeapSprite( Heap heap ) {
 		ItemSprite sprite = heap.sprite = (ItemSprite)heaps.recycle( ItemSprite.class );
 		sprite.revive();

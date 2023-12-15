@@ -489,8 +489,8 @@ public abstract class Level implements Bundlable {
 
     public void addVisual(JSONObject obj)
     {
-        decorEmittersInfo.add(obj);
-		if (PixelDungeon.scene() instanceof GameScene)
+		decorEmittersInfo.add(obj);
+    	if (PixelDungeon.scene() instanceof GameScene)
 		{
 			parseEmitterDecorAction(obj);
 		}
@@ -502,27 +502,33 @@ public abstract class Level implements Bundlable {
     }
 
     protected void parseEmitterDecorAction(@NotNull JSONObject actionObj) {
+		Scene scene = Game.scene();
+		if (!(scene instanceof GameScene))
+		{
+			return;
+		}
+		GameScene gameScene = (GameScene) scene;
         try {
             switch (actionObj.getString("type"))
             {
                 case ("torch"):
                 {
-                    Game.scene().add(new DecorEmitters.Torch(actionObj.getInt("pos"), actionObj.optInt("color", 0xFFFFCC)));
+					gameScene.addDecorEmitter(new DecorEmitters.Torch(actionObj.getInt("pos"), actionObj.optInt("color", 0xFFFFCC)));
                     break;
                 }
                 case ("sink"):
                 {
-					Game.scene().add(new DecorEmitters.Sink(actionObj.getInt("pos")));
+					gameScene.addDecorEmitter(new DecorEmitters.Sink(actionObj.getInt("pos")));
                     break;
                 }
                 case ("smoke"):
                 {
-					Game.scene().add(new DecorEmitters.Smoke(actionObj.getInt("pos")));
+					gameScene.addDecorEmitter(new DecorEmitters.Smoke(actionObj.getInt("pos")));
                     break;
                 }
             }
         } catch (JSONException e) {
-            GLog.n("Incorrect EmitterVisualAction action: " + e.getMessage());
+            GLog.n("Incorrect EmitterDecorAction action: " + e.getMessage());
         }
     }
 
