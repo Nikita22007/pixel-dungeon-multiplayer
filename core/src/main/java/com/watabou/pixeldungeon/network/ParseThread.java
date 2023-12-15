@@ -68,6 +68,7 @@ import com.watabou.pixeldungeon.sprites.CustomCharSprite;
 import com.watabou.pixeldungeon.sprites.GooSprite;
 import com.watabou.pixeldungeon.sprites.HeroCustomSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
+import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.sprites.MissileSprite;
 import com.watabou.pixeldungeon.sprites.RatSprite;
 import com.watabou.pixeldungeon.ui.Banner;
@@ -107,6 +108,7 @@ import java.util.concurrent.FutureTask;
 import static com.watabou.pixeldungeon.Dungeon.hero;
 import static com.watabou.pixeldungeon.Dungeon.level;
 import static com.watabou.pixeldungeon.network.Client.disconnect;
+import static com.watabou.pixeldungeon.scenes.GameScene.add;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateCharSprite;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
 import static com.watabou.pixeldungeon.utils.Utils.ToPascalCase;
@@ -781,6 +783,11 @@ public class ParseThread implements Callable<String> {
                         level.addVisual(actionObj);
                         break;
                     }
+                    case ("heap_drop_visual"):
+                    {
+                        parseHeadDropVisualAction(actionObj);
+                        break;
+                    }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
                 }
@@ -788,6 +795,21 @@ public class ParseThread implements Callable<String> {
                 GLog.n("Incorrect action ( " + type + "). Ignored");
             }
         }
+    }
+
+    private void parseHeadDropVisualAction(JSONObject actionObj) throws JSONException {
+        int from =actionObj.getInt("from");
+        int to = actionObj.getInt("to");
+        //Item item = CustomItem.createItem(actionObj.getJSONObject("item"));
+        //ItemSprite itemSprite = new ItemSprite(item);
+        //PixelDungeon.scene().add(itemSprite);
+        //itemSprite.drop(from, to);
+        Heap heap = level.heaps.get(to);
+        if (heap == null)
+        {
+            return;
+        }
+        heap.sprite.drop();
     }
 
     private void parse_update_bag_action(JSONObject actionObj) throws JSONException {
