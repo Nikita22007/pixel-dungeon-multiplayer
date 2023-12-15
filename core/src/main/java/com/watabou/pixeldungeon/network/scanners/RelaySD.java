@@ -106,7 +106,6 @@ public class RelaySD extends Thread implements ServiceDiscovery{
 
             }
             catch(InterruptedException e) {
-                e.printStackTrace();
                 GLog.h("relay thread stopped, no restart");
                 return;
             }
