@@ -465,7 +465,11 @@ public class WndBag extends WndTabbed {
 
 		@Override
 		public void onSelect(Item item) {
-			SendData.sendBagWindowResult(wndID, 0, owner.belongings.pathOfItem(item));
+			if (item == null) {
+				SendData.sendWindowResult(wndID, -1);
+			} else {
+				SendData.sendBagWindowResult(wndID, 0, owner.belongings.pathOfItem(item));
+			}
 		}
 	}
 }
