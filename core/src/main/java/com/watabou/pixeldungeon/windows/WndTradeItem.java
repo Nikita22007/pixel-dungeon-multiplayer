@@ -164,7 +164,7 @@ public class WndTradeItem extends Window {
 	private float createDescription( Item item, boolean forSale ) {
 		
 		IconTitle titlebar = new IconTitle();
-		titlebar.icon( new ItemSprite( item.image(), item.glowing() ) );
+		titlebar.icon( new ItemSprite( item) );
 		titlebar.label( forSale ? 
 			Utils.format( TXT_SALE, item.toString(), price( item ) ) : 
 			Utils.capitalize( item.toString() ) );

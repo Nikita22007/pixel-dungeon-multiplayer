@@ -20,6 +20,7 @@ package com.watabou.pixeldungeon.windows;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
+import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.items.Item;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
@@ -45,7 +46,7 @@ public class IconTitle extends Component {
 	
 	public IconTitle( Item item ) {
 		this( 
-			new ItemSprite( item.image(), item.glowing() ), 
+			new ItemSprite(item, null ),
 			Utils.capitalize( item.toString() ) );
 	}
 	

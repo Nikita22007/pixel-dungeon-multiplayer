@@ -182,7 +182,7 @@ public class RankingsScene extends PixelScene {
 			desc.measure();
 			
 			if (rec.win) {
-				shield.view( ItemSpriteSheet.AMULET, null );
+				shield.view(Assets.ITEMS, ItemSpriteSheet.AMULET, null );
 				position.hardlight( TEXT_WIN );
 				desc.hardlight( TEXT_WIN );
 			} else {
@@ -198,7 +198,7 @@ public class RankingsScene extends PixelScene {
 			
 			super.createChildren();
 			
-			shield = new ItemSprite( ItemSpriteSheet.TOMB, null );
+			shield = new ItemSprite(Assets.ITEMS, ItemSpriteSheet.TOMB, null );
 			add( shield );
 			
 			position = new BitmapText( PixelScene.font1x );

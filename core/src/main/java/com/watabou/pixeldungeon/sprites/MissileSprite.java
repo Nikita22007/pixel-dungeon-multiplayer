@@ -18,8 +18,10 @@
  */
 package com.watabou.pixeldungeon.sprites;
 
+import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
+import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.DungeonTilemap;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.utils.Callback;
@@ -53,15 +55,16 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 				actionObj.getDouble("speed"),
 				actionObj.getDouble("angular_speed"),
 				actionObj.getDouble("angle"),
+				actionObj.optString("item_sprite_sheet", Assets.ITEMS),
 				actionObj.getInt("item_image"),
 				glowing
 		);
 	}
 
-	private void reset(int from, int to, double SPEED, double angular_speed, double angle, int image, Glowing glowing) {
+	private void reset(int from, int to, double SPEED, double angular_speed, double angle, String spriteSheet, int image, Glowing glowing) {
 		revive();
-		
-		view( image, glowing );
+
+		view(spriteSheet, image, glowing );
 		
 		this.callback = null;
 

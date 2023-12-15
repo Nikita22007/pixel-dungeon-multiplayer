@@ -44,7 +44,7 @@ public class WndImp extends Window {
 		super();
 		
 		IconTitle titlebar = new IconTitle();
-		titlebar.icon( new ItemSprite( tokens.image(), null ) );
+		titlebar.icon( new ItemSprite( tokens, null ) );
 		titlebar.label( Utils.capitalize( tokens.name() ) );
 		titlebar.setRect( 0, 0, WIDTH, 0 );
 		add( titlebar );

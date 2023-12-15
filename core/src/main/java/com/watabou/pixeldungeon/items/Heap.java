@@ -28,6 +28,8 @@ import com.watabou.pixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -48,9 +50,27 @@ public class Heap implements Bundlable {
 			return;
 		}
 		this.customImage = customImage;
-		pseudoItem = new Item() {
-			public int image() { return getCustomImage(); };
-		};
+	}
+
+    public String spriteSheet() {
+		if (getCustomSpriteSheet() != null){
+			return getCustomSpriteSheet();
+		}
+		switch (type) {
+			case HEAP:
+			case FOR_SALE:
+				return size() > 0 ? items.peek().spriteSheet() : Assets.ITEMS;
+			default:
+				return Assets.ITEMS;
+		}
+    }
+
+	private String getCustomSpriteSheet() {
+		return customSpriteSheet;
+	}
+
+	public void setCustomSpriteSheet(String visibleSpriteSheet) {
+		customSpriteSheet = visibleSpriteSheet;
 	}
 
 	public enum Type {
@@ -73,7 +93,8 @@ public class Heap implements Bundlable {
 	public LinkedList<Item> items = new LinkedList<Item>();
 
 	protected int customImage = -1;
-	protected Item pseudoItem = null;
+	@Nullable
+	protected String customSpriteSheet = null;
 	public boolean showsItem = false;
 
 	public int image() {
@@ -116,20 +137,37 @@ public class Heap implements Bundlable {
 		if (items.isEmpty()) {
 			destroy();
 		} else if (sprite != null) {
-			sprite.view( image(), glowing() );
+			sprite.view(spriteSheet(), image(), glowing() );
 		}
 		
 		return item;
 	}
-	
+
+	protected Item getPseudoItem(){
+		if ((getCustomImage()!=-1) && (getCustomSpriteSheet() != null)) {
+			return new Item() {
+				@Override
+				public int image() {
+					return getCustomImage();
+				}
+				@Override
+				public String spriteSheet(){
+					return getCustomSpriteSheet();
+				}
+				;
+			};
+		}
+		return  null;
+	}
+
 	public Item peek() {
-		if ((showsItem) || (getCustomImage() == -1) ||  (pseudoItem == null)) {
+
+		final Item pseudoItem = getPseudoItem();
+		if ((showsItem) ||  (pseudoItem == null)) {
 			return items.peek();
 		} else {
 			return pseudoItem;
 		}
-
-
 	}
 	
 	public void drop( Item item ) {
@@ -151,7 +189,7 @@ public class Heap implements Bundlable {
 		items.addFirst( item );
 		
 		if (sprite != null) {
-			sprite.view( image(), glowing() );
+			sprite.view(spriteSheet(), image(), glowing() );
 		}
 	}
 	

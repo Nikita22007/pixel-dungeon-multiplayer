@@ -64,7 +64,7 @@ public class WndInfoItem extends Window {
 					color = item.isBroken() ? ItemSlot.WARNING : ItemSlot.UPGRADED;				
 				}
 			}
-			fillFields( item.image(), item.glowing(), color, item.toString(), item.info() );
+			fillFields( item.spriteSheet(), item.image(), item.glowing(), color, item.toString(), item.info() );
 			
 		} else {
 			
@@ -88,7 +88,7 @@ public class WndInfoItem extends Window {
 				info = TXT_NEED_KEY;
 			}
 			
-			fillFields( heap.image(), heap.glowing(), TITLE_COLOR, title, info );
+			fillFields(heap.spriteSheet(), heap.image(), heap.glowing(), TITLE_COLOR, title, info );
 			
 		}
 	}
@@ -106,13 +106,13 @@ public class WndInfoItem extends Window {
 			}
 		}
 		
-		fillFields( item.image(), item.glowing(), color, item.toString(), item.info() );
+		fillFields(item.spriteSheet(), item.image(), item.glowing(), color, item.toString(), item.info() );
 	}
 	
-	private void fillFields( int image, ItemSprite.Glowing glowing, int titleColor, String title, String info ) {
+	private void fillFields(String spriteSheet, int image, ItemSprite.Glowing glowing, int titleColor, String title, String info ) {
 		
 		IconTitle titlebar = new IconTitle();
-		titlebar.icon( new ItemSprite( image, glowing ) );
+		titlebar.icon( new ItemSprite(spriteSheet, image, glowing ) );
 		titlebar.label( Utils.capitalize( title ), titleColor );
 		titlebar.setRect( 0, 0, WIDTH, 0 );
 		add( titlebar );

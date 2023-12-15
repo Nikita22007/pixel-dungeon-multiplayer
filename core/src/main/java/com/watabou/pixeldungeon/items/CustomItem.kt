@@ -100,6 +100,9 @@ open class CustomItem() : Item() {
                         glowing = ItemSprite.Glowing(glowingObj);
                     }
                 }
+                "sprite_sheet" -> {
+                    this.spriteSheet= obj.getString(token);
+                }
             }
         }
     }

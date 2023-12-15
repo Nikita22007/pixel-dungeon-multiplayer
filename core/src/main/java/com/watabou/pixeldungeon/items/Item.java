@@ -19,27 +19,20 @@ package com.watabou.pixeldungeon.items;
 
 import android.util.Log;
 
-import com.watabou.noosa.audio.Sample;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Badges;
 import com.watabou.pixeldungeon.Dungeon;
-import com.watabou.pixeldungeon.actors.Actor;
-import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.effects.Speck;
 import com.watabou.pixeldungeon.items.bags.Bag;
-import com.watabou.pixeldungeon.mechanics.Ballistica;
-import com.watabou.pixeldungeon.scenes.CellSelector;
-import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
-import com.watabou.pixeldungeon.sprites.MissileSprite;
 import com.watabou.pixeldungeon.ui.QuickSlot;
 import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -83,6 +76,9 @@ public class Item implements Bundlable {
 	public boolean cursedKnown;
 
 	public boolean unique = false;
+
+	@NotNull
+	protected String spriteSheet = Assets.ITEMS;
 
 	public void update(JSONObject item) {
 		throw new UnsupportedOperationException("Can't update Item with json object");
@@ -357,6 +353,10 @@ public class Item implements Bundlable {
 	public int image() {
 		return image;
 	}
+
+	public String spriteSheet() {
+		return this.spriteSheet;
+	}
 	
 	public ItemSprite.Glowing glowing() {
 		return null;
@@ -476,4 +476,5 @@ public class Item implements Bundlable {
 		
 		QuickSlot.restore( bundle, this );
 	}
+
 }

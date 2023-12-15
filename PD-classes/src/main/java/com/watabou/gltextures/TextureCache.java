@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import android.content.Context;
@@ -99,7 +100,11 @@ public class TextureCache {
 		all.put( key, tx );
 	}
 
-	public static SmartTexture get( Object src ) {
+	public static SmartTexture get( Object src )
+	{
+		return get( src, false );
+	}
+	public static SmartTexture get( Object src, boolean allowsNullBitmap ) {
 		
 		if (all.containsKey( src )) {
 			
@@ -110,8 +115,16 @@ public class TextureCache {
 			return (SmartTexture)src;
 			
 		} else {
-
-			SmartTexture tx = new SmartTexture( getBitmap( src ) );
+			Bitmap bitmap = getBitmap( src );
+			if (allowsNullBitmap)
+			{
+				if (bitmap == null) {
+					return null;
+				}
+			} else {
+				Objects.requireNonNull(bitmap, "Texture: " +src.toString());
+			}
+			SmartTexture tx = new SmartTexture(bitmap);
 			all.put( src, tx );
 			return tx;
 		}
@@ -185,7 +198,7 @@ public class TextureCache {
 			}
 		}
 		for (Object key: keysToReload) {
-			get(key);
+			get(key, true);
 		}
 	}
 

@@ -344,7 +344,7 @@ public class Toolbar extends Component {
 		}
 		
 		public void reset( Item item, float dstX, float dstY ) {
-			view( item.image(), item.glowing() );
+			view(item.spriteSheet(), item.image(), item.glowing() );
 			
 			active = 
 			visible = 

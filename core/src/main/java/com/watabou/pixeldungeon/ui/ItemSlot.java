@@ -120,7 +120,7 @@ public class ItemSlot extends Button {
             CustomItem customItem = (CustomItem) item;
             CustomItem.UI ui = customItem.getUi();
             icon.visible = true;
-			icon.view( item.image(), item.glowing() );
+			icon.view(item.spriteSheet(), item.image(), item.glowing() );
 			topLeft.visible = ui.getTopLeft().getVisible();
             topRight.visible = ui.getTopRight().getVisible();
             bottomRight.visible = ui.getBottomRight().getVisible();
@@ -153,7 +153,7 @@ public class ItemSlot extends Button {
 			active = true;
 			icon.visible = topLeft.visible = topRight.visible = bottomRight.visible = true;
 			
-			icon.view( item.image(), item.glowing() );
+			icon.view(item.spriteSheet(), item.image(), item.glowing() );
 			
 			topLeft.text( item.status()  );
 

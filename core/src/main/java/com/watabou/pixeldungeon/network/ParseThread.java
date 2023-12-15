@@ -506,6 +506,7 @@ public class ParseThread implements Callable<String> {
             }
             level.drop(CustomItem.createItem(visibleItemObj), pos);
             level.heaps.get(pos).setCustomImage(heapObj.optInt("visible_sprite", -1));
+            level.heaps.get(pos).setCustomSpriteSheet(heapObj.optString("visible_sprite_sheet", null));
             level.heaps.get(pos).showsItem = heapObj.optBoolean("show_item", false);
         } catch (JSONException e) {
             Log.e("parse heap", String.format("bad heap. Exception: %s", e.getMessage()));

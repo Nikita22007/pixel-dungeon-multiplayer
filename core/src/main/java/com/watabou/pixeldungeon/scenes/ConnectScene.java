@@ -234,11 +234,11 @@ public class ConnectScene extends PixelScene implements NetworkScanner.NetworkSc
             desc.measure();
 
             if (rec.haveChallenges) {
-                shield.view( ItemSpriteSheet.AMULET, null );
+                shield.view(Assets.ITEMS, ItemSpriteSheet.AMULET, null );
                 position.hardlight( TEXT_WIN );
                 desc.hardlight( TEXT_WIN );
             } else {
-                shield.view( ItemSpriteSheet.CHEST, null );
+                shield.view(Assets.ITEMS, ItemSpriteSheet.CHEST, null );
                 position.hardlight( TEXT_LOSE );
                 desc.hardlight( TEXT_LOSE );
             }
@@ -249,7 +249,7 @@ public class ConnectScene extends PixelScene implements NetworkScanner.NetworkSc
 
             super.createChildren();
 
-            shield = new ItemSprite( ItemSpriteSheet.CHEST, null );
+            shield = new ItemSprite(Assets.ITEMS, ItemSpriteSheet.CHEST, null );
             add( shield );
 
             position = new BitmapText( PixelScene.font1x );

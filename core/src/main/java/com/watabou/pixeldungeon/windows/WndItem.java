@@ -42,7 +42,7 @@ public class WndItem extends Window {
 		super();
 		
 		IconTitle titlebar = new IconTitle();
-		titlebar.icon( new ItemSprite( item.image(), item.glowing() ) );
+		titlebar.icon( new ItemSprite( item, item.glowing() ) );
 		titlebar.label( Utils.capitalize( item.toString() ) );
         if ((item instanceof CustomItem) ? ((CustomItem) item).getShowBar() : item.isUpgradable() && item.levelKnown) {
 			titlebar.health( (float)item.durability() / item.maxDurability() );

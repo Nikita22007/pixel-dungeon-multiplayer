@@ -35,7 +35,6 @@ import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.utils.PointF;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class ItemSprite extends MovieClip {
@@ -55,21 +54,24 @@ public class ItemSprite extends MovieClip {
 	private float dropInterval;
 	
 	public ItemSprite() {
-		this( ItemSpriteSheet.SMTH, null );
+		this(Assets.ITEMS, ItemSpriteSheet.SMTH, null );
 	}
 	
 	public ItemSprite( Item item ) {
-		this( item.image(), item.glowing() );
+		this(item.spriteSheet(), item.image(), item.glowing() );
 	}
-	
-	public ItemSprite( int image, Glowing glowing ) {
-		super( Assets.ITEMS );
+	public ItemSprite( Item item, Glowing glowing ) {
+		this(item.spriteSheet(), item.image(), glowing );
+	}
+
+	public ItemSprite(String assets, int image, Glowing glowing ) {
+		super( assets );
 		
 		if (film == null) {
 			film = new TextureFilm( texture, SIZE, SIZE );
 		}
 		
-		view( image, glowing );
+		view(assets, image, glowing );
 	}
 	
 	public void originToCenter() {
@@ -82,7 +84,7 @@ public class ItemSprite extends MovieClip {
 	
 	public void link( Heap heap ) {
 		this.heap = heap;
-		view( heap.image(), heap.glowing() );
+		view(heap.spriteSheet(), heap.image(), heap.glowing() );
 		place( heap.pos );
 	}
 	
@@ -139,7 +141,10 @@ public class ItemSprite extends MovieClip {
 		}
 	}
 	
-	public ItemSprite view( int image, Glowing glowing ) {
+	public ItemSprite view(String spriteSheet,  int image, Glowing glowing ) {
+		texture( spriteSheet );
+		film = new TextureFilm(texture, SIZE, SIZE);
+
 		frame( film.get( image ) );
 		if ((this.glowing = glowing) == null) {
 			resetColor();

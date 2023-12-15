@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.ui.Component;
+import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.PixelDungeon;
 import com.watabou.pixeldungeon.items.Item;
 import com.watabou.pixeldungeon.scenes.GameScene;
@@ -139,10 +140,10 @@ public class WndCatalogus extends WndTabbed {
 			try {
 				item = cl.newInstance();
 				if (identified = item.isIdentified()) {
-					sprite.view( item.image(), null );
+					sprite.view(item.spriteSheet(), item.image(), null );
 					label.text( item.name() );
 				} else {
-					sprite.view( 127, null );
+					sprite.view(Assets.ITEMS, 127, null );
 					label.text( item.trueName() );
 					label.hardlight( 0xCCCCCC );
 				}
