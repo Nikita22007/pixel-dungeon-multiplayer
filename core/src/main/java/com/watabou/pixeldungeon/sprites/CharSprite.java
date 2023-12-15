@@ -37,6 +37,7 @@ import com.watabou.pixeldungeon.effects.particles.FlameParticle;
 import com.watabou.pixeldungeon.items.potions.PotionOfInvisibility;
 import com.watabou.pixeldungeon.levels.Level;
 import com.watabou.pixeldungeon.scenes.GameScene;
+import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
@@ -455,16 +456,21 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			return;
 		}
 		String emoType = emoObj.optString("type");
-		if (emoType != "default")
+		if (!"default".equals(emoType))
 		{
 			//todo
+			GLog.h("Unknown emo type: " + emoType + ". ID: " + (ch == null? "null": ch.id()));
 			showAlert();
+			return;
 		}
 		String emotion = emoObj.optString("emotion");
 		switch (emotion){
 			case "alert": showAlert(); break;
 			case "sleep": showSleep(); break;
-			default: showAlert(); break; //todo
+			default: {
+				GLog.h("Unknown emo: " + emotion + ". ID: " + (ch == null? "null": ch.id()));
+				showAlert();
+			}break; //todo
 		}
 	}
 
