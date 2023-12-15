@@ -2,6 +2,8 @@ package com.watabou.pixeldungeon.network;
 
 import android.util.Log;
 
+import com.nikita22007.pixeldungeonmultiplayer.JavaUtils;
+import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
@@ -25,11 +27,9 @@ import com.watabou.pixeldungeon.effects.BannerSprites;
 import com.watabou.pixeldungeon.effects.CheckedCell;
 import com.watabou.pixeldungeon.effects.DeathRay;
 import com.watabou.pixeldungeon.effects.Degradation;
-import com.watabou.pixeldungeon.effects.Enchanting;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
 import com.watabou.pixeldungeon.effects.Lightning;
-import com.watabou.pixeldungeon.effects.MagicMissile;
 import com.watabou.pixeldungeon.effects.Speck;
 import com.watabou.pixeldungeon.effects.Splash;
 import com.watabou.pixeldungeon.effects.Wound;
@@ -58,13 +58,13 @@ import com.watabou.pixeldungeon.items.bags.Bag;
 import com.watabou.pixeldungeon.items.bags.CustomBag;
 import com.watabou.pixeldungeon.items.keys.IronKey;
 import com.watabou.pixeldungeon.levels.SewerLevel;
-import com.watabou.pixeldungeon.levels.features.DecorEmitters;
 import com.watabou.pixeldungeon.plants.CustomPlant;
 import com.watabou.pixeldungeon.plants.Plant;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.InterlevelScene;
 import com.watabou.pixeldungeon.scenes.TitleScene;
 import com.watabou.pixeldungeon.sprites.CharSprite;
+import com.watabou.pixeldungeon.sprites.CustomCharSprite;
 import com.watabou.pixeldungeon.sprites.GooSprite;
 import com.watabou.pixeldungeon.sprites.HeroCustomSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
@@ -107,6 +107,7 @@ import java.util.concurrent.FutureTask;
 import static com.watabou.pixeldungeon.Dungeon.hero;
 import static com.watabou.pixeldungeon.Dungeon.level;
 import static com.watabou.pixeldungeon.network.Client.disconnect;
+import static com.watabou.pixeldungeon.scenes.GameScene.updateCharSprite;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
 import static com.watabou.pixeldungeon.utils.Utils.ToPascalCase;
 import static java.lang.Thread.sleep;
@@ -233,6 +234,11 @@ public class ParseThread implements Callable<String> {
         for (Iterator<String> it = data.keys(); it.hasNext(); ) {
             String token = it.next();
             switch (token) {
+                case "texturepack":
+                {
+                    TextureManager.INSTANCE.loadTexturePack(JavaUtils.InputStreamFromBase64(data.getString(token)));
+                    break;
+                }
                 case "server_actions": {
                     parseServerActions(data.getJSONArray(token));
                     break;
@@ -1167,7 +1173,6 @@ public class ParseThread implements Callable<String> {
         }
     }
 
-
     protected Char parseActorChar(JSONObject actorObj, int ID, Actor actor) throws JSONException {
         Char chr;
         if (actor == null) {
@@ -1175,6 +1180,25 @@ public class ParseThread implements Callable<String> {
             GameScene.add((Mob) chr);
         } else {
             chr = (Char) actor;
+        }
+        if (JavaUtils.hasNotNull(actorObj,"sprite_name"))
+        {
+            //deprecated
+            CharSprite old_sprite = chr.sprite;
+            Class<? extends CharSprite> new_sprite_class = spriteClassFromName(ToPascalCase(actorObj.getString("sprite_name")), chr != hero);
+            if ((old_sprite == null) || (!old_sprite.getClass().equals(new_sprite_class))) {
+                CharSprite sprite = spriteFromClass(new_sprite_class);
+                GameScene.updateCharSprite(chr, sprite);
+            }
+        }
+
+        if (JavaUtils.hasNotNull(actorObj,"sprite_asset"))
+        {
+            CharSprite old_sprite = chr.sprite;
+            String spriteAsset = actorObj.getString("sprite_asset");
+            if ((!(old_sprite instanceof CustomCharSprite)) || (!spriteAsset.equals(((CustomCharSprite) old_sprite).getSpriteAsset()))) {
+                updateCharSprite(chr, new CustomCharSprite(spriteAsset));
+            }
         }
         for (Iterator<String> it = actorObj.keys(); it.hasNext(); ) {
             String token = it.next();
@@ -1203,13 +1227,12 @@ public class ParseThread implements Callable<String> {
                     break;
                 }
                 case "sprite_name": {
-                    CharSprite old_sprite = chr.sprite;
-                    Class<? extends CharSprite> new_sprite_class = spriteClassFromName(ToPascalCase(actorObj.getString(token)), chr != hero);
-                    if ((old_sprite != null) && (old_sprite.getClass().equals(new_sprite_class))) {
-                        break;
-                    }
-                    CharSprite sprite = spriteFromClass(new_sprite_class);
-                    GameScene.updateCharSprite(chr, sprite);
+                    //already parsed
+                    break;
+                }
+                case "sprite_asset":
+                {
+                    //already parsed
                     break;
                 }
                 case "animation_name": {

@@ -21,7 +21,12 @@
 
 package com.watabou.gltextures;
 
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,7 +41,8 @@ import com.watabou.glwrap.Texture;
 public class TextureCache {
 
 	public static Context context;
-	
+	public static TextureManagerInterface manager = null;
+
 	private static HashMap<Object,SmartTexture> all = new HashMap<>();
 	
 	// No dithering, no scaling, 32 bits per pixel
@@ -136,7 +142,12 @@ public class TextureCache {
 					context.getResources(), (Integer)src, bitmapOptions );
 				
 			} else if (src instanceof String) {
-				
+
+				InputStream assetStream = manager.getAssetStream((String)src);
+				if (assetStream != null) {
+					return BitmapFactory.decodeStream( assetStream
+							, null, bitmapOptions);
+				}
 				return BitmapFactory.decodeStream(
 					context.getAssets().open( (String)src ), null, bitmapOptions );
 				
@@ -160,5 +171,22 @@ public class TextureCache {
 	public static boolean contains( Object key ) {
 		return all.containsKey( key );
 	}
-	
+
+	public static void reloadFromAssets(){
+		Set<Object> keysToReload = new HashSet<Object>();
+		Iterator<Map.Entry<Object, SmartTexture>> iterator = all.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<Object, SmartTexture> tx = iterator.next();
+			if (tx.getKey() instanceof String)
+			{
+				tx.getValue().delete();
+				keysToReload.add(tx.getKey());
+				iterator.remove();
+			}
+		}
+		for (Object key: keysToReload) {
+			get(key);
+		}
+	}
+
 }

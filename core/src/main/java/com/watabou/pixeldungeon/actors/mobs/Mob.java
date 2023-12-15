@@ -23,6 +23,7 @@ import com.watabou.pixeldungeon.Statistics;
 import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.levels.Level;
 import com.watabou.pixeldungeon.sprites.CharSprite;
+import com.watabou.pixeldungeon.sprites.CustomCharSprite;
 import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
 import com.watabou.utils.Bundle;
@@ -41,6 +42,10 @@ public abstract class Mob extends Char {
 	private String desc = "A creature unknown to science.";
 
 	public CharSprite sprite() {
+		if (sprite instanceof CustomCharSprite)
+		{
+			return sprite;
+		}
 		CharSprite sprite = null;
 		try {
 			sprite = spriteClass.newInstance();

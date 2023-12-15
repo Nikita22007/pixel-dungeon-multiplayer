@@ -108,6 +108,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		
 		place( ch.pos );
 		turnTo( ch.pos, Random.Int( Level.LENGTH ) );
+		if (curAnim == null)
+		{
+			play(idle);
+		}
 	}
 	
 	public PointF worldToCamera( int cell ) {

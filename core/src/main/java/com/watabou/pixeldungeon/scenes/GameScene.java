@@ -17,8 +17,6 @@
  */
 package com.watabou.pixeldungeon.scenes;
 
-import androidx.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -57,9 +55,11 @@ import com.watabou.pixeldungeon.items.wands.WandOfBlink;
 import com.watabou.pixeldungeon.levels.Level;
 import com.watabou.pixeldungeon.levels.RegularLevel;
 import com.watabou.pixeldungeon.levels.features.Chasm;
+import com.watabou.pixeldungeon.levels.features.DecorEmitters;
 import com.watabou.pixeldungeon.network.ParseThread;
 import com.watabou.pixeldungeon.plants.Plant;
 import com.watabou.pixeldungeon.sprites.CharSprite;
+import com.watabou.pixeldungeon.sprites.CustomCharSprite;
 import com.watabou.pixeldungeon.sprites.DiscardedItemSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
 import com.watabou.pixeldungeon.sprites.ItemSprite;
@@ -83,6 +83,7 @@ import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GameScene extends PixelScene {
 	
@@ -445,10 +446,15 @@ public class GameScene extends PixelScene {
 		if (chr instanceof Mob) {
 			((Mob) chr).spriteClass = newSprite.getClass();
 			CharSprite oldSprite = chr.sprite;
-			newSprite.killAndErase();
 			scene.mobs.remove(oldSprite);
 			oldSprite.killAndErase();
-			scene.addMobSprite((Mob) chr);
+			if (newSprite instanceof CustomCharSprite) {
+				scene.addMobSprite((Mob) chr, newSprite);
+			} else
+			{
+				newSprite.killAndErase();
+				scene.addMobSprite((Mob) chr);
+			}
 		} else {
 			GLog.n("trying on change sprite on char that is not mob");
 		}
@@ -456,6 +462,9 @@ public class GameScene extends PixelScene {
 
 	private void addMobSprite( Mob mob ) {
 		CharSprite sprite = mob.sprite();
+		addMobSprite(mob, sprite);
+	}
+	private void addMobSprite( Mob mob, CharSprite sprite ) {
 		sprite.visible = Dungeon.visible[mob.pos];
 		mobs.add( sprite );
 		sprite.link( mob );

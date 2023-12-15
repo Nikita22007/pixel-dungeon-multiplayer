@@ -21,6 +21,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLES20;
 
+import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
+import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
@@ -49,7 +51,9 @@ public class TitleScene extends PixelScene {
 	public void create() {
 		
 		super.create();
-		
+
+		TextureManager.INSTANCE.unloadServerTexturePacks();
+
 		Music.INSTANCE.play( Assets.THEME, true );
 		Music.INSTANCE.volume( 1f );
 		

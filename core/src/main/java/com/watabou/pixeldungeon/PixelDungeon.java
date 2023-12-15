@@ -26,6 +26,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
+import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
+import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
@@ -39,6 +41,7 @@ public class PixelDungeon extends Game {
 	
 	public PixelDungeon() {
 		super( TitleScene.class );
+		TextureCache.manager = TextureManager.INSTANCE;
 
 	/*	com.watabou.utils.Bundle.addAlias(
 			com.watabou.pixeldungeon.items.wands.WandOfReach.class,
