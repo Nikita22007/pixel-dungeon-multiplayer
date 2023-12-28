@@ -192,6 +192,10 @@ public class TextureCache {
 			Map.Entry<Object, SmartTexture> tx = iterator.next();
 			if (tx.getKey() instanceof String)
 			{
+				if (((String) tx.getKey()).startsWith("1x1"))
+				{
+					continue;
+				}
 				tx.getValue().delete();
 				keysToReload.add(tx.getKey());
 				iterator.remove();
