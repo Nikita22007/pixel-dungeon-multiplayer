@@ -6,6 +6,7 @@ import com.nikita22007.pixeldungeonmultiplayer.JavaUtils;
 import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Image;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -108,6 +109,7 @@ import java.util.concurrent.FutureTask;
 import static com.watabou.pixeldungeon.Dungeon.hero;
 import static com.watabou.pixeldungeon.Dungeon.level;
 import static com.watabou.pixeldungeon.network.Client.disconnect;
+import static com.watabou.pixeldungeon.network.Client.readStream;
 import static com.watabou.pixeldungeon.scenes.GameScene.add;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateCharSprite;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
@@ -238,7 +240,11 @@ public class ParseThread implements Callable<String> {
             switch (token) {
                 case "texturepack":
                 {
-                    TextureManager.INSTANCE.loadTexturePack(JavaUtils.InputStreamFromBase64(data.getString(token)));
+                    try {
+                        TextureManager.INSTANCE.loadTexturePack(JavaUtils.InputStreamFromBase64(data.getString(token)));
+                    }catch (IOException err){
+                        PixelDungeon.scene().add(new WndError("Malformed texture pack"));
+                        }
                     break;
                 }
                 case "server_actions": {

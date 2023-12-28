@@ -21,15 +21,10 @@ public class TextureManager implements TextureManagerInterface {
     }
 
     @Override
-    public void loadTexturePack(InputStream stream)
-    {
-        try {
-            TexturePack texturePack = new TexturePack(stream, true);
-            texturePacks.put(texturePack.name,texturePack);
-            updateTextureCache();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void loadTexturePack(InputStream stream) throws IOException {
+        TexturePack texturePack = new TexturePack(stream, true);
+        texturePacks.put(texturePack.name, texturePack);
+        updateTextureCache();
     }
 
     @Override
