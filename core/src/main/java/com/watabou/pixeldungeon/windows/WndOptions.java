@@ -17,11 +17,22 @@
  */
 package com.watabou.pixeldungeon.windows;
 
+import static com.watabou.pixeldungeon.utils.Utils.ToPascalCase;
+
 import com.watabou.noosa.BitmapTextMultiline;
+import com.watabou.noosa.Image;
+import com.watabou.pixeldungeon.items.CustomItem;
 import com.watabou.pixeldungeon.network.SendData;
 import com.watabou.pixeldungeon.scenes.PixelScene;
+import com.watabou.pixeldungeon.sprites.CharSprite;
+import com.watabou.pixeldungeon.sprites.CustomCharSprite;
+import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.ui.RedButton;
 import com.watabou.pixeldungeon.ui.Window;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class WndOptions extends Window {
 
@@ -34,23 +45,40 @@ public class WndOptions extends Window {
 		this.id =  id;
 	}
 	public WndOptions( String title, String message, String... options ) {
-		super();
-		
-		BitmapTextMultiline tfTitle = PixelScene.createMultiline( title, 9 );
-		tfTitle.hardlight( TITLE_COLOR );
-		tfTitle.x = tfTitle.y = MARGIN;
-		tfTitle.maxWidth = WIDTH - MARGIN * 2;
-		tfTitle.measure();
-		add( tfTitle );
-		
+		this(null, null, title, message, options);
+
+	}
+	public WndOptions(Image image, Integer titleColor, String title, String message, String... options ) {
+		Create(image, titleColor, title, message, options);
+	}
+	protected void Create(Image image, Integer titleColor, String title, String message, String... options ) {
+		float pos;
+		if (image == null) {
+			BitmapTextMultiline tfTitle = PixelScene.createMultiline(title, 9);
+			tfTitle.hardlight(TITLE_COLOR);
+			tfTitle.x = tfTitle.y = MARGIN;
+			tfTitle.maxWidth = WIDTH - MARGIN * 2;
+			tfTitle.measure();
+			add(tfTitle);
+			pos = tfTitle.y + tfTitle.height() + MARGIN;
+		}
+		else {
+			IconTitle titlebar = new IconTitle();
+			titlebar.icon( image );
+			titlebar.label( title );
+			titlebar.color( titleColor );
+			titlebar.setRect( 0, 0, WIDTH, 0 );
+			add( titlebar );
+			pos = titlebar.bottom() + MARGIN;
+		}
 		BitmapTextMultiline tfMesage = PixelScene.createMultiline( message, 8 );
 		tfMesage.maxWidth = WIDTH - MARGIN * 2;
 		tfMesage.measure();
 		tfMesage.x = MARGIN;
-		tfMesage.y = tfTitle.y + tfTitle.height() + MARGIN;
+		tfMesage.y = pos;
 		add( tfMesage );
 		
-		float pos = tfMesage.y + tfMesage.height() + MARGIN;
+		pos = tfMesage.y + tfMesage.height() + MARGIN;
 		
 		for (int i=0; i < options.length; i++) {
 			final int index = i;
@@ -70,7 +98,32 @@ public class WndOptions extends Window {
 		resize( WIDTH, (int)pos );
 	}
 
-	protected void onSelect( int index ) {
+    public WndOptions(JSONObject args) throws JSONException {
+		Image image = null;
+		JSONArray optionsArr = args.getJSONArray("options");
+		String[] options = new String[optionsArr.length()];
+		for (int i = 0; i < optionsArr.length(); i += 1) {
+			options[i] = optionsArr.getString(i);
+		}
+		String title = args.getString("title");
+		int titleColor = args.optInt("title_color", TITLE_COLOR);
+		String text = args.getString("message");
+		if (args.has("item"))
+		{
+			image = new ItemSprite(CustomItem.createItem(args.getJSONObject("item")));
+		} else if (args.has("sprite_asset")) {
+			image = new CustomCharSprite(args.getString("sprite_asset"));
+		} else {
+			image = CharSprite.spriteFromClass(
+					CharSprite.spriteClassFromName(
+							ToPascalCase(args.getString("sprite_class")
+							), true)
+			);
+		}
+		Create(image, titleColor, title, text, options);
+    }
+
+    protected void onSelect( int index ) {
 		SendData.sendWindowResult(id, index);
 	};
 }

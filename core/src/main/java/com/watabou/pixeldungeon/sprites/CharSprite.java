@@ -17,6 +17,8 @@
  */
 package com.watabou.pixeldungeon.sprites;
 
+import android.util.Log;
+
 import com.watabou.noosa.Game;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.Visual;
@@ -43,6 +45,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.Set;
@@ -59,7 +62,37 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	private static final float MOVE_INTERVAL	= 0.1f;
 	public static final float FLASH_INTERVAL	= 0.05f;
 
-	public enum State {
+    @Nullable
+    public static Class<? extends CharSprite> spriteClassFromName(String spriteName, boolean notHero) {
+        String sprite_name = Utils.format("com.watabou.pixeldungeon.sprites.%s", spriteName);
+        Class<? extends CharSprite> sprite_class = null;
+        CharSprite sprite = null;
+        try {
+            sprite_class = (Class<? extends CharSprite>) Class.forName(sprite_name);
+            if ((sprite_class == HeroSprite.class) && (notHero)) {
+                sprite_class = HeroCustomSprite.class;
+            }
+        } catch (Exception e) {
+            GLog.n("Incorrect sprite \"%s\"", sprite_name);
+            e.printStackTrace();
+        }
+        return sprite_class;
+    }
+
+    public static CharSprite spriteFromClass(Class<? extends CharSprite> sprite_class) {
+        CharSprite sprite = null;
+        try {
+            sprite = (CharSprite) sprite_class.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (sprite == null) {
+            sprite = new RatSprite();
+        }
+        return sprite;
+    }
+
+    public enum State {
 		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED
 	}
 	protected final Set<State> states = new CopyOnWriteArraySet<State>();

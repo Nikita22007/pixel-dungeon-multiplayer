@@ -6,7 +6,6 @@ import com.nikita22007.pixeldungeonmultiplayer.JavaUtils;
 import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.Image;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -67,11 +66,8 @@ import com.watabou.pixeldungeon.scenes.TitleScene;
 import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.pixeldungeon.sprites.CustomCharSprite;
 import com.watabou.pixeldungeon.sprites.GooSprite;
-import com.watabou.pixeldungeon.sprites.HeroCustomSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
-import com.watabou.pixeldungeon.sprites.ItemSprite;
 import com.watabou.pixeldungeon.sprites.MissileSprite;
-import com.watabou.pixeldungeon.sprites.RatSprite;
 import com.watabou.pixeldungeon.ui.Banner;
 import com.watabou.pixeldungeon.ui.GameLog;
 import com.watabou.pixeldungeon.ui.QuickSlot;
@@ -82,11 +78,9 @@ import com.watabou.pixeldungeon.windows.WndBag;
 import com.watabou.pixeldungeon.windows.WndError;
 import com.watabou.pixeldungeon.windows.WndMessage;
 import com.watabou.pixeldungeon.windows.WndOptions;
-import com.watabou.pixeldungeon.windows.WndQuest;
 import com.watabou.utils.PointF;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -414,25 +408,7 @@ public class ParseThread implements Callable<String> {
                 }
                 case "option":
                 case "wnd_option": {
-                    JSONArray optionsArr = args.getJSONArray("options");
-                    String[] options = new String[optionsArr.length()];
-                    for (int i = 0; i < optionsArr.length(); i += 1) {
-                        options[i] = optionsArr.getString(i);
-                    }
-                    GameScene.show(new WndOptions(id, args.getString("title"), args.getString("message"), options));
-                    break;
-                }
-                case "quest":
-                case "wnd_quest": {
-                    JSONArray optionsArr = args.getJSONArray("options");
-                    String[] options = new String[optionsArr.length()];
-                    for (int i = 0; i < optionsArr.length(); i += 1) {
-                        options[i] = optionsArr.getString(i);
-                    }
-                    String title = args.getString("title");
-                    String text = args.getString("text");
-                    CharSprite sprite = spriteFromClass(spriteClassFromName(ToPascalCase(args.getString("sprite")), true));
-                    GameScene.show(new WndQuest(id, sprite, title, text, options));
+                    GameScene.show(new WndOptions(args));
                     break;
                 }
                 case "bag":
@@ -1316,37 +1292,6 @@ public class ParseThread implements Callable<String> {
             }
         }
         return chr;
-    }
-
-    @Nullable
-    @SuppressWarnings("unchecked")
-    protected Class<? extends CharSprite> spriteClassFromName(String spriteName, boolean notHero) {
-        String sprite_name = Utils.format("com.watabou.pixeldungeon.sprites.%s", spriteName);
-        Class<? extends CharSprite> sprite_class = null;
-        CharSprite sprite = null;
-        try {
-            sprite_class = (Class<? extends CharSprite>) Class.forName(sprite_name);
-            if ((sprite_class == HeroSprite.class) && (notHero)) {
-                sprite_class = HeroCustomSprite.class;
-            }
-        } catch (Exception e) {
-            GLog.n("Incorrect sprite \"%s\"", sprite_name);
-            e.printStackTrace();
-        }
-        return sprite_class;
-    }
-
-    protected CharSprite spriteFromClass(Class<? extends CharSprite> sprite_class) {
-        CharSprite sprite = null;
-        try {
-            sprite = (CharSprite) sprite_class.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (sprite == null) {
-            sprite = new RatSprite();
-        }
-        return sprite;
     }
 
     protected void parseActorBlob(JSONObject actorObj, int id, Actor actor) throws JSONException {

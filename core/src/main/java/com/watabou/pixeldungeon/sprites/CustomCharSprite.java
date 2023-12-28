@@ -8,7 +8,6 @@ import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.TextureFilm;
-import com.watabou.pixeldungeon.actors.mobs.Mob;
 
 import org.json.JSONArray;
 import org.json.JSONException;
