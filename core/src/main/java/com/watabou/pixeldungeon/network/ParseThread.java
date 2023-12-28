@@ -107,6 +107,8 @@ import static com.watabou.pixeldungeon.network.Client.readStream;
 import static com.watabou.pixeldungeon.scenes.GameScene.add;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateCharSprite;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
+import static com.watabou.pixeldungeon.sprites.CharSprite.spriteClassFromName;
+import static com.watabou.pixeldungeon.sprites.CharSprite.spriteFromClass;
 import static com.watabou.pixeldungeon.utils.Utils.ToPascalCase;
 import static java.lang.Thread.sleep;
 
