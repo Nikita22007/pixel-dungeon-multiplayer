@@ -98,7 +98,8 @@ public class WndOptions extends Window {
 		resize( WIDTH, (int)pos );
 	}
 
-    public WndOptions(JSONObject args) throws JSONException {
+    public WndOptions(int id, JSONObject args) throws JSONException {
+		this.id = id;
 		Image image = null;
 		JSONArray optionsArr = args.getJSONArray("options");
 		String[] options = new String[optionsArr.length()];
@@ -113,7 +114,8 @@ public class WndOptions extends Window {
 			image = new ItemSprite(CustomItem.createItem(args.getJSONObject("item")));
 		} else if (args.has("sprite_asset")) {
 			image = new CustomCharSprite(args.getString("sprite_asset"));
-		} else {
+		} else if (args.has("sprite_class")) {
+
 			image = CharSprite.spriteFromClass(
 					CharSprite.spriteClassFromName(
 							ToPascalCase(args.getString("sprite_class")

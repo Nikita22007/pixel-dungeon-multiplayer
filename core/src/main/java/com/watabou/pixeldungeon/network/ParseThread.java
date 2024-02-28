@@ -410,7 +410,7 @@ public class ParseThread implements Callable<String> {
                 }
                 case "option":
                 case "wnd_option": {
-                    GameScene.show(new WndOptions(args));
+                    GameScene.show(new WndOptions(id, args));
                     break;
                 }
                 case "bag":
