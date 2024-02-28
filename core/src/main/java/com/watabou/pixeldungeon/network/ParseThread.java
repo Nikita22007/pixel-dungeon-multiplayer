@@ -30,6 +30,7 @@ import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
 import com.watabou.pixeldungeon.effects.Lightning;
+import com.watabou.pixeldungeon.effects.Pushing;
 import com.watabou.pixeldungeon.effects.Speck;
 import com.watabou.pixeldungeon.effects.Splash;
 import com.watabou.pixeldungeon.effects.Wound;
@@ -105,6 +106,7 @@ import static com.watabou.pixeldungeon.Dungeon.level;
 import static com.watabou.pixeldungeon.network.Client.disconnect;
 import static com.watabou.pixeldungeon.network.Client.readStream;
 import static com.watabou.pixeldungeon.scenes.GameScene.add;
+import static com.watabou.pixeldungeon.scenes.GameScene.effect;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateCharSprite;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
 import static com.watabou.pixeldungeon.sprites.CharSprite.spriteClassFromName;
@@ -643,6 +645,16 @@ public class ParseThread implements Callable<String> {
                         (float) actionObj.getDouble("target_alpha"),
                         (float) actionObj.getDouble("interval")
                 ));
+                break;
+            }
+            case ("pushing"):
+            case ("push"):
+            {
+                effect(new Pushing(sprite,
+                        actionObj.getInt("from"),
+                        actionObj.getInt("to")
+                )
+                );
                 break;
             }
             default:

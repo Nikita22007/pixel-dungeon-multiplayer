@@ -24,61 +24,53 @@ import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.utils.PointF;
 
-public class Pushing extends Actor {
+public class Pushing extends Visual {
 
 	private CharSprite sprite;
 	private int from;
 	private int to;
-	
-	private Effect effect;
-	
-	public Pushing( Char ch, int from, int to ) {
-		sprite = ch.sprite;
+
+
+	private static final float DELAY = 0.15f;
+
+	private PointF end;
+
+	private float delay;
+
+	public Pushing(CharSprite sprite, int from, int to) {
+		super(0, 0, 0, 0);
+
+		this.sprite = sprite;
 		this.from = from;
 		this.to = to;
+
+		point(sprite.worldToCamera(from));
+		end = sprite.worldToCamera(to);
+
+		speed.set(2 * (end.x - x) / DELAY, 2 * (end.y - y) / DELAY);
+		acc.set(-speed.x / DELAY, -speed.y / DELAY);
+
+		delay = 0;
+
+		sprite.parent.add(this);
 	}
 
-    public class Effect extends Visual {
+	@Override
+	public void update() {
+		super.update();
 
-		private static final float DELAY = 0.15f;
-		
-		private PointF end;
-		
-		private float delay;
-		
-		public Effect() {
-			super( 0, 0, 0, 0 );
-			
-			point( sprite.worldToCamera( from ) );
-			end = sprite.worldToCamera( to );
-			
-			speed.set( 2 * (end.x - x) / DELAY, 2 * (end.y - y) / DELAY );
-			acc.set( -speed.x / DELAY, -speed.y / DELAY );
-			
-			delay = 0;
-			
-			sprite.parent.add( this );
-		}
-		
-		@Override
-		public void update() {
-			super.update();
-			
-			if ((delay += Game.elapsed) < DELAY) {
-				
-				sprite.x = x;
-				sprite.y = y;
-				
-			} else {
-				
-				sprite.point( end );
-				
-				killAndErase();
-				Actor.remove( Pushing.this );
-				
-				next();
-			}
+		if ((delay += Game.elapsed) < DELAY) {
+
+			sprite.x = x;
+			sprite.y = y;
+
+		} else {
+
+			sprite.point(end);
+
+			killAndErase();
 		}
 	}
-
 }
+
+
