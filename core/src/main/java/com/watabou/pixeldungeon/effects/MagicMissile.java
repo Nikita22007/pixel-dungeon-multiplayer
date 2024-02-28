@@ -29,10 +29,13 @@ import com.watabou.pixeldungeon.effects.particles.PoisonParticle;
 import com.watabou.pixeldungeon.effects.particles.PurpleParticle;
 import com.watabou.pixeldungeon.effects.particles.ShadowParticle;
 import com.watabou.pixeldungeon.effects.particles.WoolParticle;
+import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.utils.Callback;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class MagicMissile extends Emitter {
 
@@ -43,7 +46,7 @@ public class MagicMissile extends Emitter {
 	private float sx;
 	private float sy;
 	private float time;
-	
+
 	public void reset( int from, int to, Callback callback ) {
 		reset( from, to, SPEED, callback );
 	}
@@ -73,7 +76,33 @@ public class MagicMissile extends Emitter {
 		y -= size / 2;
 		width = height = size;
 	}
-	
+
+
+	public static void show(String type, int from, int to, Group group) {
+		if (group == null)
+		{
+			GLog.n("MagicMissile: group is null");
+			return;
+		}
+		if (type.endsWith("light")) {
+			type = type.replace("light", "Light");
+		}
+		try {
+			Class[] catClassParams = {Group.class, int.class, int.class, Callback.class};
+			MagicMissile.class.getMethod(type, catClassParams).invoke(null, group, from, to, null);
+
+		} catch (NoSuchMethodException e) {
+			GLog.n("Can't find MagicMissile with name \"%s\"", type);
+			return;
+		} catch (InvocationTargetException e) {
+			GLog.n("Error during MagicMissile \"%s\": %s", type, e);
+			return;
+		} catch (IllegalAccessException e) {
+			GLog.n("Error during MagicMissile \"%s\": %s", type, e);
+			return;
+		}
+	}
+
 	public static void blueLight( Group group, int from, int to, Callback callback ) {
 		MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
 		missile.reset( from, to, callback );
@@ -165,7 +194,9 @@ public class MagicMissile extends Emitter {
 			y += sy * d;
 			if ((time -= d) <= 0) {
 				on = false;
-				callback.call();
+				if (callback != null) {
+					callback.call();
+				}
 			}
 		}
 	}

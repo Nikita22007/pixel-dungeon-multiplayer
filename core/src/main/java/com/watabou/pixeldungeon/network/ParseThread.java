@@ -6,6 +6,7 @@ import com.nikita22007.pixeldungeonmultiplayer.JavaUtils;
 import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Group;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -30,6 +31,7 @@ import com.watabou.pixeldungeon.effects.Degradation;
 import com.watabou.pixeldungeon.effects.Flare;
 import com.watabou.pixeldungeon.effects.FloatingText;
 import com.watabou.pixeldungeon.effects.Lightning;
+import com.watabou.pixeldungeon.effects.MagicMissile;
 import com.watabou.pixeldungeon.effects.Pushing;
 import com.watabou.pixeldungeon.effects.Speck;
 import com.watabou.pixeldungeon.effects.Splash;
@@ -104,9 +106,9 @@ import java.util.concurrent.FutureTask;
 import static com.watabou.pixeldungeon.Dungeon.hero;
 import static com.watabou.pixeldungeon.Dungeon.level;
 import static com.watabou.pixeldungeon.network.Client.disconnect;
-import static com.watabou.pixeldungeon.network.Client.readStream;
 import static com.watabou.pixeldungeon.scenes.GameScene.add;
 import static com.watabou.pixeldungeon.scenes.GameScene.effect;
+import static com.watabou.pixeldungeon.scenes.GameScene.gameOver;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateCharSprite;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
 import static com.watabou.pixeldungeon.sprites.CharSprite.spriteClassFromName;
@@ -784,6 +786,11 @@ public class ParseThread implements Callable<String> {
                         parseHeadDropVisualAction(actionObj);
                         break;
                     }
+                    case ("magic_missile_visual"):
+                    {
+                        parseMagicMissileVisual(actionObj);
+                        break;
+                    }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
                 }
@@ -791,6 +798,19 @@ public class ParseThread implements Callable<String> {
                 GLog.n("Incorrect action ( " + type + "). Ignored");
             }
         }
+    }
+
+    private void parseMagicMissileVisual(JSONObject actionObj) throws JSONException{
+        int from = actionObj.getInt("from");
+        int to = actionObj.getInt("to");
+        String type = actionObj.getString("type");
+        Char actor = Actor.findChar(from);
+        Group group = null;
+        if ((actor != null) && (actor.sprite != null))
+        {
+            group = actor.sprite.parent;
+        }
+        MagicMissile.show(type, from, to, group);
     }
 
     private void parseHeadDropVisualAction(JSONObject actionObj) throws JSONException {
