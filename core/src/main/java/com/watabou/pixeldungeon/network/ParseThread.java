@@ -665,6 +665,7 @@ public class ParseThread implements Callable<String> {
                 if (sprite instanceof GooSprite)
                 {
                     ((GooSprite) sprite).pumpUp();
+                    break;
                 }
             }
             default:
