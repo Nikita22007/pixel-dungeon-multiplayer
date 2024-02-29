@@ -34,6 +34,7 @@ import com.watabou.pixeldungeon.effects.Lightning;
 import com.watabou.pixeldungeon.effects.MagicMissile;
 import com.watabou.pixeldungeon.effects.Pushing;
 import com.watabou.pixeldungeon.effects.Speck;
+import com.watabou.pixeldungeon.effects.SpellSprite;
 import com.watabou.pixeldungeon.effects.Splash;
 import com.watabou.pixeldungeon.effects.Wound;
 import com.watabou.pixeldungeon.effects.particles.BlastParticle;
@@ -659,6 +660,13 @@ public class ParseThread implements Callable<String> {
                 );
                 break;
             }
+            case ("pump"):
+            {
+                if (sprite instanceof GooSprite)
+                {
+                    ((GooSprite) sprite).pumpUp();
+                }
+            }
             default:
                 GLog.n("Unexpected action: " + action + ". ID: " + actorID);
         }
@@ -791,6 +799,11 @@ public class ParseThread implements Callable<String> {
                         parseMagicMissileVisual(actionObj);
                         break;
                     }
+                    case ("spell_sprite"):
+                    {
+                        ShowSpellSprite(actionObj);
+                        break;
+                    }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
                 }
@@ -798,6 +811,13 @@ public class ParseThread implements Callable<String> {
                 GLog.n("Incorrect action ( " + type + "). Ignored");
             }
         }
+    }
+
+    private void ShowSpellSprite(JSONObject actionObj) throws JSONException {
+        SpellSprite.show(
+                Actor.findChar(actionObj.getInt("target")),
+                actionObj.getInt("spell")
+                );
     }
 
     private void parseMagicMissileVisual(JSONObject actionObj) throws JSONException{

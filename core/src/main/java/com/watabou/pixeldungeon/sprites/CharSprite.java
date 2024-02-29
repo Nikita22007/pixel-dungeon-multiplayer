@@ -191,7 +191,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		turnTo( from , to );
 		
 		if (visible && Level.water[from] && !ch.flying) {
-			GameScene.ripple( from );
+			//GameScene.ripple( from );
 		}
 		
 		ch.onMotionComplete();
