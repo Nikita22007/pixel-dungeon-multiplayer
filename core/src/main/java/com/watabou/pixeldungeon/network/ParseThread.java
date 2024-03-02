@@ -815,8 +815,10 @@ public class ParseThread implements Callable<String> {
     }
 
     private void ShowSpellSprite(JSONObject actionObj) throws JSONException {
+        Actor actor = Actor.findById(actionObj.getInt("target"));
+        Char chr = actor instanceof Char? (Char) actor: null;
         SpellSprite.show(
-                Actor.findChar(actionObj.getInt("target")),
+                chr,
                 actionObj.getInt("spell")
                 );
     }

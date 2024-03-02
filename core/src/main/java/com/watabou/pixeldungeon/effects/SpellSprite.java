@@ -25,6 +25,7 @@ import com.watabou.noosa.TextureFilm;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.scenes.GameScene;
+import com.watabou.pixeldungeon.utils.GLog;
 
 public class SpellSprite extends Image {
 
@@ -116,7 +117,11 @@ public class SpellSprite extends Image {
 	}
 	
 	public static void show( Char ch, int index ) {
-		
+		if (ch == null)
+		{
+			GLog.n("SpellSprite on null char");
+			return;
+		}
 		if (!ch.sprite.visible) {
 			return;
 		}
