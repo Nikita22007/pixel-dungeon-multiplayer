@@ -119,7 +119,8 @@ public class WndBag extends WndTabbed {
 
 		super();
 
-		this.allowedItems = (allowedItems == null) ? null : ParseArrayOfItems(Dungeon.hero, allowedItems);
+		this.allowedItems = (allowedItems == null) ? new ArrayList<Item>() : ParseArrayOfItems(Dungeon.hero, allowedItems);
+
 
 		this.listener = listener;
 		this.mode = mode;

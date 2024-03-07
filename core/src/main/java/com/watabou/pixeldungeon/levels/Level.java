@@ -79,9 +79,7 @@ public abstract class Level implements Bundlable {
 	public int[] map;
 	public boolean[] visited;
 	public boolean[] mapped;
-	
-	public int viewDistance = Dungeon.isChallenged( Challenges.DARKNESS ) ? 3: 8;
-	
+
 	public static boolean[] fieldOfView = new boolean[LENGTH];
 	
 	public static boolean[] passable	= new boolean[LENGTH];
