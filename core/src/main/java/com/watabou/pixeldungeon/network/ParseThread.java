@@ -806,6 +806,14 @@ public class ParseThread implements Callable<String> {
                         ShowSpellSprite(actionObj);
                         break;
                     }
+                    case ("discover_tile"):
+                    {
+                        GameScene.discoverTile(
+                                actionObj.getInt("pos"),
+                                actionObj.getInt("old_tile")
+                        );
+                        break;
+                    }
                     default:
                         GLog.h("unknown action type " + type + ". Ignored");
                 }
