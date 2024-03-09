@@ -702,6 +702,7 @@ public class ParseThread implements Callable<String> {
                         parseDegradationAction(actionObj);
                         break;
                     }
+                    case ("show_banner"):
                     case ("visual_show_banner"): {
                         parseBannerShowAction(actionObj);
                         break;
