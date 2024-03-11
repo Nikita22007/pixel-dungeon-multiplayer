@@ -29,36 +29,39 @@ public class TexturePack {
     String version;
 
     Point frameSize;
+
     public TexturePack(InputStream stream, boolean isServerTexturePack) throws IOException {
         this.isServerTexturePack = isServerTexturePack;
         try {
             File tmpFile = File.createTempFile("texturePack-", ".zip");
             tmpFile.deleteOnExit();
             FileOutputStream filestream = new FileOutputStream(tmpFile);
-            ByteStreamsKt.copyTo(stream,filestream,4096);
+            ByteStreamsKt.copyTo(stream, filestream, 4096);
             file = new ZipFile(tmpFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         loadTexturePack();
     }
+
     public TexturePack(ZipFile file) throws IOException {
         this.file = file;
         loadTexturePack();
     }
 
-    public void unload(){
+    public void unload() {
         try {
             file.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public boolean isServerTexturePack(){
+
+    public boolean isServerTexturePack() {
         return isServerTexturePack;
     }
-    private void loadManifest() throws IOException
-    {
+
+    private void loadManifest() throws IOException {
         try {
             JSONObject reader = new JSONObject(
                     JavaUtils.StringFromInputStream(
@@ -67,7 +70,7 @@ public class TexturePack {
                             )
                     )
             );
-            name = reader.optString("name",file.getName());
+            name = reader.optString("name", file.getName());
             description = reader.optString("description", "No description");
             version = reader.optString("version", "0.0.0");
             frameSize = new Point(
@@ -86,14 +89,12 @@ public class TexturePack {
     }
 
     public boolean hasAsset(String src) {
-        return (file.getEntry("assets/"+src) != null);
+        return (file.getEntry("assets/" + src) != null);
     }
 
-    protected InputStream getStream(String path)
-    {
+    protected InputStream getStream(String path) {
         ZipEntry entry = file.getEntry(path);
-        if (entry == null)
-        {
+        if (entry == null) {
             return null;
         }
         try {
@@ -103,11 +104,12 @@ public class TexturePack {
             return null;
         }
     }
+
     public InputStream getAssetStream(String src) {
-        return getStream("assets/"+src);
+        return getStream("assets/" + src);
     }
 
     public InputStream getAnimationStream(String animationsFile) {
-        return getStream("animations/"+animationsFile);
+        return getStream("animations/" + animationsFile);
     }
 }

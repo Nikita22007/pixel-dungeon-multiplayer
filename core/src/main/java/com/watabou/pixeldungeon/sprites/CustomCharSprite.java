@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CustomCharSprite extends MobSprite {
 
@@ -26,6 +27,7 @@ public class CustomCharSprite extends MobSprite {
     {
         spriteAsset = animationsFile;
         JSONObject animationsObj = TextureManager.INSTANCE.getAnimationsJsonObject(animationsFile);
+        Objects.requireNonNull(animationsObj, "Null animation obj for animation file:" + animationsFile);
         try {
             if (JavaUtils.hasNotNull(animationsObj,"default_texture"))
             {
