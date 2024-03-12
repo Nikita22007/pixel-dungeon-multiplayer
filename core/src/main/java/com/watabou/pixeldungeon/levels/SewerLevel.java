@@ -28,17 +28,6 @@ public class SewerLevel extends RegularLevel {
 		color1 = 0x48763c;
 		color2 = 0x59994a;
 	}
-	
-	@Override
-	public String tilesTex() {
-		return Assets.TILES_SEWERS;
-	}
-	
-	@Override
-	public String waterTex() {
-		return Assets.WATER_SEWERS;
-	}
-
 
 	@Override
 	public String tileName( int tile ) {

@@ -107,7 +107,10 @@ public abstract class Level implements Bundlable {
 	
 	public int color1 = 0x004400;
 	public int color2 = 0x88CC44;
-	
+
+	public String tilesTexture = Assets.TILES_SEWERS;
+	public String waterTexture = Assets.WATER_SEWERS;
+
 	private static final String MAP			= "map";
 	private static final String VISITED		= "visited";
 	private static final String MAPPED		= "mapped";
@@ -242,13 +245,13 @@ public abstract class Level implements Bundlable {
 	public int adjustPos( int pos ) {
 		return (pos / loadedMapSize) * WIDTH + (pos % loadedMapSize);
 	}
-	
+
 	public String tilesTex() {
-		return null;
+		return tilesTexture;
 	}
-	
+
 	public String waterTex() {
-		return null;
+		return waterTexture;
 	}
 
 	public void addVisuals( Scene scene ) {

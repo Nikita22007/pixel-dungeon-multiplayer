@@ -262,6 +262,11 @@ public class ParseThread implements Callable<String> {
                     parseLevel(data.getJSONObject(token));
                     break;
                 }
+                case "level_params":
+                {
+                    parseLevelParams(data.getJSONObject(token));
+                    break;
+                }
                 //UI block
                 case "interlevel_scene": {
                     //todo can cause crash
@@ -1238,6 +1243,36 @@ public class ParseThread implements Callable<String> {
                 }
                 default: {
                     GLog.n("Unexpected token \"%s\" in level. Ignored.", token);
+                    break;
+                }
+            }
+        }
+    }
+
+    protected void parseLevelParams(JSONObject levelParamsObj) throws JSONException {
+        for (Iterator<String> it = levelParamsObj.keys(); it.hasNext(); ) {
+            String token = it.next();
+            switch (token) {
+                case ("width"): {
+                    if (levelParamsObj.getInt(token) != level.WIDTH)
+                    throw new RuntimeException("unreleased");
+                    else break;
+                }
+                case ("height"): {
+                    if (levelParamsObj.getInt(token) != level.HEIGHT)
+                        throw new RuntimeException("unreleased");
+                    else break;
+                }
+                case ("tiles_texture"): {
+                    level.tilesTexture = levelParamsObj.getString(token);
+                    break;
+                }
+                case ("water_texture"): {
+                    level.waterTexture = levelParamsObj.getString(token);
+                    break;
+                }
+                default: {
+                    GLog.n("Unexpected token \"%s\" in level params. Ignored.", token);
                     break;
                 }
             }
