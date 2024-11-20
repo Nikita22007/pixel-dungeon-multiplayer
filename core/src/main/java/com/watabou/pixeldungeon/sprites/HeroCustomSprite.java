@@ -79,9 +79,11 @@ public class HeroCustomSprite extends CharSprite {
         read.frames( film, 19, 20, 20, 20, 20, 20, 20, 20, 20, 19 );
     }
     public void updateHeroClass(HeroClass heroClass) {
-     this.heroClass = heroClass;
-        texture(heroClass.spritesheet() );
-        updateArmor();
+        if(this.heroClass != heroClass) {
+            this.heroClass = heroClass;
+            texture(heroClass.spritesheet());
+            updateArmor();
+        }
     }
     public void updateTier(int tier) {
         if(this.tier != tier) {
