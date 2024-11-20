@@ -41,6 +41,7 @@ public class HeroSprite extends CharSprite {
 	
 	private Animation fly;
 	private Animation read;
+	private int tier = 1;
 	
 	public HeroSprite() {
 		super();
@@ -55,7 +56,7 @@ public class HeroSprite extends CharSprite {
 	
 	public void updateArmor() {
 
-		TextureFilm film = new TextureFilm( tiers(), ((Hero)ch).tier(), FRAME_WIDTH, FRAME_HEIGHT );
+		TextureFilm film = new TextureFilm( tiers(), tier, FRAME_WIDTH, FRAME_HEIGHT );
 		
 		idle = new Animation( 1, true );
 		idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
@@ -80,7 +81,16 @@ public class HeroSprite extends CharSprite {
 		read = new Animation( 20, false );
 		read.frames( film, 19, 20, 20, 20, 20, 20, 20, 20, 20, 19 );
 	}
-	
+
+	public void updateTier(int tier){
+		if (this.tier != tier) {
+			this.tier = tier;
+			if(ch != null) {
+				((Hero) ch).tier = tier;
+			}
+			updateArmor();
+		}
+	}
 	@Override
 	public void place( int p ) {
 		super.place( p );

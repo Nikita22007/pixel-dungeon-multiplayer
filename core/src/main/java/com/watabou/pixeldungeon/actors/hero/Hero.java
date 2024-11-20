@@ -93,9 +93,10 @@ public class Hero extends Char {
 	public String className() {
 		return subClass == null || subClass == HeroSubClass.NONE ? heroClass.title() : subClass.title();
 	}
-
+	// this is needed for StatusPane
+	public int tier = 1;
 	public int tier() {
-		return belongings.armor == null ? 0 : belongings.armorTier;
+		return tier;
 	}
 	
 	private boolean act() {

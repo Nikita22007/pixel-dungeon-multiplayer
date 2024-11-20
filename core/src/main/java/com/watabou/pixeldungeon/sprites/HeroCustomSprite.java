@@ -31,6 +31,8 @@ import com.watabou.pixeldungeon.actors.hero.HeroClass;
 import com.watabou.utils.Callback;
 
 public class HeroCustomSprite extends CharSprite {
+    private HeroClass heroClass = Dungeon.hero.heroClass;
+    private int tier = 0;
 
     private static final int FRAME_WIDTH	= 12;
     private static final int FRAME_HEIGHT	= 15;
@@ -45,13 +47,13 @@ public class HeroCustomSprite extends CharSprite {
     public HeroCustomSprite() {
         super();
 
-        texture( Dungeon.hero.heroClass.spritesheet() );
+        texture( heroClass.spritesheet() );
         updateArmor();
     }
 
     public void updateArmor() {
 
-        TextureFilm film = new TextureFilm( tiers(), (Dungeon.hero).tier(), FRAME_WIDTH, FRAME_HEIGHT );
+        TextureFilm film = new TextureFilm( tiers(), tier, FRAME_WIDTH, FRAME_HEIGHT );
 
         idle = new Animation( 1, true );
         idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
@@ -75,6 +77,17 @@ public class HeroCustomSprite extends CharSprite {
 
         read = new Animation( 20, false );
         read.frames( film, 19, 20, 20, 20, 20, 20, 20, 20, 20, 19 );
+    }
+    public void updateHeroClass(HeroClass heroClass) {
+     this.heroClass = heroClass;
+        texture(heroClass.spritesheet() );
+        updateArmor();
+    }
+    public void updateTier(int tier) {
+        if(this.tier != tier) {
+            this.tier = tier;
+            updateArmor();
+        }
     }
 
     @Override

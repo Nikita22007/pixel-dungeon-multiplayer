@@ -70,6 +70,7 @@ import com.watabou.pixeldungeon.scenes.TitleScene;
 import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.pixeldungeon.sprites.CustomCharSprite;
 import com.watabou.pixeldungeon.sprites.GooSprite;
+import com.watabou.pixeldungeon.sprites.HeroCustomSprite;
 import com.watabou.pixeldungeon.sprites.HeroSprite;
 import com.watabou.pixeldungeon.sprites.MissileSprite;
 import com.watabou.pixeldungeon.ui.Banner;
@@ -1294,6 +1295,16 @@ public class ParseThread implements Callable<String> {
             Class<? extends CharSprite> new_sprite_class = spriteClassFromName(ToPascalCase(actorObj.getString("sprite_name")), chr != hero);
             if ((old_sprite == null) || (!old_sprite.getClass().equals(new_sprite_class))) {
                 CharSprite sprite = spriteFromClass(new_sprite_class);
+                if (sprite instanceof HeroCustomSprite) {
+                    int tier = actorObj.optInt("tier", 0);
+                    HeroClass heroClass = HeroClass.valueOf(actorObj.optString("class", hero.heroClass.name()));
+                    ((HeroCustomSprite) sprite).updateHeroClass(heroClass);
+                    ((HeroCustomSprite) sprite).updateTier(tier);
+                }
+                if (sprite instanceof HeroSprite) {
+                    int tier = actorObj.optInt("tier", 0);
+                    ((HeroSprite) sprite).updateTier(tier);
+                }
                 GameScene.updateCharSprite(chr, sprite);
             }
         }
@@ -1386,6 +1397,18 @@ public class ParseThread implements Callable<String> {
                     sprite.setEmo(emoObj);
                     break;
                 }
+                case "class" :
+                    //already parsed
+                    break;
+                case "tier":
+                    if (chr.sprite instanceof HeroCustomSprite){
+                        ((HeroCustomSprite) chr.sprite).updateTier(actorObj.getInt("tier"));
+                    }
+                    if (chr.sprite instanceof HeroSprite){
+                        ((HeroSprite) chr.sprite).updateTier(actorObj.getInt("tier"));
+                    }
+
+                    break;
                 default: {
                     GLog.n("Unexpected token \"%s\" in Actor Char. Ignored.", token);
                     break;
