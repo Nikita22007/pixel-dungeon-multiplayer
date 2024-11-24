@@ -1086,7 +1086,9 @@ public class ParseThread implements Callable<String> {
             }
 
             Emitter emitter = Emitter.getEmitter(id);
-            Emitter emitter = GameScene.emitter();
+            if (emitter == null) {
+                emitter = GameScene.emitter();
+            }
             if (emitter == null) {
                 return;
             }
