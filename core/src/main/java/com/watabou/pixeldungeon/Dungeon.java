@@ -71,8 +71,6 @@ public class Dungeon {
 		Statistics.reset();
 		Journal.reset();
 		
-		depth = 0;
-		
 		droppedItems = new SparseArray<ArrayList<Item>>();
 		
 		chapters = new HashSet<Integer>();
