@@ -31,9 +31,14 @@ import com.watabou.noosa.Visual;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Emitter extends Group {
 
-	protected boolean lightMode = false;
+    private int id = -1;
+
+    protected boolean lightMode = false;
 	
 	public float x;
 	public float y;
@@ -55,6 +60,35 @@ public class Emitter extends Group {
 	
 	protected Factory factory;
 	
+	private static final Map<Integer, Emitter> emittersMap = new HashMap<Integer, Emitter>();
+
+	public static void updateEmitterState(int id, boolean on) {
+		if (!emittersMap.containsKey(id)) return;
+		Emitter emitter = emittersMap.get(id);
+		if (emitter == null) return;
+		emitter.on = on;
+	}
+
+	public static void killEmitter(int id) {
+		if (!emittersMap.containsKey(id)) return;
+		Emitter emitter = emittersMap.get(id);
+		if (emitter != null) {
+			emitter.killAndErase();
+		}
+		emittersMap.remove(id);
+	}
+
+	public static Emitter getEmitter(int id) {
+		if (emittersMap.containsKey(id)){
+			return emittersMap.get(id);
+		}
+		return null;
+	}
+
+	public static void clearEmitters() {
+		emittersMap.clear();
+	}
+
 	public void pos( float x, float y ) {
 		pos( x, y, 0, 0 );
 	}
@@ -157,7 +191,19 @@ public class Emitter extends Group {
 			super.draw();
 		}
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		emittersMap.remove(this.id);
+		this.id = id;
+		if (id != -1) {
+			emittersMap.put(id, this);
+		}
+	}
+
 	abstract public static class Factory {
 		
 		abstract public void emit( Emitter emitter, int index, float x, float y );

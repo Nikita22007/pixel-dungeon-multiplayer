@@ -797,6 +797,14 @@ public class ParseThread implements Callable<String> {
                         level.addVisual(actionObj);
                         break;
                     }
+                    case ("emitter_state"): {
+                        Emitter.updateEmitterState(actionObj.optInt("id", -1), actionObj.optBoolean("on", false));
+                        break;
+                    }
+                    case ("emitter_kill"): {
+                        Emitter.killEmitter(actionObj.optInt("id", -1));
+                        break;
+                    }
                     case ("heap_drop_visual"):
                     {
                         parseHeadDropVisualAction(actionObj);
@@ -1021,8 +1029,11 @@ public class ParseThread implements Callable<String> {
             float height;
             float interval;
             int quantity;
+            int id;
 
             Emitter.Factory factory = null;
+
+            id = actionObj.optInt("id", -1);
 
             if (actionObj.has("target_char")) {
                 fillTarget = actionObj.optBoolean("fill_target", true);
@@ -1073,6 +1084,8 @@ public class ParseThread implements Callable<String> {
             if (factory == null) {
                 return;
             }
+
+            Emitter emitter = Emitter.getEmitter(id);
             Emitter emitter = GameScene.emitter();
             if (emitter == null) {
                 return;
@@ -1095,6 +1108,7 @@ public class ParseThread implements Callable<String> {
             } else {
                 emitter.pos(position);
             }
+            emitter.setId(id);
             emitter.width = width;
             emitter.height = height;
             emitter.fillTarget = fillTarget;

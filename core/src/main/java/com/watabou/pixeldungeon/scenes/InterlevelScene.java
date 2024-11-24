@@ -22,6 +22,7 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.Actor;
@@ -79,6 +80,8 @@ public class InterlevelScene extends PixelScene {
 	@Override
 	public void create() {
 		super.create();
+
+		Emitter.clearEmitters();
 
 		phase=Phase.FADE_IN;
 		String text = "";
