@@ -20,6 +20,13 @@ package com.watabou.pixeldungeon;
 import android.content.SharedPreferences;
 
 import com.watabou.noosa.Game;
+import com.watabou.utils.Bundle;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 enum Preferences {
 
@@ -74,4 +81,27 @@ enum Preferences {
 	void put( String key, String value ) {
 		get().edit().putString( key, value ).commit();
 	}
+	Bundle heroUUIDs = new Bundle();
+	String heroUUID(String serverUUID) {
+		if (!heroUUIDs.isNull() && getString("hero_uuids", null) != null) {
+			ByteArrayInputStream bais = new ByteArrayInputStream(getString("hero_uuids", null).getBytes());
+            try {
+                heroUUIDs = Bundle.read(bais);
+            } catch (IOException e) {
+				e.printStackTrace();
+            }
+        }
+		return heroUUIDs.getString(serverUUID);
+	}
+	void heroUUID(String serverUUID, String heroUUID) {
+		heroUUIDs.put(serverUUID, heroUUID);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		Bundle.write(heroUUIDs, baos);
+		put("hero_uuids", baos.toString());
+	}
+	void clearUUIDs(){
+		heroUUIDs = new Bundle();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		Bundle.write(heroUUIDs, baos);
+		put("hero_uuids", baos.toString());	}
 }
