@@ -17,11 +17,13 @@
  */
 package com.watabou.pixeldungeon.windows;
 
+import android.preference.Preference;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.ui.Button;
 import com.watabou.pixeldungeon.Assets;
 import com.watabou.pixeldungeon.PixelDungeon;
+import com.watabou.pixeldungeon.Preferences;
 import com.watabou.pixeldungeon.scenes.PixelScene;
 import com.watabou.pixeldungeon.ui.CheckBox;
 import com.watabou.pixeldungeon.ui.RedButton;
@@ -161,7 +163,19 @@ public class WndSettings extends Window {
 		btnSound.setRect( 0, btnMusic.bottom() + GAP, WIDTH, BTN_HEIGHT );
 		btnSound.checked( PixelDungeon.soundFx() );
 		add( btnSound );
-		
+		RedButton uuidButton = new RedButton("Clear saved heroes"){
+			@Override
+			protected void onClick() {
+				PixelDungeon.scene().addToFront(new WndOptions("Clear hero UUIDs", "Are you sure you want to clear all saved heroes? No server will be able to recognize you", "yes", "no"){
+					@Override
+					protected void onSelect(int index) {
+						if(index == 0) {
+							Preferences.INSTANCE.clearUUIDs();
+						}
+					}
+				});
+			}
+		};
 		if (inGame) {
 			
 			CheckBox btnBrightness = new CheckBox( TXT_BRIGHTNESS ) {

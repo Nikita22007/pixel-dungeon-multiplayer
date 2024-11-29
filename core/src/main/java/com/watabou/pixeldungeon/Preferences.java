@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-enum Preferences {
+public enum Preferences {
 
 	INSTANCE;
 	
@@ -82,7 +82,7 @@ enum Preferences {
 		get().edit().putString( key, value ).commit();
 	}
 	Bundle heroUUIDs = new Bundle();
-	String heroUUID(String serverUUID) {
+	public String heroUUID(String serverUUID) {
 		if (!heroUUIDs.isNull() && getString("hero_uuids", null) != null) {
 			ByteArrayInputStream bais = new ByteArrayInputStream(getString("hero_uuids", null).getBytes());
             try {
@@ -93,13 +93,13 @@ enum Preferences {
         }
 		return heroUUIDs.getString(serverUUID);
 	}
-	void heroUUID(String serverUUID, String heroUUID) {
+	public void heroUUID(String serverUUID, String heroUUID) {
 		heroUUIDs.put(serverUUID, heroUUID);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bundle.write(heroUUIDs, baos);
 		put("hero_uuids", baos.toString());
 	}
-	void clearUUIDs(){
+	public void clearUUIDs(){
 		heroUUIDs = new Bundle();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bundle.write(heroUUIDs, baos);
