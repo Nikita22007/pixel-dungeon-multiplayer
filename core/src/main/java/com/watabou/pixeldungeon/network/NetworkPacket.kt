@@ -1,5 +1,6 @@
 package com.watabou.pixeldungeon.network
 
+import com.watabou.pixeldungeon.Preferences
 import java.util.concurrent.atomic.AtomicReference
 import org.json.JSONObject
 import java.lang.Exception
@@ -33,7 +34,8 @@ class NetworkPacket {
     fun packAndAddHeroClass(heroClass: String?) {
         synchronized(dataRef) {
             try {
-                dataRef.get().put("hero_class", heroClass)
+                dataRef.get().put("hero_class", heroClass);
+                dataRef.get().put("uuid", Preferences.INSTANCE.heroUUID(ParseThread.serverUUID));
             } catch (ignored: Exception) {
             }
         }

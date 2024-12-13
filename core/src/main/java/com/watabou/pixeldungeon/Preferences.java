@@ -83,25 +83,31 @@ public enum Preferences {
 	}
 	Bundle heroUUIDs = new Bundle();
 	public String heroUUID(String serverUUID) {
-		if ( getString("hero_uuids", null) != null && heroUUIDs != null && !heroUUIDs.isNull() ) {
-			ByteArrayInputStream bais = new ByteArrayInputStream(getString("hero_uuids", null).getBytes());
-            try {
-                heroUUIDs = Bundle.read(bais);
-            } catch (IOException e) {
-				e.printStackTrace();
-            }
-        }
-		return heroUUIDs.getString(serverUUID);
+		if (serverUUID != null) {
+			if (getString("hero_uuids", null) != null && heroUUIDs != null && !heroUUIDs.isNull()) {
+				ByteArrayInputStream bais = new ByteArrayInputStream(getString("hero_uuids", null).getBytes());
+				try {
+					heroUUIDs = Bundle.read(bais);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return heroUUIDs.getString(serverUUID);
+		}
+		return null;
 	}
 	public void heroUUID(String serverUUID, String heroUUID) {
-		heroUUIDs.put(serverUUID, heroUUID);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bundle.write(heroUUIDs, baos);
-		put("hero_uuids", baos.toString());
+		if (serverUUID != null) {
+			heroUUIDs.put(serverUUID, heroUUID);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			Bundle.write(heroUUIDs, baos);
+			put("hero_uuids", baos.toString());
+		}
 	}
 	public void clearUUIDs(){
 		heroUUIDs = new Bundle();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Bundle.write(heroUUIDs, baos);
-		put("hero_uuids", baos.toString());	}
+		put("hero_uuids", baos.toString());
+	}
 }

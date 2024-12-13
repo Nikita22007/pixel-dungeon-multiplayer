@@ -235,7 +235,6 @@ public class InterlevelScene extends PixelScene {
 		GameLog.wipe();
 		if (Dungeon.hero == null) {
 			resetLevel();
-			SendData.SendHeroClass(StartScene.curClass);
 			if (noStory) {
 				Dungeon.chapters.add( WndStory.ID_SEWERS );
 				noStory = false;

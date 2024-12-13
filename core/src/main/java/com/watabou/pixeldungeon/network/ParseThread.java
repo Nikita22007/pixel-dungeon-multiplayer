@@ -14,6 +14,7 @@ import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.DungeonTilemap;
 import com.watabou.pixeldungeon.PixelDungeon;
+import com.watabou.pixeldungeon.Preferences;
 import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.actors.blobs.Blob;
@@ -66,6 +67,7 @@ import com.watabou.pixeldungeon.plants.CustomPlant;
 import com.watabou.pixeldungeon.plants.Plant;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.InterlevelScene;
+import com.watabou.pixeldungeon.scenes.StartScene;
 import com.watabou.pixeldungeon.scenes.TitleScene;
 import com.watabou.pixeldungeon.sprites.CharSprite;
 import com.watabou.pixeldungeon.sprites.CustomCharSprite;
@@ -108,9 +110,7 @@ import java.util.concurrent.FutureTask;
 import static com.watabou.pixeldungeon.Dungeon.hero;
 import static com.watabou.pixeldungeon.Dungeon.level;
 import static com.watabou.pixeldungeon.network.Client.disconnect;
-import static com.watabou.pixeldungeon.scenes.GameScene.add;
 import static com.watabou.pixeldungeon.scenes.GameScene.effect;
-import static com.watabou.pixeldungeon.scenes.GameScene.gameOver;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateCharSprite;
 import static com.watabou.pixeldungeon.scenes.GameScene.updateMap;
 import static com.watabou.pixeldungeon.sprites.CharSprite.spriteClassFromName;
@@ -127,6 +127,7 @@ public class ParseThread implements Callable<String> {
     private static ParseThread activeThread;
     @NotNull
     private FutureTask<String> jsonCall;
+    public static String serverUUID = null;
 
     public ParseThread(InputStreamReader readStream, Socket socket) {
         this(new BufferedReader(readStream), socket);
@@ -344,6 +345,11 @@ public class ParseThread implements Callable<String> {
                 }
                 case "plants": {
                     parsePlants(data.getJSONArray(token));
+                    break;
+                }
+                case "server_uuid": {
+                    serverUUID = data.getString("server_uuid");
+                    Client.sendHeroClass(StartScene.curClass);
                     break;
                 }
                 default: {
@@ -1564,6 +1570,8 @@ public class ParseThread implements Callable<String> {
                     hero.gold = heroObj.getInt(token);
                     break;
                 }
+                case "uuid":
+                    Preferences.INSTANCE.heroUUID(serverUUID, heroObj.getString("uuid"));
                 default: {
                     GLog.n("Unexpected token \"%s\" in Hero. Ignored.", token);
                     break;
