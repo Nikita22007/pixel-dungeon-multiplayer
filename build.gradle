@@ -1,21 +1,32 @@
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 buildscript {
-    ext.kotlin_version = '1.6.10-RC'
+    ext.kotlin_version = '1.6.21'
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:8.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.13'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
     }
 }
 
-def getDate() {
-    def date = new Date()
-    def formattedDate = date.format('yyyy-MM-dd-HH-mm')
-    return formattedDate
+static def getDate() {
+    Instant instant = Instant.now();
+    LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+
+    // Создаем форматтер с нужным шаблоном
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
+
+    // Форматируем LocalDateTime в строку
+    String formattedDateTime = dateTime.format(formatter);
+    return formattedDateTime
 }
 allprojects {
 
@@ -37,11 +48,14 @@ allprojects {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xmaxerrs" << "40000" << "-Xlint"//<< " -Xmaxwarns" << "1000"
+        tasks.withType(JavaCompile).tap {
+            configureEach {
+                options.compilerArgs << "-Xmaxerrs" << "40000" << "-Xlint"
+//<< " -Xmaxwarns" << "1000"
+            }
         }
     }
 }

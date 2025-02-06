@@ -1,0 +1,88 @@
+## based on https://github.com/TrashboxBobylev/Summoning-Reincarnated/tree/master/.github/workflows
+
+## 1
+name: Upload thing when pushing something
+
+on:
+  push:
+    branches:
+      - "Client"
+    tags:
+      - "!.+"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Set up JDK environment to 8
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 17
+
+      # 1
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Setup Google Services
+        shell: bash
+        run: printf '%s' "${{ secrets.GOOGLE_SERVICES }}" | base64 -d > core/google-services.json
+        
+      # 2
+      #- name: Generate Release APK
+      #  run: ./gradlew android:assembleRelease
+      #- name: Generate Release JAR
+      #  run: ./gradlew desktop:release
+      - name: Generate Release APK
+        run: ./gradlew core:build release
+      # 3
+        shell: bash
+      - name: Get Build Tool Version
+        run: |
+          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
+          echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
+          echo Last build tool version is: $BUILD_TOOL_VERSION
+
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: core/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
+
+      #- name: Rename APK
+      #  run: mv android/build/outputs/apk/release/android-release-unsigned-signed.apk android/build/outputs/apk/release/android-release.apk
+
+      - name: Create dynamic tag name
+        id: vars
+        shell: bash
+        run: |
+          echo "version="$(ls core/build/outputs/apk/release | grep "unsigned-signed.apk" | head -n 1 | cut -c -37 )"" >> $GITHUB_ENV
+          echo "version="$(ls core/build/outputs/apk/release | grep "unsigned-signed.apk" | head -n 1 | cut -c -37 )""
+
+      - name: Upload as Pre-release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest_snapshot"
+          prerelease: true
+          title: "${{ env.version }}"
+          files: |
+              core/build/outputs/apk/release/*-signed.apk
+              
+      - name: Remove unsigned apk
+        run: find core/build/outputs/apk/release -name '*unsigned.apk' -exec rm {} +
+
+      - name: Remove unsigned apk
+        run: find core/build/outputs/apk/release -name '*unsigned-aligned.apk' -exec rm {} +
+
+      - name: Remove signing key
+        run: rm core/build/outputs/apk/release/signingKey.jks
+

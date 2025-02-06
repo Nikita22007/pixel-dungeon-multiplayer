@@ -5,9 +5,14 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 
 android {
+    //namespace appPackageName
+	namespace "com.watabou.pixeldungeon"
     compileSdkVersion appAndroidCompileSDK
 
     setProperty("archivesBaseName", appVersionName)
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         manifestPlaceholders = [appName:appName]
         applicationId appPackageName
