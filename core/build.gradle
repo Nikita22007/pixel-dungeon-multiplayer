@@ -34,6 +34,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.3.1')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.android.gms:play-services-measurement-api:19.0.0'
+    implementation "com.github.RohitSurwase.UCE-Handler:uce_handler:1.4"
     // Declare the dependencies for the Crashlytics and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
 }

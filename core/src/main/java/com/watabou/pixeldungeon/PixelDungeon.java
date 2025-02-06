@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.nikita22007.pixeldungeonmultiplayer.TextureManager;
+import com.rohitss.uceh.UCEHandler;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
@@ -115,6 +116,8 @@ public class PixelDungeon extends Game {
 			Assets.SND_BEE,
 			Assets.SND_DEGRADE,
 			Assets.SND_MIMIC );
+		new UCEHandler.Builder(this).setUCEHEnabled(true).build();
+
 	}
 	
 	@Override
