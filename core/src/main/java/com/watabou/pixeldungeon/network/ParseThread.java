@@ -1264,6 +1264,13 @@ public class ParseThread implements Callable<String> {
                     GameScene.setFlag(GameScene.UpdateFlags.AFTER_OBSERVE);
                     break;
                 }
+                case "cells_map": {
+                    JSONArray map = levelObj.getJSONArray("cells_map");
+                        for (int i = 0; i < map.length(); i++) {
+                            Dungeon.level.map[i] = map.getInt(i);
+                        }
+                    break;
+                }
                 default: {
                     GLog.n("Unexpected token \"%s\" in level. Ignored.", token);
                     break;
