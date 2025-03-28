@@ -84,7 +84,7 @@ public enum Preferences {
 	Bundle heroUUIDs = new Bundle();
 	public String heroUUID(String serverUUID) {
 		if (serverUUID != null) {
-			if (getString("hero_uuids", null) != null && heroUUIDs != null && !heroUUIDs.isNull()) {
+			if (getString("hero_uuids", null) != null && heroUUIDs != null && !heroUUIDs.toString().equals("{}")) {
 				ByteArrayInputStream bais = new ByteArrayInputStream(getString("hero_uuids", null).getBytes());
 				try {
 					heroUUIDs = Bundle.read(bais);
