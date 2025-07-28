@@ -352,6 +352,19 @@ public class ParseThread implements Callable<String> {
                     Client.sendHeroClass(StartScene.curClass);
                     break;
                 }
+                case "redirect": {
+                    Client.disconnectWithoutSwitch();
+                    PixelDungeon.switchScene(InterlevelScene.class);
+                    JSONObject redirectObject = data.getJSONObject(token);
+                    if (redirectObject.has("uuid")){
+                        NetworkPacket.redirectUUID = redirectObject.getString("uuid");
+                    }
+                    if(redirectObject.has("password")){
+                        NetworkPacket.password = redirectObject.getString("password");
+                    }
+                    Client.connect(redirectObject.getString("host"), redirectObject.getInt("port"));
+                    break;
+                }
                 default: {
                     GLog.h("Incorrect packet token: \"%s\". Ignored", token);
                     continue;

@@ -1,13 +1,12 @@
 package com.watabou.pixeldungeon.network
 
 import com.watabou.pixeldungeon.Preferences
-import java.util.concurrent.atomic.AtomicReference
-import org.json.JSONObject
-import java.lang.Exception
-import com.watabou.pixeldungeon.items.CustomItem
 import com.watabou.pixeldungeon.actors.hero.Hero
+import com.watabou.pixeldungeon.items.CustomItem
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 
 class NetworkPacket {
     internal enum class CellState {
@@ -19,6 +18,10 @@ class NetworkPacket {
     }
 
     companion object {
+        @JvmField
+        var password: String? = null
+        @JvmField
+        var redirectUUID: String? = null
         const val CELLS = "cells"
         const val MAP = "map"
         const val ACTORS = "actors"
