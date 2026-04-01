@@ -31,6 +31,8 @@ import com.watabou.pixeldungeon.ui.CheckBox;
 import com.watabou.pixeldungeon.ui.RedButton;
 import com.watabou.pixeldungeon.ui.Window;
 
+import java.net.IDN;
+
 public class WndRelaySettings extends Window {
 
     public static final String TXT_CLOSE = "Close";
@@ -74,7 +76,7 @@ public class WndRelaySettings extends Window {
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     Editable editable = input.getText();
-                                    PixelDungeon.customRelayAddress(editable.toString());
+                                    PixelDungeon.customRelayAddress(IDN.toASCII(editable.toString()));
                                     // deal with the editable
                                 }
                             })
